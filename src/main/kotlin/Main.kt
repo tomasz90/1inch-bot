@@ -1,5 +1,4 @@
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
 fun main() {
@@ -12,27 +11,32 @@ fun main() {
         withCleanLog(true)
     }
 
+    val cs = CoroutineScope(Dispatchers.IO)
+    val handler = CoroutineExceptionHandler { _, exception ->
+        getLogger().error("Error, $exception")
+    }
+
     while (true) {
         runBlocking {
-            launch { oneInchClient.getQuote(BSC_DAI, BSC_UST, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_DAI, BSC_USDT, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_DAI, BSC_USDC, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_DAI, BSC_TUSD, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_UST, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_USDT, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_USDC, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_TUSD, AMOUNT_TO_SELL) }
 
-            launch { oneInchClient.getQuote(BSC_UST, BSC_DAI, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_UST, BSC_USDT, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_UST, BSC_USDC, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_UST, BSC_TUSD, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_DAI, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_USDT, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_USDC, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_TUSD, AMOUNT_TO_SELL) }
 
-            launch { oneInchClient.getQuote(BSC_USDT, BSC_UST, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_USDT, BSC_DAI, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_USDT, BSC_USDC, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_USDT, BSC_TUSD, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_UST, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_DAI, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_USDC, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_TUSD, AMOUNT_TO_SELL) }
 
-            launch { oneInchClient.getQuote(BSC_TUSD, BSC_DAI, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_TUSD, BSC_USDT, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_TUSD, BSC_USDC, AMOUNT_TO_SELL) }
-            launch { oneInchClient.getQuote(BSC_TUSD, BSC_UST, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_DAI, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_USDT, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_USDC, AMOUNT_TO_SELL) }
+            cs.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_UST, AMOUNT_TO_SELL) }
         }
         getLogger().info(WAIT_MESSAGE)
         TimeUnit.SECONDS.sleep(waitingTime)
