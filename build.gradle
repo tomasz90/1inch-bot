@@ -14,8 +14,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1'
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.32'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.32'
+    implementation 'org.web3j:core:4.6.3'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 }
 
