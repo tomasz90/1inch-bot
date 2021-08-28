@@ -3,9 +3,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
-
 fun main() {
-
 
     val oneInchClient = OneInchClient()
 
