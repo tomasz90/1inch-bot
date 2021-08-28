@@ -1,0 +1,1 @@
+class Token(val name: String, val address: String)
