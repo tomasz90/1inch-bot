@@ -47,10 +47,13 @@ class OneInchClient {
         if (response.isSuccessful) {
             val finalQuote = response.body()?.amountReceived?.removeDecimals(DECIMALS).toString()
             val advantage = calculateAdvantage(quote, finalQuote)
-            getLogger().info("${from.name}: $quote, ${to.name}: $finalQuote,   advantage: ${String.format("%.2f", advantage)}%")
+            var isOpportunity = ""
             if (advantage > 0.5) {
-                getLogger().info("Oportunity !!!!!!!!!!!!!!!!!!!!!!")
+               isOpportunity = "Opportunity !!!"
             }
+            getLogger()
+                .info("${from.name}: $quote, ${to.name}: $finalQuote," +
+                        "   advantage: ${String.format("%.2f", advantage)}%    $isOpportunity")
         } else {
             getLogger().info("Error, response status: ${response.code()}")
         }
