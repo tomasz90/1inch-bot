@@ -1,0 +1,51 @@
+# method
+GET
+# url
+https://api.1inch.exchange/v3.0/1/swap
+
+# query params
+&fromTokenAddress = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
+&toTokenAddress = 0x111111111117dc0aa78b770fa6a738034120c302
+&amount = 10000000000000000
+&fromAddress = 0x03de2960E4Ee13F480CDf82F8106E77622C35DB0
+&slippage = 10
+
+# headers
+@Accept: application/json
+
+
+%%%
+
+# Duration: 156 ms
+# URL: https://api.1inch.exchange/v3.0/1/swap?&toTokenAddress=0x111111111117dc0aa78b770fa6a738034120c302&amount=10000000000000000&fromAddress=0x03de2960E4Ee13F480CDf82F8106E77622C35DB0&slippage=10
+
+# HTTP/1.1 400 Bad Request
+
+@Date: Sat, 28 Aug 2021 19:06:04 GMT
+@Content-Type: application/json; charset=utf-8
+@Content-Length: 79
+@Connection: keep-alive
+@Access-Control-Allow-Origin: *
+@Cache-Control: public, max-age=3, s-maxage=3
+@Content-Security-Policy: default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+@Etag: W/"4f-gjK/gEMUJLMwWhrlzKdQ5U+gPp0"
+@Expect-Ct: max-age=0
+@Referrer-Policy: no-referrer
+@Strict-Transport-Security: max-age=15552000; includeSubDomains
+@Vary: Origin, Accept-Encoding
+@X-Content-Type-Options: nosniff
+@X-Dns-Prefetch-Control: off
+@X-Download-Options: noopen
+@X-Frame-Options: SAMEORIGIN
+@X-Permitted-Cross-Domain-Policies: none
+@X-Xss-Protection: 0
+@CF-Cache-Status: MISS
+@Server: cloudflare
+@CF-RAY: 685fd0905cbdcc83-WAW
+@alt-svc: h3-27=":443"; ma=86400, h3-28=":443"; ma=86400, h3-29=":443"; ma=86400, h3=":443"; ma=86400
+
+{
+  "statusCode": 400,
+  "message": "undefined is wrong address",
+  "error": "Bad Request"
+}
