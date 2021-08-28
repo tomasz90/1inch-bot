@@ -17,6 +17,8 @@ interface OneInchService {
     ): Call<OneInchResponse>
 }
 
+class Token(val name: String, val address: String)
+
 class OneInchClient {
     private val mapper: ObjectMapper = ObjectMapper()
 
@@ -38,12 +40,12 @@ class OneInchClient {
         if (response.isSuccessful) {
             val finalQuote = response.body()?.amountReceived?.removeDecimals(DECIMALS).toString()
             val advantage = calculateAdvantage(quote, finalQuote)
-            println("${from.name}: $quote, ${to.name}: $finalQuote, advantage: ${String.format("%.2f", advantage)}%")
+            getLogger().info("${from.name}: $quote, ${to.name}: $finalQuote, advantage: ${String.format("%.2f", advantage)}%")
             if (advantage > 0.5) {
-                println("Oportunity !!!!!!!!!!!!!!!!!!!!!!")
+                getLogger().info("Oportunity !!!!!!!!!!!!!!!!!!!!!!")
             }
         } else {
-            println("Error, response status: ${response.code()}")
+            getLogger().info("Error, response status: ${response.code()}")
         }
     }
 }
