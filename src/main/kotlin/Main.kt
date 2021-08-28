@@ -1,13 +1,18 @@
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
-import kotlin.system.exitProcess
 
 fun main() {
 
+    getLogger().debug("Set waiting time in sec: ")
+    val waitingTime = readLine()?.toLong()!!
     val oneInchClient = OneInchClient()
+    getLogger().debug("Clean log? [y/n]")
+    if (readLine().equals("y")) {
+        withCleanLog(true)
+    }
 
-    repeat(10) {
+    while (true) {
         runBlocking {
             launch { oneInchClient.getQuote(BSC_DAI, BSC_UST, AMOUNT_TO_SELL) }
             launch { oneInchClient.getQuote(BSC_DAI, BSC_USDT, AMOUNT_TO_SELL) }
@@ -30,7 +35,6 @@ fun main() {
             launch { oneInchClient.getQuote(BSC_TUSD, BSC_UST, AMOUNT_TO_SELL) }
         }
         getLogger().info(WAIT_MESSAGE)
-        TimeUnit.SECONDS.sleep(10L)
+        TimeUnit.SECONDS.sleep(waitingTime)
     }
-    exitProcess(0)
 }

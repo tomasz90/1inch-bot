@@ -6,6 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.concurrent.TimeUnit
 
 interface OneInchService {
 
@@ -27,7 +28,11 @@ class OneInchClient {
     }
 
     private val jacksonConverter = JacksonConverterFactory.create(mapper)
-    private val httpClient = OkHttpClient.Builder().build()
+    private val httpClient = OkHttpClient.Builder()
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .writeTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .build()
     private val oneInchService: OneInchService = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(BASE_URL)
