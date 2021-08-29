@@ -1,0 +1,73 @@
+# method
+GET
+# url
+https://api.1inch.exchange/v3.0/137/quote
+
+# query params
+&fromTokenAddress = 0xc2132d05d31c914a87c6611c10748aeb04b58e8f
+&toTokenAddress = 0x692597b009d13c4049a947cab2239b7d6517875f
+&amount = 1000000
+
+# headers
+@Accept: application/json
+%%%
+
+# Duration: 303 ms
+# URL: https://api.1inch.exchange/v3.0/137/quote?&fromTokenAddress=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&toTokenAddress=0x692597b009d13c4049a947cab2239b7d6517875f&amount=1000000
+
+# HTTP/1.1 200 OK
+
+@Date: Sun, 29 Aug 2021 17:32:38 GMT
+@Content-Type: application/json; charset=utf-8
+@Transfer-Encoding: chunked
+@Connection: keep-alive
+@Access-Control-Allow-Origin: *
+@Cache-Control: public, max-age=3, s-maxage=3
+@Content-Security-Policy: default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+@Etag: W/"2c4-YhMEr3isAQG+3pYh9pcLUuONKTE"
+@Expect-Ct: max-age=0
+@Referrer-Policy: no-referrer
+@Strict-Transport-Security: max-age=15552000; includeSubDomains
+@Vary: Origin, Accept-Encoding
+@X-Content-Type-Options: nosniff
+@X-Dns-Prefetch-Control: off
+@X-Download-Options: noopen
+@X-Frame-Options: SAMEORIGIN
+@X-Permitted-Cross-Domain-Policies: none
+@X-Xss-Protection: 0
+@CF-Cache-Status: MISS
+@Server: cloudflare
+@CF-RAY: 68678510fbdf006e-WAW
+@alt-svc: h3-27=":443"; ma=86400, h3-28=":443"; ma=86400, h3-29=":443"; ma=86400, h3=":443"; ma=86400
+
+{
+  "fromToken": {
+    "symbol": "USDT",
+    "name": "Tether USD",
+    "decimals": 6,
+    "address": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+    "logoURI": "https://tokens.1inch.exchange/0xdac17f958d2ee523a2206206994597c13d831ec7.png"
+  },
+  "toToken": {
+    "symbol": "UST",
+    "name": "Wrapped UST Token (PoS)",
+    "decimals": 18,
+    "address": "0x692597b009d13c4049a947cab2239b7d6517875f",
+    "logoURI": "https://tokens.1inch.exchange/0x692597b009d13c4049a947cab2239b7d6517875f.png"
+  },
+  "toTokenAmount": "993541977152839224",
+  "fromTokenAmount": "1000000",
+  "protocols": [
+    [
+      [
+        {
+          "name": "POLYGON_ONE_INCH_LIMIT_ORDER",
+          "part": 100,
+          "fromTokenAddress": "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+          "toTokenAddress": "0x692597b009d13c4049a947cab2239b7d6517875f"
+        }
+      ]
+    ]
+  ],
+  "estimatedGas": 279462
+}

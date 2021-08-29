@@ -3,20 +3,20 @@ package quote_request
 import BASE_URL
 import Config.DEMAND_PERCENT_ADVANTAGE
 import Token
-import addDecimals
 import calculateAdvantage
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import expand
 import getLogger
 import logRatesInfo
 import okhttp3.OkHttpClient
-import removeDecimals
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.math.BigInteger
 import java.util.concurrent.TimeUnit
 
 interface OneInchService {
@@ -26,15 +26,15 @@ interface OneInchService {
         @Path("id") chainId: Int,
         @Query("fromTokenAddress") from: String,
         @Query("toTokenAddress") to: String,
-        @Query("amount") amount: String
+        @Query("amount") amount: BigInteger
     ): Call<QuoteResponse>
 
     @GET("v3.0/{id}/approve/calldata")
     fun approve(
         @Path("id") chainId: Int,
         @Query("tokenAddress") tokenAddress: String,
-        @Query("infinity") infinity: String? = null,
-        @Query("amount") amount: String? = null
+        @Query("infinity") infinity: Boolean? = null,
+        @Query("amount") amount: BigInteger? = null
     ): Call<ApprovalResponse>
 
     @GET("v3.0/{id}/swap")
@@ -42,11 +42,11 @@ interface OneInchService {
         @Path("id") chainId: Int,
         @Query("fromTokenAddress") fromTokenAddress: String,
         @Query("toTokenAddress") toTokenAddress: String,
-        @Query("amount") amount: String,
+        @Query("amount") amount: BigInteger,
         @Query("fromAddress") fromAddress: String,
-        @Query("slippage") slippage: String,
-        @Query("gasPrice") gasPrice: String? = null,
-        @Query("allowPartialFill") allowPartialFill: String? = null
+        @Query("slippage") slippage: Double,
+        @Query("gasPrice") gasPrice: BigInteger? = null,
+        @Query("allowPartialFill") allowPartialFill: Boolean? = null
     ): Call<ApprovalResponse>
 
 
@@ -72,24 +72,25 @@ class OneInchClient {
         .build()
         .create(OneInchService::class.java)
 
-    fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: String) {
-        val response =
-            oneInchService.quote(chainId, from.address, to.address, fromQuote.addDecimals(from.decimals)).execute()
+    fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: Long) {
+        val quote = expand(fromQuote, from.decimals)
+        val response = oneInchService.quote(chainId, from.address, to.address, quote).execute()
         if (response.isSuccessful) {
-            val toQuote = response.body()?.amountReceived?.removeDecimals(to.decimals).toString()
-            val percent = calculateAdvantage(fromQuote, toQuote)
-            checkOpportunity(percent)
-            logRatesInfo(from, to, fromQuote, toQuote, percent)
+            val body = response.body()!!
+            checkOpportunity(body)
         } else {
             getLogger().info("Error, response status: ${response.code()}")
         }
     }
 }
 
-fun checkOpportunity(percent: Double) {
+fun checkOpportunity(response: QuoteResponse) {
+    val percent = calculateAdvantage(response)
+
     if (percent > DEMAND_PERCENT_ADVANTAGE) {
 
     }
+    logRatesInfo(response, percent)
 }
 
 
