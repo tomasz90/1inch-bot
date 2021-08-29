@@ -21,12 +21,21 @@ import java.util.concurrent.TimeUnit
 interface OneInchService {
 
     @GET("v3.0/{id}/quote")
-    fun getQuoteOnBSC(
+    fun getQuote(
         @Path("id") chainId: Int,
         @Query("fromTokenAddress") from: String,
         @Query("toTokenAddress") to: String,
         @Query("amount") amount: String
-    ): Call<OneInchResponse>
+    ): Call<QuoteResponse>
+
+    @GET("v3.0/{id}/approve/calldata")
+    fun approve(
+        @Path("id") chainId: Int,
+        @Query("amount") amount: String? = null,
+        @Query("infinity") infinity: String? = null,
+        @Query("tokenAddress") tokenAddress: String
+    ): Call<ApprovalResponse>
+
 }
 
 class Token(val name: String, val address: String, val decimals: Int)
@@ -52,7 +61,7 @@ class OneInchClient {
         .create(OneInchService::class.java)
 
     fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: String) {
-        val response = oneInchService.getQuoteOnBSC(chainId, from.address, to.address, fromQuote.addDecimals(from.decimals)).execute()
+        val response = oneInchService.getQuote(chainId, from.address, to.address, fromQuote.addDecimals(from.decimals)).execute()
         if (response.isSuccessful) {
             val toQuote = response.body()?.amountReceived?.removeDecimals(to.decimals).toString()
             val percent = calculateAdvantage(fromQuote, toQuote)
