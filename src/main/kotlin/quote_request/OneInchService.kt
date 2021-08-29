@@ -51,8 +51,6 @@ interface OneInchService {
 
 }
 
-class Token(val name: String, val address: String, val decimals: Int)
-
 class OneInchClient {
     private val mapper: ObjectMapper = ObjectMapper()
 
@@ -86,5 +84,7 @@ class OneInchClient {
         }
     }
 }
+
+class Token(val name: String, val address: String, val decimals: Int)
 
 
