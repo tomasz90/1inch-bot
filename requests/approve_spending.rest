@@ -1,0 +1,47 @@
+# method
+GET
+# url
+https://api.1inch.exchange/v3.0/137/approve/calldata
+
+# query params
+&infinity = true
+&tokenAddress = 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
+
+# headers
+@Accept: application/json
+%%%
+
+# Duration: 200 ms
+# URL: https://api.1inch.exchange/v3.0/137/approve/calldata?&infinity=true&tokenAddress=0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
+
+# HTTP/1.1 200 OK
+
+@Date: Sun, 29 Aug 2021 12:04:29 GMT
+@Content-Type: application/json; charset=utf-8
+@Transfer-Encoding: chunked
+@Connection: keep-alive
+@Access-Control-Allow-Origin: *
+@Cache-Control: public, max-age=300, s-maxage=300
+@Content-Security-Policy: default-src 'self';base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+@Etag: W/"eb-w9TmYXVzVFkcJ86eF/8ifUcTmLw"
+@Expect-Ct: max-age=0
+@Referrer-Policy: no-referrer
+@Strict-Transport-Security: max-age=15552000; includeSubDomains
+@Vary: Origin, Accept-Encoding
+@X-Content-Type-Options: nosniff
+@X-Dns-Prefetch-Control: off
+@X-Download-Options: noopen
+@X-Frame-Options: SAMEORIGIN
+@X-Permitted-Cross-Domain-Policies: none
+@X-Xss-Protection: 0
+@CF-Cache-Status: MISS
+@Server: cloudflare
+@CF-RAY: 6865a466b916503c-WAW
+@alt-svc: h3-27=":443"; ma=86400, h3-28=":443"; ma=86400, h3-29=":443"; ma=86400, h3=":443"; ma=86400
+
+{
+  "data": "0x095ea7b300000000000000000000000011111112542d85b3ef69ae05771c2dccff4faa26ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "gasPrice": "1000000000",
+  "to": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+  "value": "0"
+}
