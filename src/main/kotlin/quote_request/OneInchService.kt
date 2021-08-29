@@ -73,7 +73,7 @@ class OneInchClient {
         .build()
         .create(OneInchService::class.java)
 
-    fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: Long) {
+    fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: Double) {
         val quote = expand(fromQuote, from.decimals)
         val response = oneInchService.quote(chainId, from.address, to.address, quote).execute()
         if (response.isSuccessful) {
@@ -84,7 +84,7 @@ class OneInchClient {
         }
     }
 
-    fun swap(chainId: Int, from: Token, to: Token, fromQuote: Long) {
+    fun swap(chainId: Int, from: Token, to: Token, fromQuote: Double) {
         val quote = expand(fromQuote, from.decimals)
         val response = oneInchService.swap(chainId, from.address, to.address, quote, MY_ADDRESS, MAX_SLIPPAGE).execute()
         if (response.isSuccessful) {
@@ -95,7 +95,7 @@ class OneInchClient {
         }
     }
 
-    private fun performTxIfGoodRate(chainId: Int, response: QuoteResponse, from: Token, to: Token, fromQuote: Long) {
+    private fun performTxIfGoodRate(chainId: Int, response: QuoteResponse, from: Token, to: Token, fromQuote: Double) {
         val percent = calculateAdvantage(response)
         if (percent > DEMAND_PERCENT_ADVANTAGE) {
             swap(chainId, from, to, fromQuote)
