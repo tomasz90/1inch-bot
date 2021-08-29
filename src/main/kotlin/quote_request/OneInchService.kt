@@ -2,6 +2,8 @@ package quote_request
 
 import BASE_URL
 import Config.DEMAND_PERCENT_ADVANTAGE
+import Config.MAX_SLIPPAGE
+import Config.MY_ADDRESS
 import Token
 import calculateAdvantage
 import com.fasterxml.jackson.databind.DeserializationFeature
@@ -48,9 +50,7 @@ interface OneInchService {
         @Query("slippage") slippage: Double,
         @Query("gasPrice") gasPrice: BigInteger? = null,
         @Query("allowPartialFill") allowPartialFill: Boolean? = null
-    ): Call<ApprovalResponse>
-
-
+    ): Call<SwapResponse>
 }
 
 class OneInchClient {
@@ -86,10 +86,10 @@ class OneInchClient {
 
     fun swap(chainId: Int, from: Token, to: Token, fromQuote: Long) {
         val quote = expand(fromQuote, from.decimals)
-        val response = oneInchService.quote(chainId, from.address, to.address, quote).execute()
+        val response = oneInchService.swap(chainId, from.address, to.address, quote, MY_ADDRESS, MAX_SLIPPAGE).execute()
         if (response.isSuccessful) {
-            val body = response.body()!!
-            checkOpportunity(body)
+            val tx = response.body()!!.tx
+            Sender.sendTransaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
         } else {
             getLogger().info("Error, response status: ${response.code()}")
         }

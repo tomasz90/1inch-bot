@@ -14,6 +14,7 @@ object Sender {
     private val manager = RawTransactionManager(web3, credentials, CHAIN.id.toLong())
 
     fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String) {
+        val increasedGasLimit = (gasLimit.toDouble()*1.25).toBigDecimal().toBigInteger()
 //        val gasPrice = BigInteger.valueOf(22000000000L)
 //        val gasLimit = BigInteger.valueOf(40000)
 //        val value = BigInteger.valueOf(500000000)
