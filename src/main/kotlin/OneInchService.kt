@@ -2,8 +2,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.OkHttpClient
 import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.http.GET
@@ -24,7 +22,7 @@ interface OneInchService {
 
 class Token(val name: String, val address: String)
 
-class OneInchClient() {
+class OneInchClient {
     private val mapper: ObjectMapper = ObjectMapper()
 
     init {
@@ -44,18 +42,13 @@ class OneInchClient() {
         .build()
         .create(OneInchService::class.java)
 
-    fun getQuote(chainId: Int, from: Token, to: Token, quote: String) {
-        val response = oneInchService.getQuoteOnBSC(chainId, from.address, to.address, quote.addDecimals(DECIMALS)).execute()
+    fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: String) {
+        val response = oneInchService.getQuoteOnBSC(chainId, from.address, to.address, fromQuote.addDecimals(DECIMALS)).execute()
         if (response.isSuccessful) {
-            val finalQuote = response.body()?.amountReceived?.removeDecimals(DECIMALS).toString()
-            val advantage = calculateAdvantage(quote, finalQuote)
-            var isOpportunity = ""
-            if (advantage > 0.5) {
-               isOpportunity = "Opportunity !!!"
-            }
-            getLogger()
-                .info("${from.name}: $quote, ${to.name}: $finalQuote," +
-                        "   advantage: ${String.format("%.2f", advantage)}%    $isOpportunity")
+            val toQuote = response.body()?.amountReceived?.removeDecimals(DECIMALS).toString()
+            val percent = calculateAdvantage(fromQuote, toQuote)
+            val isOpportunity = checkOpportunity(percent)
+            logRatesInfo(from, to, fromQuote, toQuote, percent, isOpportunity)
         } else {
             getLogger().info("Error, response status: ${response.code()}")
         }
