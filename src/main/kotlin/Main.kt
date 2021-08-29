@@ -1,3 +1,5 @@
+import Config.AMOUNT_TO_SELL
+import Config.CHAIN
 import kotlinx.coroutines.*
 import quote_request.OneInchClient
 import java.util.concurrent.TimeUnit
@@ -5,7 +7,7 @@ import java.util.concurrent.TimeUnit
 @DelicateCoroutinesApi
 fun main() {
 
-    val chain: Chain = MATIC
+    val chain: Chain = CHAIN
     val oneInchClient = OneInchClient()
 
     getLogger().debug("Set waiting time in sec: ")

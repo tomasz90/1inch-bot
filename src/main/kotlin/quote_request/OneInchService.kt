@@ -1,9 +1,10 @@
 package quote_request
 
 import BASE_URL
+import Config.DEMAND_PERCENT_ADVANTAGE
+import Token
 import addDecimals
 import calculateAdvantage
-import checkOpportunity
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import getLogger
@@ -77,14 +78,18 @@ class OneInchClient {
         if (response.isSuccessful) {
             val toQuote = response.body()?.amountReceived?.removeDecimals(to.decimals).toString()
             val percent = calculateAdvantage(fromQuote, toQuote)
-            val isOpportunity = checkOpportunity(percent)
-            logRatesInfo(from, to, fromQuote, toQuote, percent, isOpportunity)
+            checkOpportunity(percent)
+            logRatesInfo(from, to, fromQuote, toQuote, percent)
         } else {
             getLogger().info("Error, response status: ${response.code()}")
         }
     }
 }
 
-class Token(val name: String, val address: String, val decimals: Int)
+fun checkOpportunity(percent: Double) {
+    if (percent > DEMAND_PERCENT_ADVANTAGE) {
+
+    }
+}
 
 
