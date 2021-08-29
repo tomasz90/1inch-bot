@@ -4,42 +4,37 @@ import java.util.concurrent.TimeUnit
 @DelicateCoroutinesApi
 fun main() {
 
+    val chain: Chain = BSC
+    val oneInchClient = OneInchClient()
+
     getLogger().debug("Set waiting time in sec: ")
     val waitingTime = readLine()?.toLong()!!
-    val oneInchClient = OneInchClient()
+
     getLogger().debug("Clean log? [y/n]")
     if (readLine().equals("y")) {
         withCleanLog(true)
     }
 
-    //val GlobalScope = CoroutineScope(Dispatchers.IO)
     val handler = CoroutineExceptionHandler { _, exception ->
         getLogger().error("Error, $exception")
     }
 
     while (true) {
-        runBlocking {
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_UST, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_USDT, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_USDC, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_DAI, BSC_TUSD, AMOUNT_TO_SELL) }
-
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_DAI, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_USDT, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_USDC, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_UST, BSC_TUSD, AMOUNT_TO_SELL) }
-
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_UST, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_DAI, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_USDC, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_USDT, BSC_TUSD, AMOUNT_TO_SELL) }
-
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_DAI, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_USDT, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_USDC, AMOUNT_TO_SELL) }
-            GlobalScope.launch(handler) { oneInchClient.getQuote(BSC_TUSD, BSC_UST, AMOUNT_TO_SELL) }
-        }
+        checkRatesForEveryPair(chain, oneInchClient, handler)
         getLogger().info(WAIT_MESSAGE)
         TimeUnit.SECONDS.sleep(waitingTime)
+    }
+}
+
+@DelicateCoroutinesApi
+fun checkRatesForEveryPair(chain: Chain, oneInchClient: OneInchClient, handler: CoroutineExceptionHandler) {
+    val tokens = chain.tokens
+    tokens.forEach { token ->
+        tokens.filter { diffToken -> diffToken != token }
+            .forEach { diffToken ->
+                runBlocking {
+                    GlobalScope.launch(handler) { oneInchClient.getQuote(chain.id, token, diffToken, AMOUNT_TO_SELL) }
+                }
+            }
     }
 }

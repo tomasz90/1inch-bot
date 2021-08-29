@@ -7,13 +7,15 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 interface OneInchService {
 
-    @GET("v3.0/56/quote")
+    @GET("v3.0/{id}/quote")
     fun getQuoteOnBSC(
+        @Path("id") chainId: Int,
         @Query("fromTokenAddress") from: String,
         @Query("toTokenAddress") to: String,
         @Query("amount") amount: String
@@ -22,7 +24,7 @@ interface OneInchService {
 
 class Token(val name: String, val address: String)
 
-class OneInchClient {
+class OneInchClient() {
     private val mapper: ObjectMapper = ObjectMapper()
 
     init {
@@ -42,8 +44,8 @@ class OneInchClient {
         .build()
         .create(OneInchService::class.java)
 
-    fun getQuote(from: Token, to: Token, quote: String) {
-        val response = oneInchService.getQuoteOnBSC(from.address, to.address, quote.addDecimals(DECIMALS)).execute()
+    fun getQuote(chainId: Int, from: Token, to: Token, quote: String) {
+        val response = oneInchService.getQuoteOnBSC(chainId, from.address, to.address, quote.addDecimals(DECIMALS)).execute()
         if (response.isSuccessful) {
             val finalQuote = response.body()?.amountReceived?.removeDecimals(DECIMALS).toString()
             val advantage = calculateAdvantage(quote, finalQuote)
