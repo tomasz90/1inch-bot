@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 @DelicateCoroutinesApi
 fun main() {
 
-    val chain: Chain = BSC
+    val chain: Chain = MATIC
     val oneInchClient = OneInchClient()
 
     getLogger().debug("Set waiting time in sec: ")

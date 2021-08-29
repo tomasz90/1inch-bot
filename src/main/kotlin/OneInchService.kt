@@ -20,7 +20,7 @@ interface OneInchService {
     ): Call<OneInchResponse>
 }
 
-class Token(val name: String, val address: String)
+class Token(val name: String, val address: String, val decimals: Int)
 
 class OneInchClient {
     private val mapper: ObjectMapper = ObjectMapper()
@@ -43,9 +43,9 @@ class OneInchClient {
         .create(OneInchService::class.java)
 
     fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: String) {
-        val response = oneInchService.getQuoteOnBSC(chainId, from.address, to.address, fromQuote.addDecimals(DECIMALS)).execute()
+        val response = oneInchService.getQuoteOnBSC(chainId, from.address, to.address, fromQuote.addDecimals(from.decimals)).execute()
         if (response.isSuccessful) {
-            val toQuote = response.body()?.amountReceived?.removeDecimals(DECIMALS).toString()
+            val toQuote = response.body()?.amountReceived?.removeDecimals(to.decimals).toString()
             val percent = calculateAdvantage(fromQuote, toQuote)
             val isOpportunity = checkOpportunity(percent)
             logRatesInfo(from, to, fromQuote, toQuote, percent, isOpportunity)
