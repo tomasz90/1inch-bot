@@ -2,6 +2,7 @@ import org.apache.log4j.FileAppender
 import org.apache.log4j.LogManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import quote_request.Token
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 

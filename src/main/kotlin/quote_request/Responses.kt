@@ -1,3 +1,5 @@
+package quote_request
+
 import com.fasterxml.jackson.annotation.JsonProperty
 
 class OneInchResponse(

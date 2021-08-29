@@ -1,12 +1,10 @@
+package on_chain_tx
+
 import org.web3j.crypto.Credentials
 import org.web3j.crypto.ECKeyPair
-import org.web3j.crypto.Keys
 import org.web3j.protocol.core.JsonRpc2_0Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.RawTransactionManager
-import org.web3j.tx.Transfer
-import org.web3j.utils.Convert.Unit.ETHER
-import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.system.exitProcess
 
@@ -34,9 +32,4 @@ fun main() {
     ).transactionHash
     println(hash)
     exitProcess(0)
-//    var transactionReceipt = Transfer.sendFunds(
-//        web3, creds, "0x03de2960E4Ee13F480CDf82F8106E77622C35DB0",
-//        BigDecimal.valueOf(1.0), ETHER
-//    ).sendAsync().get()
-//    var etherReceipt = transactionReceipt.transactionHash
 }

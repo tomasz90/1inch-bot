@@ -1,6 +1,15 @@
+package quote_request
+
+import BASE_URL
+import addDecimals
+import calculateAdvantage
+import checkOpportunity
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import getLogger
+import logRatesInfo
 import okhttp3.OkHttpClient
+import removeDecimals
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory

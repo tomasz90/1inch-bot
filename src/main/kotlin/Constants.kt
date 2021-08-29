@@ -1,3 +1,4 @@
+import quote_request.Token
 
 const val BASE_URL = "https://api.1inch.exchange/"
 const val DEFAULT_DECIMALS = 18
