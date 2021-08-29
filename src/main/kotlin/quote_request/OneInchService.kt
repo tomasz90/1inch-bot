@@ -13,7 +13,9 @@ import getLogger
 import logRatesInfo
 import okhttp3.OkHttpClient
 import on_chain_tx.Sender
+import org.json.JSONObject
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import retrofit2.http.GET
@@ -80,7 +82,7 @@ class OneInchClient {
             val body = response.body()!!
             performTxIfGoodRate(chainId, body, from, to, fromQuote)
         } else {
-            getLogger().info("Error, response status: ${response.code()}, ${response.errorBody()}")
+            response.logErrorMessage("Error during quote, response status: ${response.code()}")
         }
     }
 
@@ -89,19 +91,25 @@ class OneInchClient {
         val response = oneInchService.swap(chainId, from.address, to.address, quote, MY_ADDRESS, MAX_SLIPPAGE).execute()
         if (response.isSuccessful) {
             val tx = response.body()!!.tx
+            response.errorBody()
             Sender.sendTransaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
         } else {
-            getLogger().info("Error, response status: ${response.code()}, ${response.errorBody()}")
+            response.logErrorMessage("Error during swap, response status: ${response.code()}")
         }
     }
 
     private fun performTxIfGoodRate(chainId: Int, response: QuoteResponse, from: Token, to: Token, fromQuote: Double) {
         val percent = calculateAdvantage(response)
+        logRatesInfo(response, percent)
         if (percent > DEMAND_PERCENT_ADVANTAGE) {
             swap(chainId, from, to, fromQuote)
         }
-        logRatesInfo(response, percent)
     }
+}
+
+fun <T> Response<T>.logErrorMessage(info: String) {
+    val msg = JSONObject(this.errorBody()!!.charStream().readText()).getString("message")
+    getLogger().error("$info\n $msg")
 }
 
 
