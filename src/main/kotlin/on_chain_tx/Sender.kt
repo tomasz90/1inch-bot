@@ -16,7 +16,9 @@ object Sender {
 
     fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String) {
         val increasedGasLimit = (gasLimit.toDouble()*1.25).toBigDecimal().toBigInteger()
-        val tx = manager.sendTransaction(gasPrice, increasedGasLimit, address, data, value)
+        getLogger()
+            .info("Attempt of swap, gasPrice: $gasPrice gasLimit: $gasLimit value: $value address: $address")
+        val tx = manager.sendTransaction(BigInteger.valueOf(20), BigInteger.valueOf(20), address, data, value)
         getLogger().info(tx.result)
         getLogger().info(tx.transactionHash)
     }

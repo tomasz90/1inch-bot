@@ -91,7 +91,6 @@ class OneInchClient {
         val response = oneInchService.swap(chainId, from.address, to.address, quote, MY_ADDRESS, MAX_SLIPPAGE).execute()
         if (response.isSuccessful) {
             val tx = response.body()!!.tx
-            response.errorBody()
             Sender.sendTransaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
         } else {
             response.logErrorMessage("Error during swap, response status: ${response.code()}")
