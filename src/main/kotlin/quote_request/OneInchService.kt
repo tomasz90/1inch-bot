@@ -83,6 +83,17 @@ class OneInchClient {
             getLogger().info("Error, response status: ${response.code()}")
         }
     }
+
+    fun swap(chainId: Int, from: Token, to: Token, fromQuote: Long) {
+        val quote = expand(fromQuote, from.decimals)
+        val response = oneInchService.quote(chainId, from.address, to.address, quote).execute()
+        if (response.isSuccessful) {
+            val body = response.body()!!
+            checkOpportunity(body)
+        } else {
+            getLogger().info("Error, response status: ${response.code()}")
+        }
+    }
 }
 
 fun checkOpportunity(response: QuoteResponse) {

@@ -18,6 +18,10 @@ class ApprovalResponse(
 )
 
 class SwapResponse(
+    @JsonProperty("fromTokenAmount") val fromTokenAmount: BigInteger,
+    @JsonProperty("toTokenAmount") val toTokenAmount: BigInteger,
+    @JsonProperty("fromToken") val fromToken: TokenProperties,
+    @JsonProperty("toToken") val toToken: TokenProperties,
     @JsonProperty("tx") val tx: Tx
 )
 
