@@ -32,13 +32,13 @@ fun logRatesInfo(response: QuoteResponse, percent: Float) {
         )
 }
 
+// adjusts quotes to token standard, from being more readable
 fun expand(quote: Long, decimals: Int): BigInteger {
     return BigInteger.valueOf(quote).times(BigInteger.valueOf(10L).pow(decimals))
 }
-
+// adjust quotes to be more readable
 fun cut(quote: BigInteger, decimals: Int): Long {
-    val divis = BigInteger.valueOf(10).pow(decimals)
-    return (quote/divis).toLong()
+    return (quote/BigInteger.valueOf(10).pow(decimals)).toLong()
 }
 
 
