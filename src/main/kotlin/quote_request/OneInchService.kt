@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 interface OneInchService {
 
     @GET("v3.0/{id}/quote")
-    fun getQuote(
+    fun quote(
         @Path("id") chainId: Int,
         @Query("fromTokenAddress") from: String,
         @Query("toTokenAddress") to: String,
@@ -31,10 +31,23 @@ interface OneInchService {
     @GET("v3.0/{id}/approve/calldata")
     fun approve(
         @Path("id") chainId: Int,
-        @Query("amount") amount: String? = null,
+        @Query("tokenAddress") tokenAddress: String,
         @Query("infinity") infinity: String? = null,
-        @Query("tokenAddress") tokenAddress: String
+        @Query("amount") amount: String? = null
     ): Call<ApprovalResponse>
+
+    @GET("v3.0/{id}/swap")
+    fun swap(
+        @Path("id") chainId: Int,
+        @Query("fromTokenAddress") fromTokenAddress: String,
+        @Query("toTokenAddress") toTokenAddress: String,
+        @Query("amount") amount: String,
+        @Query("fromAddress") fromAddress: String,
+        @Query("slippage") slippage: String,
+        @Query("gasPrice") gasPrice: String? = null,
+        @Query("allowPartialFill") allowPartialFill: String? = null
+    ): Call<ApprovalResponse>
+
 
 }
 
@@ -61,7 +74,8 @@ class OneInchClient {
         .create(OneInchService::class.java)
 
     fun getQuote(chainId: Int, from: Token, to: Token, fromQuote: String) {
-        val response = oneInchService.getQuote(chainId, from.address, to.address, fromQuote.addDecimals(from.decimals)).execute()
+        val response =
+            oneInchService.quote(chainId, from.address, to.address, fromQuote.addDecimals(from.decimals)).execute()
         if (response.isSuccessful) {
             val toQuote = response.body()?.amountReceived?.removeDecimals(to.decimals).toString()
             val percent = calculateAdvantage(fromQuote, toQuote)
