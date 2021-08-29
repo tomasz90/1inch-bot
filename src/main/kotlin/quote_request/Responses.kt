@@ -36,5 +36,6 @@ class Tx(
 
 class TokenProperties(
     @JsonProperty("symbol") val symbol: String,
-    @JsonProperty("decimals") val decimals: Int
+    @JsonProperty("decimals") val decimals: Int,
+    @JsonProperty("address") val address: String
 )

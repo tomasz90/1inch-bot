@@ -78,9 +78,9 @@ class OneInchClient {
         val response = oneInchService.quote(chainId, from.address, to.address, quote).execute()
         if (response.isSuccessful) {
             val body = response.body()!!
-            checkOpportunity(body)
+            performTxIfGoodRate(chainId, body, from, to, fromQuote)
         } else {
-            getLogger().info("Error, response status: ${response.code()}")
+            getLogger().info("Error, response status: ${response.code()}, ${response.errorBody()}")
         }
     }
 
@@ -91,18 +91,17 @@ class OneInchClient {
             val tx = response.body()!!.tx
             Sender.sendTransaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
         } else {
-            getLogger().info("Error, response status: ${response.code()}")
+            getLogger().info("Error, response status: ${response.code()}, ${response.errorBody()}")
         }
     }
-}
 
-fun checkOpportunity(response: QuoteResponse) {
-    val percent = calculateAdvantage(response)
-
-    if (percent > DEMAND_PERCENT_ADVANTAGE) {
-
+    private fun performTxIfGoodRate(chainId: Int, response: QuoteResponse, from: Token, to: Token, fromQuote: Long) {
+        val percent = calculateAdvantage(response)
+        if (percent > DEMAND_PERCENT_ADVANTAGE) {
+            swap(chainId, from, to, fromQuote)
+        }
+        logRatesInfo(response, percent)
     }
-    logRatesInfo(response, percent)
 }
 
 
