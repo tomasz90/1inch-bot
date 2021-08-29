@@ -1,6 +1,7 @@
 import quote_request.Token
 
 const val BASE_URL = "https://api.1inch.exchange/"
+const val MATIC_RPC_URL = "***REMOVED***"
 const val DEFAULT_DECIMALS = 18
 
 val BSC_DAI = Token("BSC_DAI", "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3", DEFAULT_DECIMALS)
