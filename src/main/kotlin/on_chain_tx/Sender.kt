@@ -8,10 +8,10 @@ import java.math.BigInteger
 
 object Sender {
 
-    val web3service = HttpService(CHAIN.rpc)
-    val web3 = JsonRpc2_0Web3j(web3service)
-    val credentials = WalletManager().openWallet()
-    val manager = RawTransactionManager(web3, credentials, CHAIN.id.toLong())
+    private val web3service = HttpService(CHAIN.rpc)
+    private val web3 = JsonRpc2_0Web3j(web3service)
+    private val credentials = WalletManager().openWallet()
+    private val manager = RawTransactionManager(web3, credentials, CHAIN.id.toLong())
 
     fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String) {
 //        val gasPrice = BigInteger.valueOf(22000000000L)
