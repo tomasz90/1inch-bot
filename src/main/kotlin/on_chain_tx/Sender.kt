@@ -21,11 +21,3 @@ object Sender {
         getLogger().info("TxHash: ${tx.transactionHash}")
     }
 }
-
-fun main() {
-    val hash = Sender.sendTransaction(BigInteger.valueOf(5000000000),
-        BigInteger.valueOf(21000),
-        BigInteger.valueOf(10000),
-    "0x957f3EdBE93Cfcdc3224230a06a4F30fCF9D9b34",
-    "0x")
-}
