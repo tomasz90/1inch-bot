@@ -10,13 +10,13 @@ fun main() {
     val chain: Chain = CHAIN
     val oneInchClient = OneInchClient()
 
-    getLogger().debug("Set waiting time in sec: ")
-    val waitingTime = readLine()?.toLong()!!
-
-    getLogger().debug("Clean log? [y/n]")
-    if (readLine().equals("y")) {
-        withCleanLog(true)
-    }
+//    getLogger().debug("Set waiting time in sec: ")
+//    val waitingTime = readLine()?.toLong()!!
+//
+//    getLogger().debug("Clean log? [y/n]")
+//    if (readLine().equals("y")) {
+//        withCleanLog(true)
+//    }
 
     val handler = CoroutineExceptionHandler { _, exception ->
         getLogger().error("Error, $exception")
@@ -25,7 +25,7 @@ fun main() {
     while (true) {
         checkRatesForEveryPair(chain, oneInchClient, handler)
         getLogger().info(WAIT_MESSAGE)
-        TimeUnit.SECONDS.sleep(waitingTime)
+        TimeUnit.SECONDS.sleep(10)
     }
 }
 

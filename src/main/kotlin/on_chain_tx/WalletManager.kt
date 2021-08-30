@@ -21,8 +21,8 @@ class WalletManager {
         if (files.isEmpty()) {
             throw Exception("There is no keystore..")
         }
-        getLogger().debug("Enter password to keystore:")
-        val password = (System.console()?.readPassword() ?: readLine()).toString()
-        return WalletUtils.loadCredentials(password, files[0])
+//        getLogger().debug("Enter password to keystore:")
+//        val password = (System.console()?.readPassword() ?: readLine()).toString()
+        return WalletUtils.loadCredentials("***REMOVED***", files[0])
     }
 }
