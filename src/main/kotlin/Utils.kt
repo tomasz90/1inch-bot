@@ -16,31 +16,17 @@ fun withCleanLog(boolean: Boolean) {
     }
 }
 
-fun calculateAdvantage(response: QuoteResponse): Float {
-    val fromFloat = cut(response.fromTokenAmount, response.fromToken.decimals)
-    val toFloat = cut(response.toTokenAmount, response.toToken.decimals)
-    return (toFloat - fromFloat) / fromFloat * 100
+fun calculateAdvantage(from: Amount, to: Amount): Double {
+    return (to.readable!! - from.readable!!) / from.readable!! * 100
 }
 
-fun logRatesInfo(response: QuoteResponse, percent: Float) {
-    val fromDec = cut(response.fromTokenAmount, response.fromToken.decimals)
-    val toDec = cut(response.toTokenAmount, response.toToken.decimals)
-    getLogger()
-        .info(
-            "${response.fromToken.symbol}: ${fromDec.precision()}, ${response.toToken.symbol}: ${toDec.precision()}," +
-                    "   advantage: ${percent.precision(2)}"
-        )
+fun logRatesInfo(response: QuoteResponse, percent: Double, from: Amount, to: Amount) {
+    getLogger().info(
+        "${response.fromToken.symbol}: ${from.readable!!.precision()}, " +
+                "${response.toToken.symbol}: ${to.readable!!.precision()},  advantage: ${percent.precision(2)}"
+    )
 }
 
-// adjusts quotes to token standard, from being more readable
-fun expand(quote: Double, decimals: Int): BigInteger {
-    return BigDecimal.valueOf(quote).multiply(BigInteger.valueOf(10L).pow(decimals).toBigDecimal()).toBigInteger()
-}
-// adjust quotes to be more readable
-fun cut(quote: BigInteger, decimals: Int): Float {
-    return quote.toFloat()/(BigInteger.valueOf(10).pow(decimals)).toFloat()
-}
-
-fun Float.precision(int: Int = LOG_DECIMAL_PRECISION) = String.format("%.${int}f", this)
+fun Double.precision(int: Int = LOG_DECIMAL_PRECISION) = String.format("%.${int}f", this)
 
 

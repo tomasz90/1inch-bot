@@ -11,6 +11,7 @@ class Amount private constructor(private val decimals: Int, var origin: BigInteg
     }
 
     constructor(origin: BigInteger, decimals: Int) : this(decimals, origin, null) {
+        multiplication = calcMultiply()
         readable = calcReadable()
     }
 
@@ -24,6 +25,6 @@ class Amount private constructor(private val decimals: Int, var origin: BigInteg
 
     private fun calcReadable(): Double {
         val bigDec = origin!!.toBigDecimal()
-        return (bigDec/multiplication).toDouble()
+        return bigDec.divide(multiplication).toDouble()
     }
 }
