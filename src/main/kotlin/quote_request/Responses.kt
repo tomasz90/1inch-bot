@@ -3,20 +3,6 @@ package quote_request
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.math.BigInteger
 
-class QuoteResponse(
-    @JsonProperty("fromTokenAmount") val fromTokenAmount: BigInteger,
-    @JsonProperty("toTokenAmount") val toTokenAmount: BigInteger,
-    @JsonProperty("fromToken") val fromToken: TokenProperties,
-    @JsonProperty("toToken") val toToken: TokenProperties
-)
-
-class ApprovalResponse(
-    @JsonProperty("data") val data: String,
-    @JsonProperty("value") val value: BigInteger,
-    @JsonProperty("gasPrice") val gasPrice: BigInteger,
-    @JsonProperty("to") val to: String
-)
-
 class SwapResponse(
     @JsonProperty("fromTokenAmount") val fromTokenAmount: BigInteger,
     @JsonProperty("toTokenAmount") val toTokenAmount: BigInteger,
