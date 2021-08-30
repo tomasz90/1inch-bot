@@ -3,9 +3,7 @@ import org.apache.log4j.FileAppender
 import org.apache.log4j.LogManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import quote_request.QuoteResponse
-import java.math.BigDecimal
-import java.math.BigInteger
+import quote_request.SwapResponse
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 
@@ -20,7 +18,7 @@ fun calculateAdvantage(from: Amount, to: Amount): Double {
     return (to.readable!! - from.readable!!) / from.readable!! * 100
 }
 
-fun logRatesInfo(response: QuoteResponse, percent: Double, from: Amount, to: Amount) {
+fun logRatesInfo(response: SwapResponse, percent: Double, from: Amount, to: Amount) {
     getLogger().info(
         "${response.fromToken.symbol}: ${from.readable!!.precision()}, " +
                 "${response.toToken.symbol}: ${to.readable!!.precision()},  advantage: ${percent.precision(2)}"

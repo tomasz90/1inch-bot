@@ -16,10 +16,9 @@ object Sender {
 
     fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String) {
         val increasedGasLimit = (gasLimit.toDouble()*1.25).toBigDecimal().toBigInteger()
-        getLogger().info("Swapping, gasPrice: $gasPrice gasLimit: $gasLimit value: $value")
-        val tx = manager.sendTransaction(gasPrice, gasLimit, address, data, value)
-        getLogger().info(tx.result)
-        getLogger().info(tx.transactionHash)
+        getLogger().info("Swapping, gasPrice: $gasPrice gasLimit: $increasedGasLimit")
+        val tx = manager.sendTransaction(gasPrice, increasedGasLimit, address, data, value)
+        getLogger().info("TxHash: ${tx.transactionHash}")
     }
 }
 
@@ -29,6 +28,4 @@ fun main() {
         BigInteger.valueOf(10000),
     "0x957f3EdBE93Cfcdc3224230a06a4F30fCF9D9b34",
     "0x")
-
-    println(hash)
 }

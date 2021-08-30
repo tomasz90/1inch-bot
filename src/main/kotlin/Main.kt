@@ -37,7 +37,7 @@ fun checkRatesForEveryPair(chain: Chain, oneInchClient: OneInchClient, handler: 
             .forEach { diffToken ->
                 runBlocking {
                     val amount = Amount(AMOUNT_TO_SELL, token.decimals)
-                    GlobalScope.launch(handler) { oneInchClient.getQuote(chain.id, token.address, diffToken.address, amount) }
+                    GlobalScope.launch(handler) { oneInchClient.swap(chain.id, token.address, diffToken.address, amount) }
                 }
             }
     }
