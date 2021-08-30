@@ -33,7 +33,7 @@ fun logRatesInfo(response: QuoteResponse, percent: Float) {
 }
 
 // adjusts quotes to token standard, from being more readable
-fun expand(quote: Double, decimals: Int): BigInteger {6
+fun expand(quote: Double, decimals: Int): BigInteger {
     return BigDecimal.valueOf(quote).multiply(BigInteger.valueOf(10L).pow(decimals).toBigDecimal()).toBigInteger()
 }
 // adjust quotes to be more readable

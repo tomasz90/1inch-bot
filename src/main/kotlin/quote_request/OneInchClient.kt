@@ -12,6 +12,8 @@ import logRatesInfo
 import on_chain_tx.Sender
 import org.json.JSONObject
 import retrofit2.Response
+import java.math.BigDecimal
+import java.math.BigInteger
 
 class OneInchClient {
 
@@ -30,7 +32,12 @@ class OneInchClient {
         val quote = expand(fromQuote, from.decimals)
         val response = ONE_INCH_API.swap(chainId, from.address, to.address, quote, MY_ADDRESS, MAX_SLIPPAGE).execute()
         if (response.isSuccessful) {
-            val tx = response.body()!!.tx
+            val body = response.body()!!
+            val tx = body.tx
+            getLogger().info(
+                "SWAP: fromToken ${body.fromToken}, toToken: ${body.toToken}, " +
+                        "fromAmount: ${body.fromTokenAmount}, toAmount: ${body.toTokenAmount}"
+            )
             Sender.sendTransaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
         } else {
             response.logErrorMessage("Error during swap, response status: ${response.code()}")
@@ -41,6 +48,7 @@ class OneInchClient {
         val percent = calculateAdvantage(response)
         logRatesInfo(response, percent)
         if (percent > DEMAND_PERCENT_ADVANTAGE) {
+            getLogger().info("\n\nSwap attempt, advantage: $percent")
             swap(chainId, from, to, fromQuote)
         }
     }
