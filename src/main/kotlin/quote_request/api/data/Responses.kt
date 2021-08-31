@@ -1,39 +1,22 @@
-package quote_request
+package quote_request.api.data
 
-import Token
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.math.BigInteger
-
-interface SwapQuoteResponse {
-    var from: Token
-    var to: Token
-    var tx: Tx?
-}
 
 class QuoteResponse(
     @JsonProperty("fromTokenAmount") val fromTokenAmount: BigInteger,
     @JsonProperty("toTokenAmount") val toTokenAmount: BigInteger,
     @JsonProperty("fromToken") val fromToken: TokenProperties,
     @JsonProperty("toToken") val toToken: TokenProperties
-) : SwapQuoteResponse {
-    override var from = Token(fromToken.symbol, fromToken.address, fromToken.decimals, fromTokenAmount)
-    override var to = Token(toToken.symbol, toToken.address, toToken.decimals, toTokenAmount)
-    override var tx: Tx? = null
-}
+)
 
 class SwapResponse(
     @JsonProperty("fromTokenAmount") val fromTokenAmount: BigInteger,
     @JsonProperty("toTokenAmount") val toTokenAmount: BigInteger,
     @JsonProperty("fromToken") val fromToken: TokenProperties,
     @JsonProperty("toToken") val toToken: TokenProperties,
-    @JsonProperty("tx") override var tx: Tx?
-) : SwapQuoteResponse {
-    init {
-        if (tx == null) throw KotlinNullPointerException("Response doesn't contain tx.")
-    }
-    override var from = Token(fromToken.symbol, fromToken.address, fromToken.decimals, fromTokenAmount)
-    override var to = Token(toToken.symbol, toToken.address, toToken.decimals, toTokenAmount)
-}
+    @JsonProperty("tx") val tx: Tx
+)
 
 class Tx(
     @JsonProperty("from") val from: String,
@@ -49,3 +32,16 @@ class TokenProperties(
     @JsonProperty("decimals") val decimals: Int,
     @JsonProperty("address") val address: String
 )
+
+fun QuoteResponse.toDto(): QuoteDto {
+    val from = Token(fromToken.symbol, fromToken.address, fromToken.decimals, fromTokenAmount)
+    val to = Token(toToken.symbol, toToken.address, toToken.decimals, toTokenAmount)
+    return QuoteDto(from, to)
+}
+
+fun SwapResponse.toDto(): SwapDto {
+    val from = Token(fromToken.symbol, fromToken.address, fromToken.decimals, fromTokenAmount)
+    val to = Token(toToken.symbol, toToken.address, toToken.decimals, toTokenAmount)
+    val tx = this.tx
+    return SwapDto(from, to, tx)
+}

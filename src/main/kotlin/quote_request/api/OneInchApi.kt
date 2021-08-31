@@ -1,5 +1,7 @@
-package quote_request
+package quote_request.api
 
+import quote_request.api.data.QuoteResponse
+import quote_request.api.data.SwapResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
