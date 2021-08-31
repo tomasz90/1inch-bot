@@ -1,4 +1,4 @@
-package quote_request.api
+package com.one_inch.quote_request.api
 
 import BASE_URL
 import com.fasterxml.jackson.databind.DeserializationFeature

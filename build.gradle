@@ -15,16 +15,19 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1'
-    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'org.slf4j:slf4j-log4j12:1.7.32'
     implementation 'org.web3j:core:4.8.7'
     implementation 'org.web3j:contracts:4.8.7'
     implementation 'org.json:json:20210307'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation ('org.springframework.boot:spring-boot-starter:2.5.4') {
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+    }
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.5'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
 }
 
@@ -33,11 +36,11 @@ test {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "14"
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "14"
 }
 
 application {

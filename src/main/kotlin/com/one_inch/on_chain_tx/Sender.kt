@@ -1,25 +1,24 @@
-package on_chain_tx
+package com.one_inch.on_chain_tx
 
-import Config.CHAIN
-import Config.INCREASED_GAS_LIMIT
+import com.one_inch.Config.INCREASED_GAS_LIMIT
 import getLogger
-import org.web3j.protocol.core.JsonRpc2_0Web3j
-import org.web3j.protocol.http.HttpService
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.cancel
+import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
 
-class Sender {
+@Component
+class Sender(private val rawTransactionManager: RawTransactionManager) {
 
-    private val web3service = HttpService(CHAIN.rpc)
-    private val web3j = JsonRpc2_0Web3j(web3service)
-    private val credentials = WalletManager().openWallet()
-    private val manager = RawTransactionManager(web3j, credentials, CHAIN.id.toLong())
-
+    @DelicateCoroutinesApi
     fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String) {
         val increasedGasLimit = increaseGasLimit(gasLimit)
         getLogger().info("Swapping, gasPrice: $gasPrice gasLimit: $increasedGasLimit")
-        val tx = manager.sendTransaction(gasPrice, increasedGasLimit, address, data, value)
+        val tx = rawTransactionManager.sendTransaction(gasPrice, increasedGasLimit, address, data, value)
         getLogger().info("TxHash: ${tx.transactionHash}")
+        GlobalScope.cancel("")
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {

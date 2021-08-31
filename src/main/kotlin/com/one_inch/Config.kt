@@ -1,4 +1,7 @@
-import common.Chain
+package com.one_inch
+
+import MATIC
+import com.one_inch.common.Chain
 
 object Config {
 
