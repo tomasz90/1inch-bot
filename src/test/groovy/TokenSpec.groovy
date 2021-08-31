@@ -1,12 +1,17 @@
 import spock.lang.Specification
 
-class AmountSpec extends Specification {
+class TokenSpec extends Specification {
+
+    def symbol = "USDC"
+    def address = "0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E"
 
     def "should convert readable to origin"(double readable, int decimals, BigInteger origin) {
         given:
-            def amount = new Amount(readable, decimals)
-        expect:
-            amount.origin == origin
+            def token = new Token(symbol, address, decimals)
+        when:
+            token.setQuote(readable)
+        then:
+            token.origin == origin
         where:
             readable  | decimals || origin
             0.00002   | 18        | new BigInteger("20000000000000")
@@ -17,12 +22,12 @@ class AmountSpec extends Specification {
 
     def "should convert origin to readable"(BigInteger origin, int decimals, double readable) {
         given:
-            def amount = new Amount(origin, decimals)
+            def token = new Token(symbol, address, decimals, origin)
         expect:
-            amount.readable == readable
+            token.readable == readable
         where:
             origin                                     | decimals || readable
-            new BigInteger("1")                        | 18       || 9
+            new BigInteger("1")                        | 18       || 0.000000000000000001
             new BigInteger("1000000")                  | 6        || 1.0
             new BigInteger("200000000000000")          | 9        || 200000
             new BigInteger("300000000000000000000000") | 18       || 300000.00
