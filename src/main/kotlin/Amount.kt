@@ -1,16 +1,21 @@
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.properties.Delegates
 
-class Amount private constructor(private val decimals: Int, var origin: BigInteger?, var readable: Double?) {
+class Amount private constructor(private val decimals: Int) {
 
-    lateinit var multiplication: BigDecimal
+    lateinit var origin: BigInteger
+    var readable by Delegates.notNull<Double>()
+    private lateinit var multiplication: BigDecimal
 
-    constructor(readable: Double, decimals: Int) : this(decimals, null, readable) {
+    constructor(readable: Double, decimals: Int) : this(decimals) {
+        this.readable = readable
         multiplication = calcMultiply()
         origin = calcOrigin()
     }
 
-    constructor(origin: BigInteger, decimals: Int) : this(decimals, origin, null) {
+    constructor(origin: BigInteger, decimals: Int) : this(decimals) {
+        this.origin = origin
         multiplication = calcMultiply()
         readable = calcReadable()
     }
@@ -19,12 +24,12 @@ class Amount private constructor(private val decimals: Int, var origin: BigInteg
 
 
     private fun calcOrigin(): BigInteger {
-        val bigDec = readable!!.toBigDecimal()
+        val bigDec = readable.toBigDecimal()
         return bigDec.multiply(multiplication).toBigInteger()
     }
 
     private fun calcReadable(): Double {
-        val bigDec = origin!!.toBigDecimal()
+        val bigDec = origin.toBigDecimal()
         return bigDec.divide(multiplication).toDouble()
     }
 }
