@@ -25,7 +25,7 @@ fun main() {
     while (true) {
         checkRatesForEveryPair(chain, oneInchClient, handler)
         getLogger().info(WAIT_MESSAGE)
-        TimeUnit.SECONDS.sleep(10)
+        TimeUnit.SECONDS.sleep(5)
     }
 }
 
@@ -36,8 +36,8 @@ fun checkRatesForEveryPair(chain: Chain, oneInchClient: OneInchClient, handler: 
         tokens.filter { diffToken -> diffToken != token }
             .forEach { diffToken ->
                 runBlocking {
-                    val amount = Amount(AMOUNT_TO_SELL, token.decimals)
-                    GlobalScope.launch(handler) { oneInchClient.swap(chain.id, token.address, diffToken.address, amount) }
+                    token.setQuote(AMOUNT_TO_SELL)
+                    GlobalScope.launch(handler) { oneInchClient.getQuote(chain.id, token, diffToken) }
                 }
             }
     }
