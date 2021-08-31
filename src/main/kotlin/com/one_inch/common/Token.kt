@@ -34,5 +34,3 @@ open class Token constructor(val symbol: String, val address: String, private va
         this.origin = calcOrigin()
     }
 }
-
-class Chain(val id: Int, val tokens: List<Token>, val rpc: String)

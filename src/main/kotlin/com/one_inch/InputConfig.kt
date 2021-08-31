@@ -3,7 +3,7 @@ package com.one_inch
 import MATIC
 import com.one_inch.common.Chain
 
-object Config {
+object InputConfig {
 
     val CHAIN: Chain = MATIC
     const val TEST_MODE = true

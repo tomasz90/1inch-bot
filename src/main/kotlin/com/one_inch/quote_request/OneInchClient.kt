@@ -1,8 +1,8 @@
 package com.one_inch.quote_request
 
-import com.one_inch.Config.DEMAND_PERCENT_ADVANTAGE
-import com.one_inch.Config.MAX_SLIPPAGE
-import com.one_inch.Config.MY_ADDRESS
+import com.one_inch.InputConfig.DEMAND_PERCENT_ADVANTAGE
+import com.one_inch.InputConfig.MAX_SLIPPAGE
+import com.one_inch.InputConfig.MY_ADDRESS
 import getLogger
 import logRatesInfo
 import logSwapInfo
@@ -13,7 +13,6 @@ import com.one_inch.quote_request.api.data.SwapDto
 import com.one_inch.quote_request.api.data.Token
 import com.one_inch.quote_request.api.data.TokenQuote
 import com.one_inch.quote_request.api.data.toDto
-import kotlinx.coroutines.DelicateCoroutinesApi
 import org.springframework.stereotype.Component
 import retrofit2.Response
 

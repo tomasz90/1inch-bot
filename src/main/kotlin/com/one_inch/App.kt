@@ -20,7 +20,7 @@ open class DemoApplication: CommandLineRunner {
 
     @DelicateCoroutinesApi
     override fun run(vararg args: String?) {
-        val chain: Chain = Config.CHAIN
+        val chain: Chain = InputConfig.CHAIN
 
 //    getLogger().debug("Set waiting time in sec: ")
 //    val waitingTime = readLine()?.toLong()!!
@@ -54,7 +54,7 @@ fun checkRatesForEveryPair(chain: Chain, oneInchClient: OneInchClient, handler: 
         tokens.filter { diffToken -> diffToken != token }
             .forEach { diffToken ->
                 runBlocking {
-                    val tokenQuote = TokenQuote(token, Config.AMOUNT_TO_SELL)
+                    val tokenQuote = TokenQuote(token, InputConfig.AMOUNT_TO_SELL)
                     GlobalScope.launch(handler) { oneInchClient.getQuote(chain.id, tokenQuote, diffToken) }
                 }
             }
