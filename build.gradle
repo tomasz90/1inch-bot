@@ -48,5 +48,6 @@ tasks.jar {
     }
     configurations["compileClasspath"].forEach { File file ->
         from(zipTree(file.absoluteFile))
+        exclude 'META-INF', 'META-INF/**'
     }
 }
