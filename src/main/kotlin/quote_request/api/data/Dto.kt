@@ -5,35 +5,36 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.properties.Delegates
 
-class QuoteDto(val from: Token, val to: Token) {
+class QuoteDto(val from: TokenQuote, val to: TokenQuote) {
     val percentage = calculateAdvantage(from, to)
 }
 
-class SwapDto(val from: Token, val to: Token, val tx: Tx) {
+class SwapDto(val from: TokenQuote, val to: TokenQuote, val tx: Tx) {
     val percentage = calculateAdvantage(from, to)
 }
 
-class Token constructor(val symbol: String, val address: String, private val decimals: Int) {
+class Token(val symbol: String, val address: String, val decimals: Int)
 
-    var readable by Delegates.notNull<Double>()
-    lateinit var origin: BigInteger
-    private var multiplication: BigDecimal
+class TokenQuote private constructor(val token: Token) {
 
-    init {
-        multiplication = calcMultiply()
-    }
-
-    constructor(symbol: String, address: String, decimals: Int, origin: BigInteger) : this(symbol, address, decimals) {
+    constructor(token: Token, origin: BigInteger) : this(token) {
         this.origin = origin
+        this.multiplication = calcMultiply()
         this.readable = calcReadable()
     }
 
-    fun setQuote(readable: Double) {
+    constructor(token: Token, readable: Double) : this(token) {
         this.readable = readable
+        this.multiplication = calcMultiply()
         this.origin = calcOrigin()
+
     }
 
-    private fun calcMultiply() = BigDecimal.valueOf(10L).pow(decimals)
+    var readable by Delegates.notNull<Double>()
+    lateinit var origin: BigInteger
+    private lateinit var multiplication: BigDecimal
+
+    private fun calcMultiply() = BigDecimal.valueOf(10L).pow(token.decimals)
 
     private fun calcOrigin(): BigInteger {
         val bigDec = readable.toBigDecimal()

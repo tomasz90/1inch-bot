@@ -1,6 +1,8 @@
+import quote_request.api.data.Token
+import quote_request.api.data.TokenQuote
 import spock.lang.Specification
 
-class TokenSpec extends Specification {
+class TokenQuoteSpec extends Specification {
 
     def symbol = "USDC"
     def address = "0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E"
@@ -8,10 +10,9 @@ class TokenSpec extends Specification {
     def "should convert readable to origin"(double readable, int decimals, BigInteger origin) {
         given:
             def token = new Token(symbol, address, decimals)
-        when:
-            token.setQuote(readable)
-        then:
-            token.origin == origin
+            def tokenQuote = new TokenQuote(token, readable)
+        expect:
+            tokenQuote.origin == origin
         where:
             readable  | decimals || origin
             0.00002   | 18        | new BigInteger("20000000000000")
@@ -22,9 +23,10 @@ class TokenSpec extends Specification {
 
     def "should convert origin to readable"(BigInteger origin, int decimals, double readable) {
         given:
-            def token = new Token(symbol, address, decimals, origin)
+            def token = new Token(symbol, address, decimals)
+            def tokenQuote = new TokenQuote(token, origin)
         expect:
-            token.readable == readable
+            tokenQuote.readable == readable
         where:
             origin                                     | decimals || readable
             new BigInteger("1")                        | 18       || 0.000000000000000001

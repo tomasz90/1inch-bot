@@ -13,7 +13,7 @@ class BalanceProvider(private val web3j: Web3j, private val address: String) {
         return web3j.ethGetBalance(address, LATEST).send().balance
     }
 
-    fun getBalance(erc20Address: String): BigInteger {
+    fun getERC20Balance(erc20Address: String): BigInteger {
         val txManager = ClientTransactionManager(web3j, address)
         val contract = load(erc20Address, web3j, txManager, DefaultGasProvider())
         return contract.balanceOf(address).send()

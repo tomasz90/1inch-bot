@@ -10,16 +10,17 @@ import on_chain_tx.Sender
 import org.json.JSONObject
 import quote_request.api.ApiConfig.ONE_INCH_API
 import quote_request.api.data.SwapDto
-import quote_request.api.data.SwapResponse
 import quote_request.api.data.Token
+import quote_request.api.data.TokenQuote
 import quote_request.api.data.toDto
 import retrofit2.Response
-import kotlin.reflect.typeOf
 
 class OneInchClient {
 
-    fun getQuote(chainId: Int, from: Token, to: Token) {
-        val response = ONE_INCH_API.quote(chainId, from.address, to.address, from.origin).execute()
+    private val sender = Sender()
+
+    fun getQuote(chainId: Int, from: TokenQuote, to: Token) {
+        val response = ONE_INCH_API.quote(chainId, from.token.address, to.address, from.origin).execute()
         if (response.isSuccessful) {
             val dto = response.body()!!.toDto()
             logRatesInfo(dto.from, dto.to, dto.percentage)
@@ -28,9 +29,9 @@ class OneInchClient {
         }
     }
 
-    fun swap(chainId: Int, from: Token, to: Token) {
+    fun swap(chainId: Int, from: TokenQuote, to: Token) {
         val response =
-            ONE_INCH_API.swap(chainId, from.address, to.address, from.origin, MY_ADDRESS, MAX_SLIPPAGE).execute()
+            ONE_INCH_API.swap(chainId, from.token.address, to.address, from.origin, MY_ADDRESS, MAX_SLIPPAGE).execute()
         if (response.isSuccessful) {
             val dto = response.body()!!.toDto()
             logRatesInfo(dto.from, dto.to, dto.percentage)
@@ -44,7 +45,7 @@ class OneInchClient {
         if (dto.percentage > DEMAND_PERCENT_ADVANTAGE) {
             logSwapInfo(dto.from, dto.to)
             val tx = dto.tx
-            Sender().sendTransaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
+            sender.sendTransaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
         }
     }
 }

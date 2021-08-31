@@ -1,7 +1,9 @@
 import Config.AMOUNT_TO_SELL
 import Config.CHAIN
+import common.Chain
 import kotlinx.coroutines.*
 import quote_request.OneInchClient
+import quote_request.api.data.TokenQuote
 import java.util.concurrent.TimeUnit
 
 @DelicateCoroutinesApi
@@ -36,8 +38,8 @@ fun checkRatesForEveryPair(chain: Chain, oneInchClient: OneInchClient, handler: 
         tokens.filter { diffToken -> diffToken != token }
             .forEach { diffToken ->
                 runBlocking {
-                    token.setQuote(AMOUNT_TO_SELL)
-                    GlobalScope.launch(handler) { oneInchClient.getQuote(chain.id, token, diffToken) }
+                    val tokenQuote = TokenQuote(token, AMOUNT_TO_SELL)
+                    GlobalScope.launch(handler) { oneInchClient.getQuote(chain.id, tokenQuote, diffToken) }
                 }
             }
     }

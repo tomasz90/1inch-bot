@@ -1,3 +1,5 @@
+import common.Chain
+
 object Config {
 
     val CHAIN: Chain = MATIC

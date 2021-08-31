@@ -34,14 +34,14 @@ class TokenProperties(
 )
 
 fun QuoteResponse.toDto(): QuoteDto {
-    val from = Token(fromToken.symbol, fromToken.address, fromToken.decimals, fromTokenAmount)
-    val to = Token(toToken.symbol, toToken.address, toToken.decimals, toTokenAmount)
+    val from = TokenQuote(Token(fromToken.symbol, fromToken.address, fromToken.decimals), fromTokenAmount)
+    val to = TokenQuote(Token(toToken.symbol, toToken.address, toToken.decimals), toTokenAmount)
     return QuoteDto(from, to)
 }
 
 fun SwapResponse.toDto(): SwapDto {
-    val from = Token(fromToken.symbol, fromToken.address, fromToken.decimals, fromTokenAmount)
-    val to = Token(toToken.symbol, toToken.address, toToken.decimals, toTokenAmount)
+    val from = TokenQuote(Token(fromToken.symbol, fromToken.address, fromToken.decimals), fromTokenAmount)
+    val to = TokenQuote(Token(toToken.symbol, toToken.address, toToken.decimals), toTokenAmount)
     val tx = this.tx
     return SwapDto(from, to, tx)
 }
