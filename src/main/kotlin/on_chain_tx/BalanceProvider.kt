@@ -7,7 +7,18 @@ import org.web3j.tx.ClientTransactionManager
 import org.web3j.tx.gas.DefaultGasProvider
 import java.math.BigInteger
 
-class BalanceProvider(private val web3j: Web3j, private val address: String) {
+interface IBalanceProvider{
+
+    fun getAllERC20Balance()
+}
+
+class FakeBalanceProvider() : IBalanceProvider {
+    override fun getAllERC20Balance() {
+        TODO("Not yet implemented")
+    }
+}
+
+class BalanceProvider(private val web3j: Web3j, private val address: String) : IBalanceProvider {
 
     fun getBalance(): BigInteger {
         return web3j.ethGetBalance(address, LATEST).send().balance
@@ -17,5 +28,9 @@ class BalanceProvider(private val web3j: Web3j, private val address: String) {
         val txManager = ClientTransactionManager(web3j, address)
         val contract = load(erc20Address, web3j, txManager, DefaultGasProvider())
         return contract.balanceOf(address).send()
+    }
+
+    override fun getAllERC20Balance() {
+        TODO("Not yet implemented")
     }
 }
