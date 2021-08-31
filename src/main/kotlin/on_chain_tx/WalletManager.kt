@@ -35,8 +35,3 @@ class WalletManager {
         return WalletUtils.loadCredentials("abc", files[0])
     }
 }
-
-fun main() {
-
-println(WalletManager().generateMnemonic())
-}

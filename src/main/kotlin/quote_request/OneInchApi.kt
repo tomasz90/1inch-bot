@@ -16,14 +16,6 @@ interface OneInchApi {
         @Query("amount") amount: BigInteger
     ): Call<QuoteResponse>
 
-    @GET("v3.0/{id}/approve/calldata")
-    fun approve(
-        @Path("id") chainId: Int,
-        @Query("tokenAddress") tokenAddress: String,
-        @Query("infinity") infinity: Boolean? = null,
-        @Query("amount") amount: BigInteger? = null
-    ): Call<ApprovalResponse>
-
     @GET("v3.0/{id}/swap")
     fun swap(
         @Path("id") chainId: Int,

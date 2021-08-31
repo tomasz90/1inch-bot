@@ -3,6 +3,7 @@ const val BASE_URL = "https://api.1inch.exchange/"
 const val MATIC_RPC_URL = "***REMOVED***"
 const val BSC_RPC_URL = "https://bsc-dataseed.binance.org/"
 const val DEFAULT_DECIMALS = 18
+const val WAIT_MESSAGE = "\n---------------- WAIT ----------------"
 
 val BSC_DAI = Token("BSC_DAI", "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3", DEFAULT_DECIMALS)
 val BSC_UST = Token("BSC_UST", "0x23396cf899ca06c4472205fc903bdb4de249d6fc", DEFAULT_DECIMALS)
@@ -15,9 +16,5 @@ val MATIC_UST = Token("MATIC_UST", "0x692597b009d13c4049a947cab2239b7d6517875f",
 val MATIC_USDC = Token("MATIC_USDC", "0x2791bca1f2de4661ed88a30c99a7a9449aa84174", 6)
 val MATIC_USDT= Token("MATIC_USDT", "0xc2132d05d31c914a87c6611c10748aeb04b58e8f", 6)
 
-val WAIT_MESSAGE = "\n---------------- WAIT ----------------"
-
 val BSC = Chain(56, listOf(BSC_DAI, BSC_UST, BSC_USDC, BSC_USDT, BSC_TUSD), BSC_RPC_URL)
 val MATIC = Chain(137, listOf(MATIC_DAI, MATIC_UST, MATIC_USDC, MATIC_USDT), MATIC_RPC_URL)
-
-
