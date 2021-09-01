@@ -1,5 +1,6 @@
 package com.oneinch
 
+import com.oneinch.InputConfig.MINIMAL_SWAP_QUOTE
 import com.oneinch.common.Chain
 import com.oneinch.common.WAIT_MESSAGE
 import com.oneinch.on_chain_api.IBalance
@@ -50,9 +51,14 @@ class Main {
             tokens.filter { diffToken -> diffToken != token }
                 .forEach { diffToken ->
                     runBlocking {
-                        val availableBalance = balance.getERC20(token.address)
-                        val tokenQuote = TokenQuote(token, availableBalance)
-                        GlobalScope.launch(handler) { requester.swap(chain.id, tokenQuote, diffToken) }
+                        GlobalScope.launch(handler) {
+                            val availableBalance = balance.getERC20(token.address)
+                            val tokenQuote = TokenQuote(token, availableBalance)
+                            if (tokenQuote.readable < MINIMAL_SWAP_QUOTE) {
+                                return@launch
+                            }
+                            requester.swap(chain.id, tokenQuote, diffToken)
+                        }
                     }
                 }
         }
