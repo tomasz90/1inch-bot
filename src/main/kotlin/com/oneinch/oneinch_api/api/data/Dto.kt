@@ -5,11 +5,13 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.properties.Delegates
 
-class QuoteDto(val from: TokenQuote, val to: TokenQuote) {
+interface IDto
+
+class QuoteDto(val from: TokenQuote, val to: TokenQuote): IDto {
     val percentage = calculateAdvantage(from, to)
 }
 
-class SwapDto(val from: TokenQuote, val to: TokenQuote, val tx: Tx) {
+class SwapDto(val from: TokenQuote, val to: TokenQuote, val tx: Tx): IDto {
     val percentage = calculateAdvantage(from, to)
 }
 
