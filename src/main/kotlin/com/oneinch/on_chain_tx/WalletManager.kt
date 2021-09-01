@@ -1,4 +1,4 @@
-package com.one_inch.on_chain_tx
+package com.oneinch.on_chain_tx
 
 import org.web3j.crypto.*
 import org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT

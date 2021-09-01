@@ -1,6 +1,6 @@
-package com.one_inch.on_chain_tx
+package com.oneinch.on_chain_tx
 
-import com.one_inch.InputConfig.INCREASED_GAS_LIMIT
+import com.oneinch.InputConfig.INCREASED_GAS_LIMIT
 import getLogger
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

@@ -1,7 +1,7 @@
-package com.one_inch
+package com.oneinch
 
-import com.one_inch.InputConfig.MY_ADDRESS
-import com.one_inch.on_chain_tx.WalletManager
+import com.oneinch.InputConfig.MY_ADDRESS
+import com.oneinch.on_chain_tx.WalletManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.web3j.protocol.core.JsonRpc2_0Web3j

@@ -1,5 +1,5 @@
-import quote_request.api.data.Token
-import quote_request.api.data.TokenQuote
+import com.oneinch.quote_request.api.data.Token
+import com.oneinch.quote_request.api.data.TokenQuote
 import spock.lang.Specification
 
 class TokenQuoteSpec extends Specification {

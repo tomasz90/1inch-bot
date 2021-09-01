@@ -1,4 +1,4 @@
-package com.one_inch.on_chain_tx
+package com.oneinch.on_chain_tx
 
 import org.springframework.stereotype.Component
 import org.web3j.contracts.eip20.generated.ERC20.load

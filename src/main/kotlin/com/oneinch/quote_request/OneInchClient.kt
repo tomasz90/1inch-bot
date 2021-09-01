@@ -1,18 +1,18 @@
-package com.one_inch.quote_request
+package com.oneinch.quote_request
 
-import com.one_inch.InputConfig.DEMAND_PERCENT_ADVANTAGE
-import com.one_inch.InputConfig.MAX_SLIPPAGE
-import com.one_inch.InputConfig.MY_ADDRESS
+import com.oneinch.InputConfig.DEMAND_PERCENT_ADVANTAGE
+import com.oneinch.InputConfig.MAX_SLIPPAGE
+import com.oneinch.InputConfig.MY_ADDRESS
 import getLogger
 import logRatesInfo
 import logSwapInfo
-import com.one_inch.on_chain_tx.Sender
+import com.oneinch.on_chain_tx.Sender
 import org.json.JSONObject
-import com.one_inch.quote_request.api.ApiConfig.ONE_INCH_API
-import com.one_inch.quote_request.api.data.SwapDto
-import com.one_inch.quote_request.api.data.Token
-import com.one_inch.quote_request.api.data.TokenQuote
-import com.one_inch.quote_request.api.data.toDto
+import com.oneinch.quote_request.api.ApiConfig.ONE_INCH_API
+import com.oneinch.quote_request.api.data.SwapDto
+import com.oneinch.quote_request.api.data.Token
+import com.oneinch.quote_request.api.data.TokenQuote
+import com.oneinch.quote_request.api.data.toDto
 import org.springframework.stereotype.Component
 import retrofit2.Response
 

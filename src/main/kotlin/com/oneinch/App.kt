@@ -1,9 +1,9 @@
-package com.one_inch
+package com.oneinch
 
 import WAIT_MESSAGE
-import com.one_inch.common.Chain
-import com.one_inch.quote_request.OneInchClient
-import com.one_inch.quote_request.api.data.TokenQuote
+import com.oneinch.common.Chain
+import com.oneinch.quote_request.OneInchClient
+import com.oneinch.quote_request.api.data.TokenQuote
 import getLogger
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired

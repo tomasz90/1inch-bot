@@ -1,4 +1,4 @@
-package com.one_inch.quote_request.api.data
+package com.oneinch.quote_request.api.data
 
 import calculateAdvantage
 import java.math.BigDecimal

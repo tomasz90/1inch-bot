@@ -1,9 +1,9 @@
-import com.one_inch.InputConfig.LOG_DECIMAL_PRECISION
+import com.oneinch.InputConfig.LOG_DECIMAL_PRECISION
 import org.apache.log4j.FileAppender
 import org.apache.log4j.LogManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import com.one_inch.quote_request.api.data.TokenQuote
+import com.oneinch.quote_request.api.data.TokenQuote
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 
