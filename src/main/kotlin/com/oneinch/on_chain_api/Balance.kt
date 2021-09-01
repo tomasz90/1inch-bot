@@ -10,7 +10,7 @@ import java.math.BigInteger
 
 interface IBalance{
 
-    fun getAllERC20()
+    fun getERC20(erc20Address: String): BigInteger
 }
 
 @Component
@@ -20,20 +20,17 @@ class Balance(private val web3j: JsonRpc2_0Web3j, private val myAddress: String)
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
     }
 
-    fun getERC20(erc20Address: String): BigInteger {
+    override fun getERC20(erc20Address: String): BigInteger {
         val txManager = ClientTransactionManager(web3j, myAddress)
         val contract = load(erc20Address, web3j, txManager, DefaultGasProvider())
         return contract.balanceOf(myAddress).send()
     }
 
-    override fun getAllERC20() {
-        TODO("Not yet implemented")
-    }
 }
 
 @Component
 class FakeBalance() : IBalance {
-    override fun getAllERC20() {
+    override fun getERC20(erc20Address: String): BigInteger {
         TODO("Not yet implemented")
     }
 }

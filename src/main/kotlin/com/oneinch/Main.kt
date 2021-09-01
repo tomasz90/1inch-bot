@@ -2,7 +2,8 @@ package com.oneinch
 
 import com.oneinch.common.Chain
 import com.oneinch.common.WAIT_MESSAGE
-import com.oneinch.oneinch_api.OneInchClient
+import com.oneinch.on_chain_api.IBalance
+import com.oneinch.oneinch_api.IRequester
 import com.oneinch.oneinch_api.api.data.TokenQuote
 import getLogger
 import kotlinx.coroutines.*
@@ -14,7 +15,10 @@ import java.util.concurrent.TimeUnit
 class Main {
 
     @Autowired
-    private lateinit var oneInchClient: OneInchClient
+    private lateinit var requester: IRequester
+
+    @Autowired
+    private lateinit var balance: IBalance
 
     @DelicateCoroutinesApi
     fun run() {
@@ -33,21 +37,22 @@ class Main {
         }
 
         while (true) {
-            checkRatesForEveryPair(chain, oneInchClient, handler)
+            checkRatesForEveryPair(chain, requester, handler)
             getLogger().info(WAIT_MESSAGE)
             TimeUnit.SECONDS.sleep(5)
         }
     }
 
     @DelicateCoroutinesApi
-    private fun checkRatesForEveryPair(chain: Chain, oneInchClient: OneInchClient, handler: CoroutineExceptionHandler) {
+    private fun checkRatesForEveryPair(chain: Chain, requester: IRequester, handler: CoroutineExceptionHandler) {
         val tokens = chain.tokens
         tokens.forEach { token ->
             tokens.filter { diffToken -> diffToken != token }
                 .forEach { diffToken ->
                     runBlocking {
-                        val tokenQuote = TokenQuote(token, InputConfig.AMOUNT_TO_SELL)
-                        GlobalScope.launch(handler) { oneInchClient.quote(chain.id, tokenQuote, diffToken) }
+                        val availableBalance = balance.getERC20(token.address)
+                        val tokenQuote = TokenQuote(token, availableBalance)
+                        GlobalScope.launch(handler) { requester.swap(chain.id, tokenQuote, diffToken) }
                     }
                 }
         }

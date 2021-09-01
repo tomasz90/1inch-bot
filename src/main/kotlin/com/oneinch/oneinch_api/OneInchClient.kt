@@ -49,6 +49,25 @@ class OneInchClient(private val myAddress: String, private val sender: Sender) {
     }
 }
 
+interface IRequester {
+    fun swap(chainId: Int, from: TokenQuote, to: Token)
+}
+
+@Component
+class Requester(private val oneInchClient: OneInchClient): IRequester {
+    override fun swap(chainId: Int, from: TokenQuote, to: Token) {
+        oneInchClient.quote(chainId, from, to)
+    }
+}
+
+@Component
+class FakeRequester(private  val oneInchClient: OneInchClient): IRequester {
+    override fun swap(chainId: Int, from: TokenQuote, to: Token) {
+        oneInchClient.quote(chainId, from, to)
+    }
+}
+
+
 fun <T> Response<T>.logErrorMessage(info: String) {
     val msg = JSONObject(this.errorBody()!!.charStream().readText()).getString("message")
     getLogger().error("$info Response status: ${this.code()}\n $msg")
