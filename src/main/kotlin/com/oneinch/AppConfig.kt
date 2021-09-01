@@ -18,7 +18,7 @@ open class AppConfig {
     open fun web3j() = JsonRpc2_0Web3j(web3service())
 
     @Bean
-    open fun credentials() = Wallet().openWallet()
+    open fun credentials() = Wallet().open()
 
     @Bean
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), InputConfig.CHAIN.id.toLong())

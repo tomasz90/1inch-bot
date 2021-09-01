@@ -16,7 +16,7 @@ class Wallet {
         return MnemonicUtils.generateMnemonic(initialEntropy)
     }
 
-    fun generateWalletFromMnemonic(mnemonic: String, password: String) {
+    fun generateFromMnemonic(mnemonic: String, password: String) {
         val path = intArrayOf(44 or HARDENED_BIT, 60 or HARDENED_BIT, 0 or HARDENED_BIT, 0, 0)
         val seed = MnemonicUtils.generateSeed(mnemonic,"")
         val masterKeyPair = Bip32ECKeyPair.generateKeyPair(seed)
@@ -24,7 +24,7 @@ class Wallet {
         WalletUtils.generateWalletFile(password, bip44Keypair, file, true)
     }
 
-    fun openWallet(): Credentials {
+    fun open(): Credentials {
         val filter = FilenameFilter { _: File?, name: String -> name.startsWith("UTC") && name.endsWith(".json") }
         val files = file.listFiles(filter)!!
         if (files.isEmpty()) {

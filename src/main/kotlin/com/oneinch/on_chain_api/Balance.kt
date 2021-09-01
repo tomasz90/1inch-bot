@@ -8,32 +8,32 @@ import org.web3j.tx.ClientTransactionManager
 import org.web3j.tx.gas.DefaultGasProvider
 import java.math.BigInteger
 
-interface IBalanceProvider{
+interface IBalance{
 
-    fun getAllERC20Balance()
+    fun getAllERC20()
 }
 
 @Component
-class FakeBalanceProvider() : IBalanceProvider {
-    override fun getAllERC20Balance() {
-        TODO("Not yet implemented")
-    }
-}
+class Balance(private val web3j: JsonRpc2_0Web3j, private val myAddress: String) : IBalance {
 
-@Component
-class BalanceProvider(private val web3j: JsonRpc2_0Web3j, private val myAddress: String) : IBalanceProvider {
-
-    fun getBalance(): BigInteger {
+    fun get(): BigInteger {
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
     }
 
-    fun getERC20Balance(erc20Address: String): BigInteger {
+    fun getERC20(erc20Address: String): BigInteger {
         val txManager = ClientTransactionManager(web3j, myAddress)
         val contract = load(erc20Address, web3j, txManager, DefaultGasProvider())
         return contract.balanceOf(myAddress).send()
     }
 
-    override fun getAllERC20Balance() {
+    override fun getAllERC20() {
+        TODO("Not yet implemented")
+    }
+}
+
+@Component
+class FakeBalance() : IBalance {
+    override fun getAllERC20() {
         TODO("Not yet implemented")
     }
 }

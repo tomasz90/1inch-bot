@@ -9,11 +9,21 @@ import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
 
+interface ISender {
+    fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String)
+}
+
 @Component
-class Sender(private val rawTransactionManager: RawTransactionManager) {
+class Sender(private val rawTransactionManager: RawTransactionManager) : ISender {
 
     @DelicateCoroutinesApi
-    fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String) {
+    override fun sendTransaction(
+        gasPrice: BigInteger,
+        gasLimit: BigInteger,
+        value: BigInteger,
+        address: String,
+        data: String
+    ) {
         val increasedGasLimit = increaseGasLimit(gasLimit)
         getLogger().info("Swapping, gasPrice: $gasPrice gasLimit: $increasedGasLimit")
         val tx = rawTransactionManager.sendTransaction(gasPrice, increasedGasLimit, address, data, value)
@@ -23,5 +33,17 @@ class Sender(private val rawTransactionManager: RawTransactionManager) {
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {
         return (gasLimit.toDouble() * INCREASED_GAS_LIMIT).toBigDecimal().toBigInteger()
+    }
+}
+
+@Component
+class FakeSender : ISender {
+    override fun sendTransaction(
+        gasPrice: BigInteger,
+        gasLimit: BigInteger,
+        value: BigInteger,
+        address: String,
+        data: String
+    ) {
     }
 }
