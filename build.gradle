@@ -2,6 +2,7 @@ plugins {
     id 'application'
     id 'groovy'
     id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+    id "org.springframework.boot" version "2.5.4"
 }
 
 group = 'me.tomas'
@@ -46,14 +47,4 @@ compileTestKotlin {
 def mainClass = 'com.oneinch.AppKt'
 application {
     mainClassName = mainClass
-}
-
-tasks.jar {
-    manifest {
-        attributes["Main-Class"] = mainClass
-    }
-    configurations["compileClasspath"].forEach { File file ->
-        from(zipTree(file.absoluteFile))
-        exclude 'META-INF', 'META-INF/**'
-    }
 }
