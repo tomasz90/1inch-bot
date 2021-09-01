@@ -1,7 +1,11 @@
 package com.oneinch.wallet
 
-import org.web3j.crypto.*
+import org.mockito.Mockito.mock
+import org.web3j.crypto.Bip32ECKeyPair
 import org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT
+import org.web3j.crypto.Credentials
+import org.web3j.crypto.MnemonicUtils
+import org.web3j.crypto.WalletUtils
 import java.io.File
 import java.io.FilenameFilter
 import java.security.SecureRandom
@@ -44,6 +48,7 @@ class Wallet: IWallet {
 class FakeWallet: IWallet {
 
     override fun open(): Credentials {
-        TODO("Not yet implemented")
+        // TODO: 01.09.2021 Open real file with balances, probably json
+        return mock(Credentials::class.java)
     }
 }

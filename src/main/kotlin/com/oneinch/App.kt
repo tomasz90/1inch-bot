@@ -1,19 +1,22 @@
 package com.oneinch
 
-import com.oneinch.common.WAIT_MESSAGE
 import com.oneinch.common.Chain
+import com.oneinch.common.WAIT_MESSAGE
 import com.oneinch.oneinch_api.OneInchClient
 import com.oneinch.oneinch_api.api.data.TokenQuote
 import getLogger
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.core.env.ConfigurableEnvironment
+import org.springframework.core.env.StandardEnvironment
 import java.util.concurrent.TimeUnit
 
 @SpringBootApplication
-open class DemoApplication: CommandLineRunner {
+open class App : CommandLineRunner {
 
     @Autowired
     lateinit var oneInchClient: OneInchClient
@@ -43,9 +46,13 @@ open class DemoApplication: CommandLineRunner {
 }
 
 fun main(args: Array<String>) {
-    runApplication<DemoApplication>(*args)
+    val environment: ConfigurableEnvironment = StandardEnvironment()
+    environment.setActiveProfiles("realAccount")
+    val application = SpringApplication(App::class.java)
+    application.setEnvironment(environment)
+    application.run(*args)
+    runApplication<App>(*args)
 }
-
 
 @DelicateCoroutinesApi
 fun checkRatesForEveryPair(chain: Chain, oneInchClient: OneInchClient, handler: CoroutineExceptionHandler) {
