@@ -9,24 +9,30 @@ import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
 
-interface ISender {
-    fun sendTransaction(gasPrice: BigInteger, gasLimit: BigInteger, value: BigInteger, address: String, data: String)
+interface ISender<T> {
+    fun sendTransaction(t: T)
 }
 
+interface ITransaction
+
+class Transaction(
+    val gasPrice: BigInteger,
+    val gasLimit: BigInteger,
+    val value: BigInteger,
+    val address: String,
+    val data: String
+) : ITransaction
+
+class FakeTransaction : ITransaction
+
 @Component
-class Sender(private val rawTransactionManager: RawTransactionManager) : ISender {
+class Sender(private val rawTransactionManager: RawTransactionManager) : ISender<Transaction> {
 
     @DelicateCoroutinesApi
-    override fun sendTransaction(
-        gasPrice: BigInteger,
-        gasLimit: BigInteger,
-        value: BigInteger,
-        address: String,
-        data: String
-    ) {
-        val increasedGasLimit = increaseGasLimit(gasLimit)
-        getLogger().info("Swapping, gasPrice: $gasPrice gasLimit: $increasedGasLimit")
-        val tx = rawTransactionManager.sendTransaction(gasPrice, increasedGasLimit, address, data, value)
+    override fun sendTransaction(t: Transaction) {
+        val increasedGasLimit = increaseGasLimit(t.gasLimit)
+        getLogger().info("Swapping, gasPrice: ${t.gasPrice} gasLimit: $increasedGasLimit")
+        val tx = rawTransactionManager.sendTransaction(t.gasPrice, increasedGasLimit, t.address, t.data, t.value)
         getLogger().info("TxHash: ${tx.transactionHash}")
         GlobalScope.cancel("") // TODO: 01.09.2021 Check this
     }
@@ -37,13 +43,7 @@ class Sender(private val rawTransactionManager: RawTransactionManager) : ISender
 }
 
 @Component
-class FakeSender : ISender {
-    override fun sendTransaction(
-        gasPrice: BigInteger,
-        gasLimit: BigInteger,
-        value: BigInteger,
-        address: String,
-        data: String
-    ) {
+class FakeSender : ISender<FakeTransaction> {
+    override fun sendTransaction(t: FakeTransaction) {
     }
 }

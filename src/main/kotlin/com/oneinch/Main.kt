@@ -4,7 +4,7 @@ import com.oneinch.InputConfig.MINIMAL_SWAP_QUOTE
 import com.oneinch.common.Chain
 import com.oneinch.common.WAIT_MESSAGE
 import com.oneinch.on_chain_api.IBalance
-import com.oneinch.oneinch_api.IRequester
+import com.oneinch.oneinch_api.AbstractRequester
 import com.oneinch.oneinch_api.api.data.TokenQuote
 import getLogger
 import kotlinx.coroutines.*
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class Main {
 
     @Autowired
-    private lateinit var requester: IRequester
+    private lateinit var requester: AbstractRequester
 
     @Autowired
     private lateinit var balance: IBalance
@@ -45,7 +45,7 @@ class Main {
     }
 
     @DelicateCoroutinesApi
-    private fun checkRatesForEveryPair(chain: Chain, requester: IRequester, handler: CoroutineExceptionHandler) {
+    private fun checkRatesForEveryPair(chain: Chain, requester: AbstractRequester, handler: CoroutineExceptionHandler) {
         val tokens = chain.tokens
         tokens.forEach { token ->
             tokens.filter { diffToken -> diffToken != token }
