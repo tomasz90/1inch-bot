@@ -6,7 +6,12 @@ import java.io.File
 import java.io.FilenameFilter
 import java.security.SecureRandom
 
-class Wallet {
+interface IWallet {
+
+    fun open(): Credentials
+}
+
+class Wallet: IWallet {
 
     private val file = File(System.getProperty("user.dir"))
 
@@ -24,7 +29,7 @@ class Wallet {
         WalletUtils.generateWalletFile(password, bip44Keypair, file, true)
     }
 
-    fun open(): Credentials {
+    override fun open(): Credentials {
         val filter = FilenameFilter { _: File?, name: String -> name.startsWith("UTC") && name.endsWith(".json") }
         val files = file.listFiles(filter)!!
         if (files.isEmpty()) {
@@ -33,5 +38,12 @@ class Wallet {
 //        getLogger().debug("Enter password to keystore:")
 //        val password = (System.console()?.readPassword() ?: readLine()).toString()
         return WalletUtils.loadCredentials("abc", files[0])
+    }
+}
+
+class FakeWallet: IWallet {
+
+    override fun open(): Credentials {
+        TODO("Not yet implemented")
     }
 }

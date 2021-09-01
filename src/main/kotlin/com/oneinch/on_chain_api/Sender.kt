@@ -28,7 +28,7 @@ class Sender(private val rawTransactionManager: RawTransactionManager) : ISender
         getLogger().info("Swapping, gasPrice: $gasPrice gasLimit: $increasedGasLimit")
         val tx = rawTransactionManager.sendTransaction(gasPrice, increasedGasLimit, address, data, value)
         getLogger().info("TxHash: ${tx.transactionHash}")
-        GlobalScope.cancel("")
+        GlobalScope.cancel("") // TODO: 01.09.2021 Check this
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {
