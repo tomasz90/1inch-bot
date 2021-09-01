@@ -2,7 +2,6 @@ package com.oneinch.oneinch_api
 
 import com.oneinch.InputConfig.DEMAND_PERCENT_ADVANTAGE
 import com.oneinch.InputConfig.MAX_SLIPPAGE
-import com.oneinch.InputConfig.MY_ADDRESS
 import com.oneinch.on_chain_api.Sender
 import com.oneinch.oneinch_api.api.ApiConfig.ONE_INCH_API
 import com.oneinch.oneinch_api.api.data.SwapDto
@@ -17,9 +16,9 @@ import org.springframework.stereotype.Component
 import retrofit2.Response
 
 @Component
-class OneInchClient(private val sender: Sender) {
+class OneInchClient(private val myAddress: String, private val sender: Sender) {
 
-    fun getQuote(chainId: Int, from: TokenQuote, to: Token) {
+    fun quote(chainId: Int, from: TokenQuote, to: Token) {
         val response = ONE_INCH_API.quote(chainId, from.token.address, to.address, from.origin).execute()
         if (response.isSuccessful) {
             val dto = response.body()!!.toDto()
@@ -31,7 +30,7 @@ class OneInchClient(private val sender: Sender) {
 
     fun swap(chainId: Int, from: TokenQuote, to: Token) {
         val response =
-            ONE_INCH_API.swap(chainId, from.token.address, to.address, from.origin, MY_ADDRESS, MAX_SLIPPAGE).execute()
+            ONE_INCH_API.swap(chainId, from.token.address, to.address, from.origin, myAddress, MAX_SLIPPAGE).execute()
         if (response.isSuccessful) {
             val dto = response.body()!!.toDto()
             logRatesInfo(dto.from, dto.to, dto.percentage)

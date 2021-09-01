@@ -47,7 +47,7 @@ class Main {
                 .forEach { diffToken ->
                     runBlocking {
                         val tokenQuote = TokenQuote(token, InputConfig.AMOUNT_TO_SELL)
-                        GlobalScope.launch(handler) { oneInchClient.getQuote(chain.id, tokenQuote, diffToken) }
+                        GlobalScope.launch(handler) { oneInchClient.quote(chain.id, tokenQuote, diffToken) }
                     }
                 }
         }

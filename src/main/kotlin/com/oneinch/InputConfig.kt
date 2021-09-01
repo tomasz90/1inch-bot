@@ -6,8 +6,6 @@ import com.oneinch.common.Chain
 object InputConfig {
 
     val CHAIN: Chain = MATIC
-    const val TEST_MODE = true
-    const val MY_ADDRESS = "0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E"
     const val LOG_DECIMAL_PRECISION = 0
 
     const val AMOUNT_TO_SELL: Double = 20000.0
