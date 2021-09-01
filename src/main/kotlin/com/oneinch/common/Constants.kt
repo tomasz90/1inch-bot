@@ -1,5 +1,6 @@
-import com.oneinch.common.Chain
-import com.oneinch.quote_request.api.data.Token
+package com.oneinch.common
+
+import com.oneinch.oneinch_api.api.data.Token
 
 const val BASE_URL = "https://api.1inch.exchange/"
 const val MATIC_RPC_URL = "***REMOVED***"

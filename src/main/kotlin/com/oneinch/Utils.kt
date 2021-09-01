@@ -3,7 +3,7 @@ import org.apache.log4j.FileAppender
 import org.apache.log4j.LogManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import com.oneinch.quote_request.api.data.TokenQuote
+import com.oneinch.oneinch_api.api.data.TokenQuote
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 

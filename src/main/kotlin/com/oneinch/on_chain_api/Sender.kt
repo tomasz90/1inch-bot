@@ -1,4 +1,4 @@
-package com.oneinch.on_chain_tx
+package com.oneinch.on_chain_api
 
 import com.oneinch.InputConfig.INCREASED_GAS_LIMIT
 import getLogger

@@ -1,6 +1,6 @@
-package com.oneinch.quote_request.api
+package com.oneinch.oneinch_api.api
 
-import BASE_URL
+import com.oneinch.common.BASE_URL
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.OkHttpClient

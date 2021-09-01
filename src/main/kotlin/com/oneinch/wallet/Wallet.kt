@@ -1,4 +1,4 @@
-package com.oneinch.on_chain_tx
+package com.oneinch.wallet
 
 import org.web3j.crypto.*
 import org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT
@@ -6,7 +6,7 @@ import java.io.File
 import java.io.FilenameFilter
 import java.security.SecureRandom
 
-class WalletManager {
+class Wallet {
 
     private val file = File(System.getProperty("user.dir"))
 

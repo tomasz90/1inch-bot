@@ -1,4 +1,4 @@
-package com.oneinch.quote_request.api.data
+package com.oneinch.oneinch_api.api.data
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.math.BigInteger

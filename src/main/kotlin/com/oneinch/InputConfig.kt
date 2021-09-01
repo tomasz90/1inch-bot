@@ -1,6 +1,6 @@
 package com.oneinch
 
-import MATIC
+import com.oneinch.common.MATIC
 import com.oneinch.common.Chain
 
 object InputConfig {
