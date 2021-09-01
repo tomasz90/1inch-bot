@@ -13,45 +13,45 @@ abstract class AbstractRequester {
     @Autowired
     lateinit var oneInchClient: OneInchClient
 
-    @Autowired
-    lateinit var sender: ISender<ITransaction>
-
     open fun swap(chainId: Int, from: TokenQuote, to: Token){}
 
-    fun performTxIfGoodRate(from: TokenQuote, to: TokenQuote, percentage: Double, tx: ITransaction) {
+    fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double): Boolean {
         logRatesInfo(from, to, percentage)
         if (percentage > DEMAND_PERCENT_ADVANTAGE) {
             logSwapInfo(from, to)
-            sender.sendTransaction(tx)
+            return true
         }
+        return false
     }
 }
 
 @Component
-class Requester : AbstractRequester() {
+class Requester(private val sender: ISender<Transaction>) : AbstractRequester() {
 
     override fun swap(chainId: Int, from: TokenQuote, to: Token) {
         val dto = oneInchClient.swap(chainId, from, to) // TODO: 01.09.2021 change to swap when working
         val tx = createTx(dto)
-        performTxIfGoodRate(dto.from, dto.to, dto.percentage, tx)
+        val isGood = isRateGood(dto.from, dto.to, dto.percentage)
+        if (isGood) sender.sendTransaction(tx)
     }
 
-    private fun createTx(dto: SwapDto): ITransaction { // TODO: 01.09.2021 change to swap when working
+    private fun createTx(dto: SwapDto): Transaction { // TODO: 01.09.2021 change to swap when working
         val tx = dto.tx
         return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
     }
 }
 
 @Component
-class FakeRequester : AbstractRequester() {
+class FakeRequester(private val sender: ISender<FakeTransaction>) : AbstractRequester() {
 
     override fun swap(chainId: Int, from: TokenQuote, to: Token) {
         val dto = oneInchClient.quote(chainId, from, to) // TODO: 01.09.2021 change to swap when working
         val tx = createTx(dto)
-        performTxIfGoodRate(dto.from, dto.to, dto.percentage, tx)
+        val isGood = isRateGood(dto.from, dto.to, dto.percentage)
+        if (isGood) sender.sendTransaction(tx)
     }
 
-    private fun createTx(dto: QuoteDto): ITransaction {
+    private fun createTx(dto: QuoteDto): FakeTransaction {
         return FakeTransaction()
     }
 }
