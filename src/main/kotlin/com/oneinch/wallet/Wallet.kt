@@ -1,6 +1,5 @@
 package com.oneinch.wallet
 
-import org.mockito.Mockito.mock
 import org.web3j.crypto.Bip32ECKeyPair
 import org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT
 import org.web3j.crypto.Credentials
@@ -10,12 +9,12 @@ import java.io.File
 import java.io.FilenameFilter
 import java.security.SecureRandom
 
-interface IWallet {
+interface IWallet<T> {
 
-    fun open(): Credentials
+    fun open(): T
 }
 
-class Wallet: IWallet {
+class Wallet: IWallet<Credentials> {
 
     private val file = File(System.getProperty("user.dir"))
 
@@ -45,10 +44,12 @@ class Wallet: IWallet {
     }
 }
 
-class FakeWallet: IWallet {
+class FakeWallet: IWallet<FakeCredentials> {
 
-    override fun open(): Credentials {
+    override fun open(): FakeCredentials {
         // TODO: 01.09.2021 Open real file with balances, probably json
-        return mock(Credentials::class.java)
+        return FakeCredentials()
     }
 }
+
+class FakeCredentials
