@@ -1,4 +1,4 @@
-package com.oneinch
+package com.oneinch.config
 
 import com.oneinch.common.Chain
 import com.oneinch.common.MATIC

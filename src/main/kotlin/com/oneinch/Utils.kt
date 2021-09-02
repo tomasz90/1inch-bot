@@ -1,4 +1,4 @@
-import com.oneinch.InputConfig.LOG_DECIMAL_PRECISION
+import com.oneinch.config.InputConfig.LOG_DECIMAL_PRECISION
 import org.apache.log4j.FileAppender
 import org.apache.log4j.LogManager
 import org.slf4j.Logger

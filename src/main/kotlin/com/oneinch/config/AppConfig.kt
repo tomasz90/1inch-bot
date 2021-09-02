@@ -1,4 +1,4 @@
-package com.oneinch
+package com.oneinch.config
 
 import com.oneinch.wallet.Wallet
 import org.springframework.context.annotation.Bean

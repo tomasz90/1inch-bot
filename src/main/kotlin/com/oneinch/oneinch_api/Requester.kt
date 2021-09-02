@@ -1,6 +1,6 @@
 package com.oneinch.oneinch_api
 
-import com.oneinch.InputConfig.DEMAND_PERCENT_ADVANTAGE
+import com.oneinch.config.InputConfig.DEMAND_PERCENT_ADVANTAGE
 import com.oneinch.on_chain_api.*
 import com.oneinch.oneinch_api.api.data.*
 import logRatesInfo
@@ -32,7 +32,7 @@ class Requester(private val sender: ISender<Transaction>) : AbstractRequester() 
         val dto = oneInchClient.quote(chainId, from, to) // TODO: 01.09.2021 change to swap when working
 //        val tx = createTx(dto)
 //        val isGood = isRateGood(dto.from, dto.to, dto.percentage)
-//        if (isGood) sender.sendTransaction(tx)
+//        if (isGood) sender.sendTransaction(tx, from)
     }
 
     private fun createTx(dto: SwapDto): Transaction { // TODO: 01.09.2021 change to swap when working
@@ -48,7 +48,7 @@ class FakeRequester(private val sender: ISender<FakeTransaction>) : AbstractRequ
         val dto = oneInchClient.quote(chainId, from, to) // TODO: 01.09.2021 change to swap when working
         val tx = createTx(dto)
         val isGood = isRateGood(dto.from, dto.to, dto.percentage)
-        if (isGood) sender.sendTransaction(tx)
+        if (isGood) sender.sendTransaction(tx, from)
     }
 
     private fun createTx(dto: QuoteDto): FakeTransaction {

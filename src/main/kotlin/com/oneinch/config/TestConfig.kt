@@ -1,4 +1,4 @@
-package com.oneinch
+package com.oneinch.config
 
 import com.oneinch.on_chain_api.FakeBalance
 import com.oneinch.wallet.FakeWallet

@@ -1,11 +1,10 @@
 package com.oneinch
 
-import com.oneinch.InputConfig.MINIMAL_SWAP_QUOTE
 import com.oneinch.common.Chain
 import com.oneinch.common.WAIT_MESSAGE
+import com.oneinch.config.InputConfig
 import com.oneinch.on_chain_api.IBalance
 import com.oneinch.oneinch_api.AbstractRequester
-import com.oneinch.oneinch_api.api.data.TokenQuote
 import getLogger
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,12 +51,11 @@ class Main {
                 .forEach { diffToken ->
                     runBlocking {
                         GlobalScope.launch(handler) {
-                            val availableBalance = balance.getERC20(token.address)
-                            val tokenQuote = TokenQuote(token, availableBalance)
+                            val availableTokenQuote = balance.getERC20(token)
 //                            if (tokenQuote.readable < MINIMAL_SWAP_QUOTE) {
 //                                return@launch
 //                            }
-                            requester.swap(chain.id, tokenQuote, diffToken)
+                            requester.swap(chain.id, availableTokenQuote, diffToken)
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 package com.oneinch.oneinch_api
 
-import com.oneinch.InputConfig.MAX_SLIPPAGE
+import com.oneinch.config.InputConfig.MAX_SLIPPAGE
 import com.oneinch.oneinch_api.api.ApiConfig.ONE_INCH_API
 import com.oneinch.oneinch_api.api.data.*
 import org.json.JSONObject
