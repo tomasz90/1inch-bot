@@ -1,5 +1,6 @@
 package com.oneinch.wallet
 
+import getLogger
 import org.web3j.crypto.Bip32ECKeyPair
 import org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT
 import org.web3j.crypto.Credentials
@@ -9,12 +10,7 @@ import java.io.File
 import java.io.FilenameFilter
 import java.security.SecureRandom
 
-interface IWallet<T> {
-
-    fun open(): T
-}
-
-class Wallet: IWallet<Credentials> {
+class Wallet {
 
     private val file = File(System.getProperty("user.dir"))
 
@@ -26,30 +22,24 @@ class Wallet: IWallet<Credentials> {
 
     fun generateFromMnemonic(mnemonic: String, password: String) {
         val path = intArrayOf(44 or HARDENED_BIT, 60 or HARDENED_BIT, 0 or HARDENED_BIT, 0, 0)
-        val seed = MnemonicUtils.generateSeed(mnemonic,"")
+        val seed = MnemonicUtils.generateSeed(mnemonic, "")
         val masterKeyPair = Bip32ECKeyPair.generateKeyPair(seed)
         val bip44Keypair = Bip32ECKeyPair.deriveKeyPair(masterKeyPair, path)
         WalletUtils.generateWalletFile(password, bip44Keypair, file, true)
     }
 
-    override fun open(): Credentials {
+    fun open(): Credentials {
         val filter = FilenameFilter { _: File?, name: String -> name.startsWith("UTC") && name.endsWith(".json") }
         val files = file.listFiles(filter)!!
         if (files.isEmpty()) {
             throw Exception("There is no keystore..")
         }
-//        getLogger().debug("Enter password to keystore:")
-//        val password = (System.console()?.readPassword() ?: readLine()).toString()
-        return WalletUtils.loadCredentials("abc", files[0])
+        val password = "abc" //providePassword()
+        return WalletUtils.loadCredentials(password, files[0])
+    }
+
+    private fun providePassword(): String {
+        getLogger().debug("Enter password to keystore:")
+        return (System.console()?.readPassword() ?: readLine()).toString()
     }
 }
-
-class FakeWallet: IWallet<FakeCredentials> {
-
-    override fun open(): FakeCredentials {
-        // TODO: 01.09.2021 Open real file with balances, probably json
-        return FakeCredentials()
-    }
-}
-
-class FakeCredentials

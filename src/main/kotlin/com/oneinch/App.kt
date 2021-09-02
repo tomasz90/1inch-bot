@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
     runApplication<App>(*args)
 }
 
-fun setActiveProfile(args: Array<String>, profile: String) {
+private fun setActiveProfile(args: Array<String>, profile: String) {
     val environment: ConfigurableEnvironment = StandardEnvironment()
     environment.setActiveProfiles(profile)
     val application = SpringApplication(App::class.java)
