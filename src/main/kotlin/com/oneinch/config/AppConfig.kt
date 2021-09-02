@@ -1,5 +1,6 @@
 package com.oneinch.config
 
+import com.oneinch.oneinch_api.api.ApiProvider
 import com.oneinch.wallet.Wallet
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,6 +24,9 @@ open class AppConfig {
 
     @Bean
     open fun myAddress() = credentials().address
+
+    @Bean
+    open fun oneInch() = ApiProvider().oneInch
 
     @Bean
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), InputConfig.CHAIN.id.toLong())

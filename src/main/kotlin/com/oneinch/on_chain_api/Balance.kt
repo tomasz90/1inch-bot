@@ -20,7 +20,7 @@ interface IBalance {
 @Component
 class Balance(private val web3j: JsonRpc2_0Web3j, private val myAddress: String) : IBalance {
 
-    val allBalance: MutableMap<TokenQuote, Boolean> = mutableMapOf()
+    private val allBalance: MutableMap<TokenQuote, Boolean> = mutableMapOf()
 
     fun get(): BigInteger {
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
@@ -50,6 +50,7 @@ fun MutableMap<TokenQuote, Boolean>.filterBalance(erc20: Token): Map<TokenQuote,
 
 @Component
 class FakeBalance : IBalance {
+
     override fun getERC20(erc20: Token): TokenQuote {
         TODO("Not yet implemented")
     }

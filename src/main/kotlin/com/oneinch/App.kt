@@ -22,7 +22,7 @@ open class App : CommandLineRunner {
 }
 
 fun main(args: Array<String>) {
-    setActiveProfile(args,"fakeAccount")
+    setActiveProfile(args,"realAccount")
     runApplication<App>(*args)
 }
 

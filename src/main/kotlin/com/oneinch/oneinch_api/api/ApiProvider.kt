@@ -4,11 +4,13 @@ import com.oneinch.common.BASE_URL
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.OkHttpClient
+import org.springframework.stereotype.Component
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object ApiConfig {
+@Component
+class ApiProvider {
 
     private val mapper: ObjectMapper = ObjectMapper()
 
@@ -22,7 +24,7 @@ object ApiConfig {
         .writeTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
         .build()
-    val ONE_INCH_API: OneInchApi = Retrofit.Builder()
+    val oneInch: OneInchApi = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(BASE_URL)
         .addConverterFactory(jacksonConverter)
