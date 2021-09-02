@@ -29,7 +29,7 @@ class Balance(private val web3j: JsonRpc2_0Web3j, private val myAddress: String)
 }
 
 @Component
-class FakeBalance() : IBalance {
+class FakeBalance : IBalance {
     override fun getERC20(erc20Address: String): BigInteger {
         TODO("Not yet implemented")
     }

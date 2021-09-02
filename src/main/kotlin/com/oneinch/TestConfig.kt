@@ -1,5 +1,6 @@
 package com.oneinch
 
+import com.oneinch.on_chain_api.FakeBalance
 import com.oneinch.wallet.FakeWallet
 import org.mockito.Mockito.mock
 import org.springframework.context.annotation.Bean
@@ -16,6 +17,9 @@ open class TestConfig {
 
     @Bean
     open fun myAddress() = ""
+
+    @Bean
+    open fun balance() = FakeBalance()
 
     @Bean
     open fun rawTransactionManager() = mock(RawTransactionManager::class.java)

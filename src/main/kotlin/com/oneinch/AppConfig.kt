@@ -1,10 +1,8 @@
 package com.oneinch
 
-import com.oneinch.on_chain_api.Sender
 import com.oneinch.wallet.Wallet
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
 import org.web3j.protocol.core.JsonRpc2_0Web3j
 import org.web3j.protocol.http.HttpService

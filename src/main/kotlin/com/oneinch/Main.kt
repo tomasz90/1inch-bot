@@ -34,7 +34,7 @@ class Main {
 //    }
 
         val handler = CoroutineExceptionHandler { _, exception ->
-            getLogger().error("Error, $exception")
+            getLogger().error(exception.message)
         }
 
         while (true) {
@@ -54,9 +54,9 @@ class Main {
                         GlobalScope.launch(handler) {
                             val availableBalance = balance.getERC20(token.address)
                             val tokenQuote = TokenQuote(token, availableBalance)
-                            if (tokenQuote.readable < MINIMAL_SWAP_QUOTE) {
-                                return@launch
-                            }
+//                            if (tokenQuote.readable < MINIMAL_SWAP_QUOTE) {
+//                                return@launch
+//                            }
                             requester.swap(chain.id, tokenQuote, diffToken)
                         }
                     }
