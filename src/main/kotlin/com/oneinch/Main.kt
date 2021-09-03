@@ -1,9 +1,9 @@
 package com.oneinch
 
-import com.oneinch.common.Chain
+import com.oneinch.`object`.Chain
 import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.IBalance
-import com.oneinch.oneinch_api.AbstractRequester
+import com.oneinch.one_inch_api.AbstractRequester
 import getLogger
 import kotlinx.coroutines.*
 import org.springframework.beans.factory.annotation.Autowired

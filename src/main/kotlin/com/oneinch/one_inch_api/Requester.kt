@@ -1,13 +1,13 @@
-package com.oneinch.oneinch_api
+package com.oneinch.one_inch_api
 
 import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.FakeTransaction
 import com.oneinch.on_chain_api.ISender
 import com.oneinch.on_chain_api.Transaction
-import com.oneinch.oneinch_api.api.data.QuoteDto
-import com.oneinch.oneinch_api.api.data.SwapDto
-import com.oneinch.oneinch_api.api.data.Token
-import com.oneinch.oneinch_api.api.data.TokenQuote
+import com.oneinch.one_inch_api.api.data.QuoteDto
+import com.oneinch.one_inch_api.api.data.SwapDto
+import com.oneinch.one_inch_api.api.data.Token
+import com.oneinch.one_inch_api.api.data.TokenQuote
 import logRatesInfo
 import logSwapInfo
 import org.springframework.beans.factory.annotation.Autowired

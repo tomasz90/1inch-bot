@@ -1,8 +1,8 @@
-package com.oneinch.oneinch_api
+package com.oneinch.one_inch_api
 
 import com.oneinch.config.Settings
-import com.oneinch.oneinch_api.api.OneInchApi
-import com.oneinch.oneinch_api.api.data.*
+import com.oneinch.one_inch_api.api.OneInchApi
+import com.oneinch.one_inch_api.api.data.*
 import org.json.JSONObject
 import org.springframework.stereotype.Component
 import retrofit2.Response

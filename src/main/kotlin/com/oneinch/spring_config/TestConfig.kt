@@ -1,11 +1,11 @@
-package com.oneinch.profiles
+package com.oneinch.spring_config
 
 import com.oneinch.config.Properties
 import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.FakeBalance
 import com.oneinch.on_chain_api.FakeSender
-import com.oneinch.oneinch_api.FakeRequester
-import com.oneinch.oneinch_api.api.ApiProvider
+import com.oneinch.one_inch_api.FakeRequester
+import com.oneinch.one_inch_api.api.ApiProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

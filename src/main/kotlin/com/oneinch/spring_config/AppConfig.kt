@@ -1,6 +1,6 @@
-package com.oneinch.profiles
+package com.oneinch.spring_config
 
-import com.oneinch.common.Chain
+import com.oneinch.`object`.Chain
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean

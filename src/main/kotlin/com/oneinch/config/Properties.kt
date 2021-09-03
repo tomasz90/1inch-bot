@@ -3,14 +3,10 @@ package com.oneinch.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.oneinch.common.Chain
+import com.oneinch.`object`.Chain
 import org.springframework.stereotype.Component
 import java.nio.file.Files.newBufferedReader
 import java.nio.file.Paths
-
-interface IResources<T> {
-    fun load(): T
-}
 
 @Component
 class PropertiesLoader : IResources<Properties> {

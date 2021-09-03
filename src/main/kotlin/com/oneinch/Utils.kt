@@ -1,5 +1,5 @@
 import com.oneinch.config.Settings
-import com.oneinch.oneinch_api.api.data.TokenQuote
+import com.oneinch.one_inch_api.api.data.TokenQuote
 import org.apache.log4j.FileAppender
 import org.apache.log4j.LogManager
 import org.slf4j.Logger

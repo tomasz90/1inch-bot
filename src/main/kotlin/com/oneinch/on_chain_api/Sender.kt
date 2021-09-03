@@ -1,7 +1,7 @@
 package com.oneinch.on_chain_api
 
 import com.oneinch.config.Settings
-import com.oneinch.oneinch_api.api.data.TokenQuote
+import com.oneinch.one_inch_api.api.data.TokenQuote
 import getLogger
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

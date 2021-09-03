@@ -1,4 +1,4 @@
-package com.oneinch.oneinch_api.api
+package com.oneinch.one_inch_api.api
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper

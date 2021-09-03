@@ -1,7 +1,7 @@
 package com.oneinch.on_chain_api
 
-import com.oneinch.oneinch_api.api.data.Token
-import com.oneinch.oneinch_api.api.data.TokenQuote
+import com.oneinch.one_inch_api.api.data.Token
+import com.oneinch.one_inch_api.api.data.TokenQuote
 import org.springframework.stereotype.Component
 import org.web3j.contracts.eip20.generated.ERC20.load
 import org.web3j.protocol.core.DefaultBlockParameterName.LATEST
