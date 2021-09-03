@@ -13,6 +13,6 @@ class YamlPropertySourceFactory : PropertySourceFactory {
         factory.setResources(encodedResource.resource)
         val properties = factory.getObject()
         // TODO: 03.09.2021 resolve exceptions
-        return PropertiesPropertySource(encodedResource.resource.filename, properties)
+        return PropertiesPropertySource(encodedResource.resource.filename!!, properties!!)
     }
 }

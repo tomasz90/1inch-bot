@@ -27,7 +27,6 @@ class Main {
     @DelicateCoroutinesApi
     fun run() {
         val chain: Chain = InputConfig.CHAIN
-        yamlFooProperties.users
 //    getLogger().debug("Set waiting time in sec: ")
 //    val waitingTime = readLine()?.toLong()!!
 //
@@ -59,7 +58,7 @@ class Main {
 //                            if (tokenQuote.readable < MINIMAL_SWAP_QUOTE) {
 //                                return@launch
 //                            }
-                            //requester.swap(chain.id, availableTokenQuote, diffToken)
+                            requester.swap(chain.id, availableTokenQuote, diffToken)
                         }
                     }
                 }
