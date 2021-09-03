@@ -2,8 +2,7 @@ package com.oneinch
 
 import com.oneinch.common.Chain
 import com.oneinch.common.WAIT_MESSAGE
-import com.oneinch.config.InputConfig
-import com.oneinch.config.YamlFooProperties
+import com.oneinch.config.InputConfig.CHAIN
 import com.oneinch.on_chain_api.IBalance
 import com.oneinch.oneinch_api.AbstractRequester
 import getLogger
@@ -21,13 +20,10 @@ class Main {
     @Autowired
     private lateinit var balance: IBalance
 
-    @Autowired
-    lateinit var yamlFooProperties: YamlFooProperties
 
     @DelicateCoroutinesApi
     fun run() {
-        val chain: Chain = InputConfig.CHAIN
-        println(yamlFooProperties.bsc?.toChain())
+        val chain: Chain = CHAIN
 //    getLogger().debug("Set waiting time in sec: ")
 //    val waitingTime = readLine()?.toLong()!!
 //
