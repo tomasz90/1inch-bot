@@ -1,7 +1,7 @@
-package com.oneinch.example.manager
+package com.oneinch.h2.manager
 
-import com.oneinch.example.dao.Repo
-import com.oneinch.example.dao.entity.TokenQuoteEntity
+import com.oneinch.h2.dao.Repo
+import com.oneinch.h2.dao.entity.TokenQuoteEntity
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -24,7 +24,7 @@ class ManagerRepo (private val repo: Repo) {
     }
 
     fun fillDB() {
-        save(TokenQuoteEntity(1L, "0x89523895u"))
-        save(TokenQuoteEntity(2L, "0x358235923"))
+        save(TokenQuoteEntity("0x113435111"))
+        save(TokenQuoteEntity("0x358235923"))
     }
 }

@@ -3,7 +3,7 @@ package com.oneinch
 import com.oneinch.common.Chain
 import com.oneinch.common.WAIT_MESSAGE
 import com.oneinch.config.InputConfig
-import com.oneinch.example.manager.ManagerRepo
+import com.oneinch.h2.manager.ManagerRepo
 import com.oneinch.on_chain_api.IBalance
 import com.oneinch.oneinch_api.AbstractRequester
 import getLogger
