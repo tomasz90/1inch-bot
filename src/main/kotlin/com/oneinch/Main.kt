@@ -20,10 +20,11 @@ class Main {
     @Autowired
     private lateinit var balance: IBalance
 
+    @Autowired
+    private lateinit var chain: Chain
 
     @DelicateCoroutinesApi
     fun run() {
-        val chain: Chain = CHAIN
 //    getLogger().debug("Set waiting time in sec: ")
 //    val waitingTime = readLine()?.toLong()!!
 //

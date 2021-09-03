@@ -21,30 +21,4 @@ class PropertiesLoader : IResources<PropertiesHolder> {
     }
 }
 
-@Component
-class SettingsLoader : IResources<SettingsHolder> {
-    override fun load(): SettingsHolder {
-        val dir = Paths.get("src", "main", "resources", "settings.yml")
-        val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
-        return newBufferedReader(dir).use { mapper.readValue(it, SettingsHolder::class.java) }
-    }
-}
-
-class SettingsHolder(
-    val account: String,
-    val chain: String,
-    val myAddress: String,
-    val logDecimalPrecision: Int,
-    val minimalSwapQuote: Double,
-    val amountToSell: Double,
-    val demandPercentAdvantage: Double,
-    val maxSlippage: Double,
-    val increasedGasLimit: Double
-)
-
 class PropertiesHolder(val oneInchUrl: String, val bsc: Chain, val matic: Chain)
-
-fun main() {
-    val c = SettingsLoader().load()
-    println(c)
-}

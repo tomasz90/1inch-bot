@@ -1,5 +1,6 @@
 package com.oneinch
 
+import com.oneinch.config.SettingsLoader
 import kotlinx.coroutines.DelicateCoroutinesApi
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
@@ -22,11 +23,13 @@ open class App : CommandLineRunner {
 }
 
 fun main(args: Array<String>) {
-    setActiveProfile(args,"realAccount")
+    setActiveProfile(args)
     runApplication<App>(*args)
 }
 
-private fun setActiveProfile(args: Array<String>, profile: String) {
+private fun setActiveProfile(args: Array<String>) {
+    val settings = SettingsLoader()
+    val profile = settings.load().account
     val environment: ConfigurableEnvironment = StandardEnvironment()
     environment.setActiveProfiles(profile)
     val application = SpringApplication(App::class.java)
