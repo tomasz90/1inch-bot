@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import kotlin.reflect.full.declaredMemberProperties
 
 @Configuration
 @Profile("fakeAccount")
@@ -30,14 +31,14 @@ open class TestConfig {
     @Bean
     open fun settings() = settingsLoader.load()
 
-    // TODO: 03.09.2021 by reflection?
     @Bean
     open fun chain(): Chain {
-        return when(settings().chain) {
-            "bsc" -> properties().bsc
-            "matic" -> properties().matic
-            else -> throw Exception("No such chain in configuration")
-        }
+        val instance = properties()
+        return instance.javaClass.kotlin
+            .declaredMemberProperties
+            .filter { it.name == settings().chain }
+            .map { it.get(instance) }
+            .first() as Chain
     }
 
     @Bean
