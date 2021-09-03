@@ -2,7 +2,7 @@ package com.oneinch.oneinch_api.api
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.oneinch.config.PropertiesHolder
+import com.oneinch.config.Properties
 import okhttp3.OkHttpClient
 import org.springframework.stereotype.Component
 import retrofit2.Retrofit
@@ -10,7 +10,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
 
 @Component
-class ApiProvider(private val properties: PropertiesHolder) {
+class ApiProvider(private val properties: Properties) {
 
     private val mapper: ObjectMapper = ObjectMapper()
 

@@ -1,6 +1,6 @@
 package com.oneinch.on_chain_api
 
-import com.oneinch.config.InputConfig.INCREASED_GAS_LIMIT
+import com.oneinch.config.Settings
 import com.oneinch.oneinch_api.api.data.TokenQuote
 import getLogger
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -27,7 +27,7 @@ class Transaction(
 class FakeTransaction : ITransaction
 
 @Component
-class Sender(private val rawTransactionManager: RawTransactionManager, private val balance: IBalance) :
+class Sender(val rawTransactionManager: RawTransactionManager, val balance: IBalance, val settings: Settings) :
     ISender<Transaction> {
 
     @DelicateCoroutinesApi
@@ -41,7 +41,7 @@ class Sender(private val rawTransactionManager: RawTransactionManager, private v
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {
-        return (gasLimit.toDouble() * INCREASED_GAS_LIMIT).toBigDecimal().toBigInteger()
+        return (gasLimit.toDouble() * settings.increasedGasLimit).toBigDecimal().toBigInteger()
     }
 }
 

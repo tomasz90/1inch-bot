@@ -52,6 +52,6 @@ open class AppConfig {
     open fun oneInch() = ApiProvider(properties()).create()
 
     @Bean
-    open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), InputConfig.CHAIN.id.toLong())
+    open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain().id.toLong())
 
 }

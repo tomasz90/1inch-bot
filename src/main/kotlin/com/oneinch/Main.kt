@@ -1,8 +1,7 @@
 package com.oneinch
 
 import com.oneinch.common.Chain
-import com.oneinch.common.WAIT_MESSAGE
-import com.oneinch.config.InputConfig.CHAIN
+import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.IBalance
 import com.oneinch.oneinch_api.AbstractRequester
 import getLogger
@@ -23,6 +22,9 @@ class Main {
     @Autowired
     private lateinit var chain: Chain
 
+    @Autowired
+    private lateinit var settings: Settings
+
     @DelicateCoroutinesApi
     fun run() {
 //    getLogger().debug("Set waiting time in sec: ")
@@ -39,7 +41,7 @@ class Main {
 
         while (true) {
             checkRatesForEveryPair(chain, requester, handler)
-            getLogger().info(WAIT_MESSAGE)
+            getLogger().info("---------------- WAIT ----------------")
             TimeUnit.SECONDS.sleep(5)
         }
     }
@@ -53,7 +55,7 @@ class Main {
                     runBlocking {
                         GlobalScope.launch(handler) {
                             val availableTokenQuote = balance.getERC20(token)
-//                            if (tokenQuote.readable < MINIMAL_SWAP_QUOTE) {
+//                            if (availableTokenQuote.readable < settings.minimalSwapQuote) {
 //                                return@launch
 //                            }
                             requester.swap(chain.id, availableTokenQuote, diffToken)

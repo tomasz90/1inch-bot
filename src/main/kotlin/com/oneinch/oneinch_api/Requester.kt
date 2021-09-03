@@ -1,8 +1,13 @@
 package com.oneinch.oneinch_api
 
-import com.oneinch.config.InputConfig.DEMAND_PERCENT_ADVANTAGE
-import com.oneinch.on_chain_api.*
-import com.oneinch.oneinch_api.api.data.*
+import com.oneinch.config.Settings
+import com.oneinch.on_chain_api.FakeTransaction
+import com.oneinch.on_chain_api.ISender
+import com.oneinch.on_chain_api.Transaction
+import com.oneinch.oneinch_api.api.data.QuoteDto
+import com.oneinch.oneinch_api.api.data.SwapDto
+import com.oneinch.oneinch_api.api.data.Token
+import com.oneinch.oneinch_api.api.data.TokenQuote
 import logRatesInfo
 import logSwapInfo
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,11 +18,14 @@ abstract class AbstractRequester {
     @Autowired
     lateinit var oneInchClient: OneInchClient
 
+    @Autowired
+    lateinit var settings: Settings
+
     open fun swap(chainId: Int, from: TokenQuote, to: Token){}
 
     fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double): Boolean {
         logRatesInfo(from, to, percentage)
-        if (percentage > DEMAND_PERCENT_ADVANTAGE) {
+        if (percentage > settings.demandPercentAdvantage) {
             logSwapInfo(from, to)
             return true
         }

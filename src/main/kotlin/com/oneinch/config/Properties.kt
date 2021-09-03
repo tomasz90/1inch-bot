@@ -13,12 +13,12 @@ interface IResources<T> {
 }
 
 @Component
-class PropertiesLoader : IResources<PropertiesHolder> {
-    override fun load(): PropertiesHolder {
+class PropertiesLoader : IResources<Properties> {
+    override fun load(): Properties {
         val dir = Paths.get("src", "main", "resources", "properties.yml")
         val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
-        return newBufferedReader(dir).use { mapper.readValue(it, PropertiesHolder::class.java) }
+        return newBufferedReader(dir).use { mapper.readValue(it, Properties::class.java) }
     }
 }
 
-class PropertiesHolder(val oneInchUrl: String, val bsc: Chain, val matic: Chain)
+class Properties(val oneInchUrl: String, val bsc: Chain, val matic: Chain)
