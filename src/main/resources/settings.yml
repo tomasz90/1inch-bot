@@ -1,10 +1,9 @@
-settings:
-  acount: realAccount
-  chain: bsc
-  my_address: 0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E
-  log_decimal_precision: 3
-  minimal_swap_quote: 10.0
-  amount_to_sell: 20000.0
-  demand_percent_advantage: 1.0
-  max_slippage: 0.1
-  increased_gas_limit: 1.25
+account: fakeAccount
+chain: matic
+myAddress: 0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E
+logDecimalPrecision: 3
+minimalSwapQuote: 10.0
+amountToSell: 20000.0
+demandPercentAdvantage: 1.0
+maxSlippage: 0.1
+increasedGasLimit: 1.25

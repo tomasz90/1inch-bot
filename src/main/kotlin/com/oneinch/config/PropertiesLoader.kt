@@ -4,36 +4,47 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.oneinch.common.Chain
-import java.nio.file.Files
-import java.nio.file.Path
+import org.springframework.stereotype.Component
+import java.nio.file.Files.newBufferedReader
 import java.nio.file.Paths
 
 interface IResources<T> {
-    fun load(file: String): T
+    fun load(): T
 }
 
+@Component
 class PropertiesLoader : IResources<PropertiesHolder> {
-    override fun load(file: String): PropertiesHolder {
-        val resourceDirectory: Path = Paths.get("src", "main", "resources", file)
-        val mapper = ObjectMapper(YAMLFactory())
-        mapper.registerModule(KotlinModule())
-        return Files.newBufferedReader(resourceDirectory).use { mapper.readValue(it, PropertiesHolder::class.java) }
+    override fun load(): PropertiesHolder {
+        val dir = Paths.get("src", "main", "resources", "properties.yml")
+        val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
+        return newBufferedReader(dir).use { mapper.readValue(it, PropertiesHolder::class.java) }
     }
 }
 
+@Component
 class SettingsLoader : IResources<SettingsHolder> {
-    override fun load(file: String): SettingsHolder {
-        TODO("Not yet implemented")
+    override fun load(): SettingsHolder {
+        val dir = Paths.get("src", "main", "resources", "settings.yml")
+        val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
+        return newBufferedReader(dir).use { mapper.readValue(it, SettingsHolder::class.java) }
     }
-
 }
 
-class SettingsHolder {
+class SettingsHolder(
+    val account: String,
+    val chain: String,
+    val myAddress: String,
+    val logDecimalPrecision: Int,
+    val minimalSwapQuote: Double,
+    val amountToSell: Double,
+    val demandPercentAdvantage: Double,
+    val maxSlippage: Double,
+    val increasedGasLimit: Double
+)
 
-}
-
-class PropertiesHolder(val oneInchURL: String, val bsc: Chain, val matic: Chain)
+class PropertiesHolder(val oneInchUrl: String, val bsc: Chain, val matic: Chain)
 
 fun main() {
-    PropertiesLoader().load("properties.yml")
+    val c = SettingsLoader().load()
+    println(c)
 }
