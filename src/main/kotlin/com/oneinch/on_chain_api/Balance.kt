@@ -51,6 +51,8 @@ fun MutableMap<TokenQuote, Boolean>.filterBalance(erc20: Token): Map<TokenQuote,
 @Component
 class FakeBalance : IBalance {
 
+    // TODO: 02.09.2021 DB here is needed
+
     override fun getERC20(erc20: Token): TokenQuote {
         TODO("Not yet implemented")
     }
