@@ -27,6 +27,7 @@ class Main {
     @DelicateCoroutinesApi
     fun run() {
         val chain: Chain = InputConfig.CHAIN
+        println(yamlFooProperties.bsc?.toChain())
 //    getLogger().debug("Set waiting time in sec: ")
 //    val waitingTime = readLine()?.toLong()!!
 //
