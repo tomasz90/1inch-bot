@@ -1,0 +1,14 @@
+spring:
+  h2:
+    console:
+      enabled: 'true'
+      path: /console
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+  datasource:
+    url: jdbc:h2:file:./database
+  main:
+    allow-bean-definition-overriding: 'true'

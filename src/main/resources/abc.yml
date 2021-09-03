@@ -1,0 +1,8 @@
+application:
+  users:
+    -
+      name: a
+      age: 2
+    -
+      name: b
+      age: 6
