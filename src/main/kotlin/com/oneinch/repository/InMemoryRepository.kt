@@ -2,12 +2,12 @@ package com.oneinch.repository
 
 import com.oneinch.one_inch_api.api.data.Token
 import com.oneinch.one_inch_api.api.data.TokenQuote
-import org.springframework.stereotype.Repository
+import org.springframework.stereotype.Component
 
-@Repository
+@Component
 open class InMemoryRepository {
 
-    private val allBalance: MutableMap<TokenQuote, Boolean> = mutableMapOf()
+    val allBalance = mutableMapOf<TokenQuote, Boolean>()
 
     fun get(erc20: Token): TokenQuote {
         return allBalance
@@ -24,12 +24,11 @@ open class InMemoryRepository {
     }
 
     fun needsRefresh(erc20: Token): Boolean {
+        if(allBalance.isEmpty()) {
+            return true
+        }
         return allBalance
             .filterKeys { tokenQuote -> tokenQuote.token.address == erc20.address }
             .values.first()
-    }
-
-    fun isEmpty(): Boolean {
-       return allBalance.isEmpty()
     }
 }

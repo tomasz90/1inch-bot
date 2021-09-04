@@ -19,7 +19,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
     }
 
     override fun getERC20(erc20: Token): TokenQuote {
-        return if (repository.isEmpty() || repository.needsRefresh(erc20)) {
+        return if (repository.needsRefresh(erc20)) {
             val tokenQuote = getFromChain(erc20)
             repository.save(tokenQuote)
             tokenQuote
