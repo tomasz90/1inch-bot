@@ -30,14 +30,12 @@ class FakeTransaction : ITransaction
 class Sender(val rawTransactionManager: RawTransactionManager, val balance: IBalance, val settings: Settings) :
     ISender<Transaction> {
 
-    @DelicateCoroutinesApi
     override fun sendTransaction(t: Transaction, from: TokenQuote) {
         val increasedGasLimit = increaseGasLimit(t.gasLimit)
         getLogger().info("Swapping, gasPrice: ${t.gasPrice} gasLimit: $increasedGasLimit")
         val tx = rawTransactionManager.sendTransaction(t.gasPrice, increasedGasLimit, t.address, t.data, t.value)
         getLogger().info("TxHash: ${tx.transactionHash}")
         balance.refresh(from.token, true)
-        GlobalScope.cancel("") // TODO: 01.09.2021 Check this
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {

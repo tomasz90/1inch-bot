@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 import kotlin.reflect.full.declaredMemberProperties
 
 @Configuration
-open class CommonConfig {
+open class Config {
     @Autowired
     lateinit var propertiesLoader: PropertiesLoader
 
