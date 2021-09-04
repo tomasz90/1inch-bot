@@ -14,7 +14,7 @@ class FakeRequester(private val sender: ISender<FakeTransaction>) : AbstractRequ
         val dto = oneInchClient.quote(chainId, from, to) // TODO: 01.09.2021 change to swap when working
         val tx = createTx(dto)
         val isGood = isRateGood(dto.from, dto.to, dto.percentage)
-        if (isGood) sender.sendTransaction(tx, from)
+        if (isGood) sender.sendTransaction(tx, from, dto.to)
     }
 
     private fun createTx(dto: QuoteDto): FakeTransaction {

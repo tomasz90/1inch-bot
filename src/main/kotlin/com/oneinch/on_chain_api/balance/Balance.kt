@@ -2,8 +2,7 @@ package com.oneinch.on_chain_api.balance
 
 import com.oneinch.one_inch_api.api.data.Token
 import com.oneinch.one_inch_api.api.data.TokenQuote
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.cancel
+import com.oneinch.repository.InMemoryRepository
 import org.springframework.stereotype.Component
 import org.web3j.contracts.eip20.generated.ERC20.load
 import org.web3j.protocol.core.DefaultBlockParameterName.LATEST
@@ -13,30 +12,27 @@ import org.web3j.tx.gas.DefaultGasProvider
 import java.math.BigInteger
 
 @Component
-class Balance(private val web3j: JsonRpc2_0Web3j, private val myAddress: String) : IBalance {
-
-    private val allBalance: MutableMap<TokenQuote, Boolean> = mutableMapOf()
+class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository: InMemoryRepository) : IBalance {
 
     fun get(): BigInteger {
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
     }
 
     override fun getERC20(erc20: Token): TokenQuote {
-        return if (allBalance.isEmpty() || allBalance.filterBalance(erc20).values.first()) {
-            val txManager = ClientTransactionManager(web3j, myAddress)
-            val contract = load(erc20.address, web3j, txManager, DefaultGasProvider())
-            val quote = contract.balanceOf(myAddress).send()
-            val tokenQuote = TokenQuote(erc20, quote)
-            allBalance[tokenQuote] = false
+        return if (repository.isEmpty() || repository.needsRefresh(erc20)) {
+            val tokenQuote = getFromChain(erc20)
+            repository.save(tokenQuote)
             tokenQuote
         } else {
-            allBalance.filterBalance(erc20).keys.first()
+            repository.get(erc20)
         }
     }
 
-    override fun refresh(erc20: Token, boolean: Boolean) {
-        allBalance[allBalance.filterBalance(erc20).keys.first()] = boolean
-        GlobalScope.cancel("") // TODO: 01.09.2021 Check this
+    private fun getFromChain(erc20: Token): TokenQuote {
+        val txManager = ClientTransactionManager(web3j, myAddress)
+        val contract = load(erc20.address, web3j, txManager, DefaultGasProvider())
+        val quote = contract.balanceOf(myAddress).send()
+        return TokenQuote(erc20, quote)
     }
 }
 

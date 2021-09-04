@@ -4,6 +4,7 @@ import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.FakeBalance
 import com.oneinch.on_chain_api.sender.FakeSender
 import com.oneinch.one_inch_api.requester.FakeRequester
+import com.oneinch.repository.Repository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,14 +17,17 @@ open class TestConfig {
     @Autowired
     lateinit var settings: Settings
 
+    @Autowired
+    lateinit var repository: Repository
+
     @Bean
     open fun myAddress() = settings.myAddress
 
     @Bean
-    open fun balance() = FakeBalance()
+    open fun balance() = FakeBalance(repository)
 
     @Bean
-    open fun sender() = FakeSender()
+    open fun sender() = FakeSender(repository)
 
     @Bean
     open fun requester() = FakeRequester(sender())

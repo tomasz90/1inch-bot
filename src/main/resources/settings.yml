@@ -1,4 +1,4 @@
-account: fakeAccount
+account: realAccount
 chain: bsc
 myAddress: 0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E
 logDecimalPrecision: 3

@@ -1,4 +1,4 @@
-package com.oneinch.h2.dao.entity
+package com.oneinch.repository.dao
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
