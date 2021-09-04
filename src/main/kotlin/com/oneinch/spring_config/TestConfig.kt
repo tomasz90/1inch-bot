@@ -1,9 +1,9 @@
 package com.oneinch.spring_config
 
 import com.oneinch.config.Settings
-import com.oneinch.on_chain_api.FakeBalance
-import com.oneinch.on_chain_api.FakeSender
-import com.oneinch.one_inch_api.FakeRequester
+import com.oneinch.on_chain_api.balance.FakeBalance
+import com.oneinch.on_chain_api.sender.FakeSender
+import com.oneinch.one_inch_api.requester.FakeRequester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

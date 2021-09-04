@@ -2,12 +2,9 @@ package com.oneinch.spring_config
 
 import com.oneinch.`object`.Chain
 import com.oneinch.config.Settings
-import com.oneinch.on_chain_api.Balance
-import com.oneinch.on_chain_api.FakeBalance
-import com.oneinch.on_chain_api.FakeSender
-import com.oneinch.on_chain_api.Sender
-import com.oneinch.one_inch_api.FakeRequester
-import com.oneinch.one_inch_api.Requester
+import com.oneinch.on_chain_api.balance.Balance
+import com.oneinch.on_chain_api.sender.Sender
+import com.oneinch.one_inch_api.requester.Requester
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
