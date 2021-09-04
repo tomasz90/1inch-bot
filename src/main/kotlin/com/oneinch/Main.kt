@@ -48,7 +48,6 @@ class Main {
             when (val tokenQuote = balance.getERC20(pair.first)) {
                 null -> { }
                 else -> {
-                    println("check pair: ${pair.first.symbol}   ${pair.second.symbol}")
                     if (tokenQuote.toReadable() > settings.minimalSwapQuote) {
                         requester.swap(chain.id, tokenQuote, pair.second)
                     }

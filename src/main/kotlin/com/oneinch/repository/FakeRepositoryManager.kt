@@ -43,9 +43,7 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
 
     private fun fillWithFakeBalanceIfEmpty() {
         if (repository.count() == 0L) {
-            val usdc = createTokenQuoteEntity("USDC", 1000.0)
-            val usdt = createTokenQuoteEntity("USDT", 10000.0)
-            save(usdc)
+            val usdt = createTokenQuoteEntity("USDT", 1000.0)
             save(usdt)
         }
     }

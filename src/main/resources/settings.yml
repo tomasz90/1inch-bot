@@ -4,6 +4,6 @@ myAddress: 0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E
 logDecimalPrecision: 2
 minimalSwapQuote: 10.0
 amountToSell: 20000.0
-demandPercentAdvantage: 0.1
+demandPercentAdvantage: 0.05
 maxSlippage: 0.1
 increasedGasLimit: 1.25
