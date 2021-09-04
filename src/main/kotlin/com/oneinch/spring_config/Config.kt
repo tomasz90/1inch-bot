@@ -1,6 +1,5 @@
 package com.oneinch.spring_config
 
-import Const
 import Const.precision
 import Const.tokens
 import com.oneinch.`object`.Chain

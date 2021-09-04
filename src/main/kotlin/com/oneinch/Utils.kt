@@ -35,17 +35,17 @@ fun logSwapInfo(from: TokenQuote, to: TokenQuote) {
 
 fun TokenQuote.toReadable(): Double {
     val bigDec = origin.toBigDecimal()
-    val multiplication = calculateMultiplication(symbol)
+    val multiplication = calculateMultiplication(address)
     return bigDec.divide(multiplication).toDouble()
 }
 
 fun FakeTokenQuoteEntity.toOrigin(): BigInteger {
-    val multiplication = calculateMultiplication(symbol)
+    val multiplication = calculateMultiplication(address)
     return readable.multiply(multiplication).toBigInteger()
 }
 
-fun calculateMultiplication(symbol: String): BigDecimal {
-    val decimals = tokens.first { it.symbol == symbol }.decimals
+fun calculateMultiplication(address: String): BigDecimal {
+    val decimals = tokens.first { it.address == address }.decimals
     return BigDecimal.valueOf(10L).pow(decimals)
 }
 
