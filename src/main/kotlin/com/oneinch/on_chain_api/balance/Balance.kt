@@ -19,12 +19,12 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
     }
 
     override fun getERC20(erc20: Token): TokenQuote {
-        return if (repository.needsRefresh(erc20)) {
+        return if (repository.needsRefresh(erc20.symbol)) {
             val tokenQuote = getFromChain(erc20)
             repository.save(tokenQuote)
             tokenQuote
         } else {
-            repository.get(erc20)
+            repository.get(erc20.symbol)
         }
     }
 
@@ -32,7 +32,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         val txManager = ClientTransactionManager(web3j, myAddress)
         val contract = load(erc20.address, web3j, txManager, DefaultGasProvider())
         val quote = contract.balanceOf(myAddress).send()
-        return TokenQuote(erc20, quote)
+        return TokenQuote(erc20.symbol, erc20.address, quote)
     }
 }
 

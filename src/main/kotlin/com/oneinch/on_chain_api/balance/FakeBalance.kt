@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class FakeBalance(val repository: FakeRepositoryManager) : IBalance {
 
-    override fun getERC20(erc20: Token): TokenQuote {
+    override fun getERC20(erc20: Token): TokenQuote? {
         return repository.getBalance(erc20)
     }
 }

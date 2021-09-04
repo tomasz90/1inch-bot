@@ -18,8 +18,7 @@ class Sender(
     val rawTransactionManager: RawTransactionManager,
     val repository: RealRepositoryManager,
     val inMemoryRepository: InMemoryRepository
-) :
-    ISender<Transaction> {
+) : ISender<Transaction> {
 
     override fun sendTransaction(t: Transaction, from: TokenQuote, to: TokenQuote) {
         val newGasLimit = increaseGasLimit(t.gasLimit)
@@ -28,7 +27,7 @@ class Sender(
             .sendTransaction(t.gasPrice, newGasLimit, t.address, t.data, t.value)
             .transactionHash
         repository.saveTransaction(from, to, t, txHash)
-        inMemoryRepository.update(from.token)
+        inMemoryRepository.update(from.symbol)
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {

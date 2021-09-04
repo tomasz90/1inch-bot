@@ -1,6 +1,5 @@
 package com.oneinch.repository
 
-import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import org.springframework.stereotype.Component
 
@@ -9,9 +8,9 @@ open class InMemoryRepository {
 
     val allBalance = mutableMapOf<TokenQuote, Boolean>()
 
-    fun get(erc20: Token): TokenQuote {
+    fun get(symbol: String): TokenQuote {
         return allBalance
-            .filterKeys { tokenQuote -> tokenQuote.token.address == erc20.address }
+            .filterKeys { tokenQuote -> tokenQuote.symbol == symbol }
             .keys.first()
     }
 
@@ -19,16 +18,16 @@ open class InMemoryRepository {
         allBalance[tokenQuote] = false
     }
 
-    fun update(erc20: Token) {
-        allBalance[get(erc20)] = true
+    fun update(symbol: String) {
+        allBalance[get(symbol)] = true
     }
 
-    fun needsRefresh(erc20: Token): Boolean {
+    fun needsRefresh(symbol: String): Boolean {
         if(allBalance.isEmpty()) {
             return true
         }
         return allBalance
-            .filterKeys { tokenQuote -> tokenQuote.token.address == erc20.address }
+            .filterKeys { tokenQuote -> tokenQuote.symbol == symbol }
             .values.first()
     }
 }

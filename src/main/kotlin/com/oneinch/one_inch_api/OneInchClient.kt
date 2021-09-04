@@ -13,7 +13,7 @@ import retrofit2.Response
 class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings: Settings) {
 
     fun quote(chainId: Int, from: TokenQuote, to: Token): QuoteDto {
-        val response = oneInch.quote(chainId, from.token.address, to.address, from.origin).execute()
+        val response = oneInch.quote(chainId, from.address, to.address, from.origin).execute()
         if (response.isSuccessful) {
             return response.body()!!.toDto()
         } else {
@@ -24,7 +24,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
 
     fun swap(chainId: Int, from: TokenQuote, to: Token): SwapDto {
         val response =
-            oneInch.swap(chainId, from.token.address, to.address, from.origin, myAddress, settings.maxSlippage).execute()
+            oneInch.swap(chainId, from.address, to.address, from.origin, myAddress, settings.maxSlippage).execute()
         if (response.isSuccessful) {
             return response.body()!!.toDto()
         } else {

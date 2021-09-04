@@ -54,11 +54,15 @@ class Main {
                 .forEach { diffToken ->
                     runBlocking {
                         GlobalScope.launch(handler) {
-                            val availableTokenQuote = balance.getERC20(token)
-//                            if (availableTokenQuote.readable < settings.minimalSwapQuote) {
-//                                return@launch
-//                            }
-                            requester.swap(chain.id, availableTokenQuote, diffToken)
+                            when (val tokenQuote = balance.getERC20(token)) {
+                                null -> {}
+                                else -> {
+//                                    if (tokenQuote.readable < settings.minimalSwapQuote) {
+//                                        return@launch
+//                                    }
+                                    requester.swap(chain.id, tokenQuote, diffToken)
+                                }
+                            }
                         }
                     }
                 }
