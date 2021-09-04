@@ -4,7 +4,7 @@ import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.FakeBalance
 import com.oneinch.on_chain_api.sender.FakeSender
 import com.oneinch.one_inch_api.requester.FakeRequester
-import com.oneinch.repository.Repository
+import com.oneinch.repository.FakeRepositoryManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,7 +18,7 @@ open class TestConfig {
     lateinit var settings: Settings
 
     @Autowired
-    lateinit var repository: Repository
+    lateinit var repository: FakeRepositoryManager
 
     @Bean
     open fun myAddress() = settings.myAddress

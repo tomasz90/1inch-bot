@@ -1,7 +1,7 @@
 package com.oneinch.on_chain_api.balance
 
-import com.oneinch.one_inch_api.api.data.Token
-import com.oneinch.one_inch_api.api.data.TokenQuote
+import com.oneinch.`object`.Token
+import com.oneinch.`object`.TokenQuote
 import com.oneinch.repository.InMemoryRepository
 import org.springframework.stereotype.Component
 import org.web3j.contracts.eip20.generated.ERC20.load

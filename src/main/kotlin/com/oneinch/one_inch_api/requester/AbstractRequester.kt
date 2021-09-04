@@ -2,8 +2,8 @@ package com.oneinch.one_inch_api.requester
 
 import com.oneinch.config.Settings
 import com.oneinch.one_inch_api.OneInchClient
-import com.oneinch.one_inch_api.api.data.Token
-import com.oneinch.one_inch_api.api.data.TokenQuote
+import com.oneinch.`object`.Token
+import com.oneinch.`object`.TokenQuote
 import logRatesInfo
 import logSwapInfo
 import org.springframework.beans.factory.annotation.Autowired

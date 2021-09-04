@@ -1,10 +1,12 @@
 package com.oneinch.on_chain_api.sender
 
 import com.oneinch.config.Settings
-import com.oneinch.repository.Repository
+import com.oneinch.repository.FakeRepositoryManager
 import com.oneinch.repository.InMemoryRepository
 import com.oneinch.on_chain_api.tx.Transaction
-import com.oneinch.one_inch_api.api.data.TokenQuote
+import com.oneinch.`object`.TokenQuote
+import com.oneinch.repository.IRepositoryManager
+import com.oneinch.repository.RealRepositoryManager
 import getLogger
 import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
@@ -14,7 +16,7 @@ import java.math.BigInteger
 class Sender(
     val settings: Settings,
     val rawTransactionManager: RawTransactionManager,
-    val repository: Repository,
+    val repository: RealRepositoryManager,
     val inMemoryRepository: InMemoryRepository
 ) :
     ISender<Transaction> {

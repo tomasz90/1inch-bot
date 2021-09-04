@@ -1,5 +1,6 @@
 package com.oneinch.spring_config
 
+import Const.precision
 import com.oneinch.`object`.Chain
 import com.oneinch.config.PropertiesLoader
 import com.oneinch.config.SettingsLoader
@@ -35,4 +36,9 @@ open class Config {
 
     @Bean
     open fun oneInch() = ApiProvider(properties()).create()
+
+    @Bean
+    open fun setPrecision() {
+        precision = settings().logDecimalPrecision
+    }
 }

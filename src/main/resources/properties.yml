@@ -21,7 +21,7 @@ bsc:
       decimals: 18
     -
       symbol: TUSD
-      address: 0x55d398326f99059ff775485246999027b3197955
+      address: 0x14016e85a25aeb13065688cafb43044c2ef86784
       decimals: 18
 matic:
   id: 137

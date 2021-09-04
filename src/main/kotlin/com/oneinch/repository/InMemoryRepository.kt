@@ -1,7 +1,7 @@
 package com.oneinch.repository
 
-import com.oneinch.one_inch_api.api.data.Token
-import com.oneinch.one_inch_api.api.data.TokenQuote
+import com.oneinch.`object`.Token
+import com.oneinch.`object`.TokenQuote
 import org.springframework.stereotype.Component
 
 @Component

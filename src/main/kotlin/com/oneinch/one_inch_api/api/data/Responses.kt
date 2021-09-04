@@ -1,6 +1,8 @@
 package com.oneinch.one_inch_api.api.data
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.oneinch.`object`.Token
+import com.oneinch.`object`.TokenQuote
 import java.math.BigInteger
 
 class QuoteResponse(

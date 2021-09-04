@@ -42,7 +42,7 @@ class Main {
         while (true) {
             checkRatesForEveryPair(chain, requester, handler)
             getLogger().info("---------------- WAIT ----------------")
-            TimeUnit.SECONDS.sleep(5)
+            TimeUnit.SECONDS.sleep(20)
         }
     }
 

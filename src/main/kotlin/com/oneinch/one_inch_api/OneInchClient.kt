@@ -1,5 +1,7 @@
 package com.oneinch.one_inch_api
 
+import com.oneinch.`object`.Token
+import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
 import com.oneinch.one_inch_api.api.OneInchApi
 import com.oneinch.one_inch_api.api.data.*

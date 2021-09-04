@@ -6,7 +6,8 @@ import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.sender.Sender
 import com.oneinch.one_inch_api.requester.Requester
 import com.oneinch.repository.InMemoryRepository
-import com.oneinch.repository.Repository
+import com.oneinch.repository.FakeRepositoryManager
+import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -30,7 +31,7 @@ open class RealConfig {
     lateinit var inMemoryRepository: InMemoryRepository
 
     @Autowired
-    lateinit var repository: Repository
+    lateinit var repository: RealRepositoryManager
 
     @Bean
     open fun web3j() = JsonRpc2_0Web3j(HttpService())

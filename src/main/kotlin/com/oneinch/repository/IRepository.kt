@@ -1,8 +1,8 @@
 package com.oneinch.repository
 
-import com.oneinch.repository.dao.TokenQuoteEntity
+import com.oneinch.repository.dao.FakeTokenQuoteEntity
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface IRepository : CrudRepository<TokenQuoteEntity, Long>
+interface IRepository : CrudRepository<FakeTokenQuoteEntity, Long>
