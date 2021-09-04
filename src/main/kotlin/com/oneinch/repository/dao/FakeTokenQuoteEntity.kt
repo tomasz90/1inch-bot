@@ -11,11 +11,9 @@ import javax.persistence.Id
 @Entity
 class FakeTokenQuoteEntity() {
 
-    @GeneratedValue(strategy = TABLE)
     @Id
-    var id: Long? = null
-    lateinit var symbol: String
     lateinit var address: String
+    lateinit var symbol: String
     lateinit var readable: BigDecimal
 
     constructor(symbol: String, address: String, readable: Double) : this() {

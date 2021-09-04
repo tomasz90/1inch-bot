@@ -7,7 +7,7 @@ import com.oneinch.on_chain_api.tx.FakeTransaction
 import com.oneinch.repository.dao.FakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
 import org.springframework.stereotype.Component
-import java.lang.NullPointerException
+import toReadable
 
 @Component
 open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) : IRepositoryManager {
@@ -21,7 +21,7 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
     }
 
     fun saveTransaction(from: TokenQuote, to: TokenQuote, t: FakeTransaction) {
-        TODO("Not yet implemented")
+        TODO("Not yet implemented, include date")
     }
 
     fun getBalance(erc20: Token): TokenQuote? {
@@ -29,18 +29,16 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
     }
 
     fun updateBalance(from: TokenQuote, to: TokenQuote) {
-//        val fromQuote = repository.findByAddress(from.address)!!
-//        fromQuote.readable = from.readable.toBigDecimal()
-//        val toQuote = repository.findByAddress(to.address)
-//
-//        repository.save(fromQuote)
-//        if (toQuote != null) {
-//            val to = createTokenQuoteEntity(to.symbol, to.readable)
-//            repository.save(to)
-//        } else {
-//            toQuote?.readable = to.readable.toBigDecimal()
-//            repository.save(toQuote)
-//        }
+        val entity = repository.findByAddress(from.address)!!
+        entity.readable -= from.toReadable().toBigDecimal()
+        var entity2 = repository.findByAddress(to.address)
+        if (entity2 == null) {
+            entity2 = createTokenQuoteEntity(to.symbol, to.toReadable())
+        } else {
+            entity2.readable += to.toReadable().toBigDecimal()
+        }
+        save(entity)
+        save(entity2)
     }
 
     private fun fillWithFakeBalanceIfEmpty() {

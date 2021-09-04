@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import java.math.BigDecimal
 
 @Repository
-interface IRepository : CrudRepository<FakeTokenQuoteEntity, Long> {
+interface IRepository : CrudRepository<FakeTokenQuoteEntity, String> {
 
     fun findByAddress(address: String): FakeTokenQuoteEntity?
 }
