@@ -36,7 +36,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
     private fun getFromChain(symbol: String, address: String): TokenQuote {
         val txManager = ClientTransactionManager(web3j, myAddress)
         val contract = load(address, web3j, txManager, DefaultGasProvider())
-        val quote = contract.balanceOf(myAddress).send()
+        val quote = contract.balanceOf(myAddress).send() //todo: catch sockettimeout excepion
         getLogger().info("Getting balance from chain: $quote")
         return TokenQuote(symbol, address, quote)
     }

@@ -7,4 +7,4 @@ amountToSell: 0.05
 demandPercentAdvantage: -0.3
 maxSlippage: 0.1
 increasedGasLimit: 1.25
-increasedGasPrice: 2
+increasedGasPrice: 3

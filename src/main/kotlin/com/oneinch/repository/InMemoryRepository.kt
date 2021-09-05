@@ -7,21 +7,21 @@ import java.math.BigInteger
 @Component
 open class InMemoryRepository {
 
-    val allBalance = mutableMapOf<String, TokenQuote>()
-
+    private val allBalance = mutableListOf<TokenQuote>()
 
     fun save(tokenQuote: TokenQuote) {
-        allBalance.put(tokenQuote.address, tokenQuote)
+        allBalance.add(tokenQuote)
     }
 
     fun findByAddress(address: String): TokenQuote? {
-        return allBalance.getOrDefault(address, null)
+        return allBalance.firstOrNull { it.address == address }
     }
 
     fun update(tokenQuote: TokenQuote) {
-        val x = findByAddress(tokenQuote.address) // TODO: 05.09.2021 to remove?
-        allBalance.replace(tokenQuote.address, tokenQuote)
+        val index = allBalance.indexOfFirst { it.address == tokenQuote.address }
+        if (index > -1) {
+            allBalance.removeAt(index)
+        }
+        allBalance.add(tokenQuote)
     }
 }
-
-class InMemoryToken(symbol: String, origin: BigInteger)
