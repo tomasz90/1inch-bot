@@ -3,6 +3,7 @@ package com.oneinch.on_chain_api.balance
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.repository.InMemoryRepository
+import getLogger
 import org.springframework.stereotype.Component
 import org.web3j.contracts.eip20.generated.ERC20.load
 import org.web3j.protocol.core.DefaultBlockParameterName.LATEST
@@ -19,20 +20,25 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
     }
 
     override fun getERC20(erc20: Token): TokenQuote {
-        return if (repository.needsRefresh(erc20.symbol)) {
-            val tokenQuote = getFromChain(erc20)
-            repository.save(tokenQuote)
-            tokenQuote
-        } else {
-            repository.get(erc20.symbol)
+        var x = repository.findByAddress(erc20.address)
+        if (x == null) {
+            x = getFromChain(erc20.symbol, erc20.address)
+            repository.save(x)
         }
+        return x
     }
 
-    private fun getFromChain(erc20: Token): TokenQuote {
+    fun update(tokenQuote: TokenQuote) {
+        val x = getFromChain(tokenQuote.symbol, tokenQuote.address)
+        repository.update(x)
+    }
+
+    private fun getFromChain(symbol: String, address: String): TokenQuote {
         val txManager = ClientTransactionManager(web3j, myAddress)
-        val contract = load(erc20.address, web3j, txManager, DefaultGasProvider())
+        val contract = load(address, web3j, txManager, DefaultGasProvider())
         val quote = contract.balanceOf(myAddress).send()
-        return TokenQuote(erc20.symbol, erc20.address, quote)
+        getLogger().info("Getting balance from chain: $quote")
+        return TokenQuote(symbol, address, quote)
     }
 }
 

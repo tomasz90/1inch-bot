@@ -1,11 +1,9 @@
 package com.oneinch.on_chain_api.sender
 
-import com.oneinch.config.Settings
-import com.oneinch.repository.FakeRepositoryManager
-import com.oneinch.repository.InMemoryRepository
-import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.repository.IRepositoryManager
+import com.oneinch.config.Settings
+import com.oneinch.on_chain_api.balance.Balance
+import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.repository.RealRepositoryManager
 import getLogger
 import org.springframework.stereotype.Component
@@ -18,7 +16,7 @@ class Sender(
     val settings: Settings,
     val rawTransactionManager: RawTransactionManager,
     val repository: RealRepositoryManager,
-    val inMemoryRepository: InMemoryRepository
+    val balance: Balance
 ) : ISender<Transaction> {
 
     override fun sendTransaction(t: Transaction, from: TokenQuote, to: TokenQuote) {
@@ -31,11 +29,11 @@ class Sender(
             .transactionHash
         repository.saveTransaction(from, to, t, txHash)
         getLogger().info(txHash)
-        inMemoryRepository.update(from)
-        inMemoryRepository.update(to)
 
         getLogger().info("WAITING FOR TRANSACTION SUCCEED")
         TimeUnit.SECONDS.sleep(30)
+        balance.update(from)
+        balance.update(to)
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {

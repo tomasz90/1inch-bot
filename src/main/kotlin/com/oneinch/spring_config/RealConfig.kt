@@ -49,7 +49,7 @@ open class RealConfig {
     open fun balance() = Balance(web3j(), myAddress(), inMemoryRepository)
 
     @Bean
-    open fun sender() = Sender(settings, rawTransactionManager(), repository, inMemoryRepository)
+    open fun sender() = Sender(settings, rawTransactionManager(), repository, balance())
 
     @Bean
     open fun requester() = Requester(sender())
