@@ -30,12 +30,12 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
 
     fun updateBalance(from: TokenQuote, to: TokenQuote) {
         val entity = repository.findByAddress(from.address)!!
-        entity.readable -= from.toReadable().toBigDecimal()
+        entity.readable -= from.toReadable()
         var entity2 = repository.findByAddress(to.address)
         if (entity2 == null) {
             entity2 = createTokenQuoteEntity(to.symbol, to.toReadable())
         } else {
-            entity2.readable += to.toReadable().toBigDecimal()
+            entity2.readable += to.toReadable()
         }
         save(entity)
         save(entity2)
@@ -43,7 +43,7 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
 
     private fun fillWithFakeBalanceIfEmpty() {
         if (repository.count() == 0L) {
-            val usdt = createTokenQuoteEntity("USDT", 1000.0)
+            val usdt = createTokenQuoteEntity("USDT", 10000.0)
             save(usdt)
         }
     }

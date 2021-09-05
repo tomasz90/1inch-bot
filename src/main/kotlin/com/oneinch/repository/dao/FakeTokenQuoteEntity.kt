@@ -2,25 +2,13 @@ package com.oneinch.repository.dao
 
 import com.oneinch.`object`.TokenQuote
 import toOrigin
-import java.math.BigDecimal
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType.TABLE
 import javax.persistence.Id
 
 @Entity
-class FakeTokenQuoteEntity() {
+class FakeTokenQuoteEntity(var symbol: String, @Id var address: String, var readable: Double) {
 
-    @Id
-    lateinit var address: String
-    lateinit var symbol: String
-    lateinit var readable: BigDecimal
-
-    constructor(symbol: String, address: String, readable: Double) : this() {
-        this.symbol = symbol
-        this.address = address
-        this.readable = readable.toBigDecimal()
-    }
+    constructor() : this("", "", 0.0)
 }
 
 fun FakeTokenQuoteEntity.toTokenQuote(): TokenQuote {

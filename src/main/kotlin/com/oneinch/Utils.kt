@@ -7,8 +7,8 @@ import org.apache.log4j.FileAppender
 import org.apache.log4j.LogManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.math.pow
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 
@@ -34,19 +34,19 @@ fun logSwapInfo(from: TokenQuote, to: TokenQuote) {
 }
 
 fun TokenQuote.toReadable(): Double {
-    val bigDec = origin.toBigDecimal()
+    val double = origin.toDouble()
     val multiplication = calculateMultiplication(address)
-    return bigDec.divide(multiplication).toDouble()
+    return double/multiplication
 }
 
 fun FakeTokenQuoteEntity.toOrigin(): BigInteger {
     val multiplication = calculateMultiplication(address)
-    return readable.multiply(multiplication).toBigInteger()
+    return (readable*multiplication).toBigDecimal().toBigInteger()
 }
 
-fun calculateMultiplication(address: String): BigDecimal {
+fun calculateMultiplication(address: String): Double {
     val decimals = tokens.first { it.address == address }.decimals
-    return BigDecimal.valueOf(10L).pow(decimals)
+    return 10.0.pow(decimals.toDouble())
 }
 
 fun calculateAdvantage(from: TokenQuote, to: TokenQuote): Double {
