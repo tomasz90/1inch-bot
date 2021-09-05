@@ -1,9 +1,10 @@
 account: realAccount
 chain: matic
 myAddress: 0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E
-logDecimalPrecision: 2
+logDecimalPrecision: 3
 minimalSwapQuote: 0.01
 amountToSell: 0.05
-demandPercentAdvantage: 0.05
+demandPercentAdvantage: -0.04
 maxSlippage: 0.1
 increasedGasLimit: 1.25
+increasedGasPrice: 3

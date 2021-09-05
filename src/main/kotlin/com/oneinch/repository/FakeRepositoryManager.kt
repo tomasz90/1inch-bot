@@ -5,9 +5,9 @@ import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.on_chain_api.tx.FakeTransaction
 import com.oneinch.repository.dao.FakeTokenQuoteEntity
+import com.oneinch.repository.dao.toFakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
 import org.springframework.stereotype.Component
-import toReadable
 
 @Component
 open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) : IRepositoryManager {
@@ -30,12 +30,14 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
 
     fun updateBalance(from: TokenQuote, to: TokenQuote) {
         val entity = repository.findByAddress(from.address)!!
-        entity.readable -= from.toReadable()
+        entity.readable -= from.readable // TODO: 05.09.2021 minus origin
+        entity.origin -= from.origin // TODO: 05.09.2021 minus origin
         var entity2 = repository.findByAddress(to.address)
         if (entity2 == null) {
-            entity2 = createTokenQuoteEntity(to.symbol, to.toReadable())
+            entity2 = createTokenQuoteEntity(to.symbol, to.readable)
         } else {
-            entity2.readable += to.toReadable()
+            entity2.readable += to.readable
+            entity2.origin += to.origin
         }
         save(entity)
         save(entity2)
@@ -50,6 +52,7 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
 
     private fun createTokenQuoteEntity(symbol: String, readable: Double): FakeTokenQuoteEntity {
         val token = chain.tokens.first { it.symbol == symbol }
-        return FakeTokenQuoteEntity(token.symbol, token.address, readable)
+        val tokenQuote = TokenQuote(token.symbol, token.address, readable)
+        return tokenQuote.toFakeTokenQuoteEntity()
     }
 }

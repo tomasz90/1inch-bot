@@ -34,7 +34,7 @@ open class RealConfig {
     lateinit var repository: RealRepositoryManager
 
     @Bean
-    open fun web3j() = JsonRpc2_0Web3j(HttpService())
+    open fun web3j() = JsonRpc2_0Web3j(HttpService(chain.rpc))
 
     @Bean
     open fun credentials() = Wallet().open()

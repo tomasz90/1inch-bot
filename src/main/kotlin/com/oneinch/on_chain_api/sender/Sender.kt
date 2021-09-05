@@ -11,6 +11,7 @@ import getLogger
 import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
+import java.util.concurrent.TimeUnit
 
 @Component
 class Sender(
@@ -22,15 +23,26 @@ class Sender(
 
     override fun sendTransaction(t: Transaction, from: TokenQuote, to: TokenQuote) {
         val newGasLimit = increaseGasLimit(t.gasLimit)
+        val newGasPrice = increaseGasPrice(t.gasPrice)
         getLogger().info("Swapping, gasPrice: ${t.gasPrice} gasLimit: $newGasLimit")
+        getLogger().info("from: ${from.origin} to: ${to.origin}")
         val txHash = rawTransactionManager
-            .sendTransaction(t.gasPrice, newGasLimit, t.address, t.data, t.value)
+            .sendTransaction(newGasPrice, newGasLimit, t.address, t.data, t.value)
             .transactionHash
         repository.saveTransaction(from, to, t, txHash)
-        inMemoryRepository.update(from.symbol)
+        getLogger().info(txHash)
+        inMemoryRepository.update(from)
+        inMemoryRepository.update(to)
+
+        getLogger().info("WAITING FOR TRANSACTION SUCCEED")
+        TimeUnit.SECONDS.sleep(30)
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {
         return (gasLimit.toDouble() * settings.increasedGasLimit).toBigDecimal().toBigInteger()
+    }
+
+    private fun increaseGasPrice(gasLimit: BigInteger): BigInteger {
+        return (gasLimit.toDouble() * settings.increasedGasPrice).toBigDecimal().toBigInteger()
     }
 }

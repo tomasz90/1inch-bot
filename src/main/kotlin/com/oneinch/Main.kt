@@ -8,7 +8,6 @@ import com.oneinch.one_inch_api.requester.AbstractRequester
 import getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import toReadable
 import java.util.concurrent.TimeUnit
 
 @Component
@@ -48,7 +47,7 @@ class Main {
             when (val tokenQuote = balance.getERC20(pair.first)) {
                 null -> { }
                 else -> {
-                    if (tokenQuote.toReadable() > settings.minimalSwapQuote) {
+                    if (tokenQuote.readable > settings.minimalSwapQuote) {
                         requester.swap(chain.id, tokenQuote, pair.second)
                     }
                 }

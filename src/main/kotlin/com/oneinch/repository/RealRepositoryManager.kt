@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component
 class RealRepositoryManager: IRepositoryManager {
 
     fun saveTransaction(from: TokenQuote, to: TokenQuote, t: Transaction, txHash: String) {
-        TODO("Not yet implemented")
+        // TODO: 05.09.2021  
     }
 }

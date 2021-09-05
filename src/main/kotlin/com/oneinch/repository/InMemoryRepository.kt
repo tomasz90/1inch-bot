@@ -15,19 +15,28 @@ open class InMemoryRepository {
     }
 
     fun save(tokenQuote: TokenQuote) {
-        allBalance[tokenQuote] = false
+        val x = allBalance
+            .filterKeys { token -> tokenQuote.symbol == token.symbol }
+            .values.firstOrNull()
+        if (x == null) {
+            allBalance[tokenQuote] = false
+        }
     }
 
-    fun update(symbol: String) {
-        allBalance[get(symbol)] = true
+    fun update(tokenQuote: TokenQuote) {
+        val x = allBalance
+            .filterKeys { token -> tokenQuote.symbol == token.symbol }
+            .values.firstOrNull()
+        if (x == null) {
+            allBalance[tokenQuote] = true
+        } else {
+            allBalance[allBalance.filterKeys { it.symbol == tokenQuote.symbol }.entries.first().key] = true
+        }
     }
 
     fun needsRefresh(symbol: String): Boolean {
-        if(allBalance.isEmpty()) {
-            return true
-        }
         return allBalance
             .filterKeys { tokenQuote -> tokenQuote.symbol == symbol }
-            .values.first()
+            .values.firstOrNull() ?: true
     }
 }

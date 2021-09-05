@@ -25,5 +25,6 @@ class Settings(
     val amountToSell: Double,
     val demandPercentAdvantage: Double,
     val maxSlippage: Double,
-    val increasedGasLimit: Double
+    val increasedGasLimit: Double,
+    val increasedGasPrice: Double
 )

@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component
 class Requester(private val sender: ISender<Transaction>) : AbstractRequester() {
 
     override fun swap(chainId: Int, from: TokenQuote, to: Token) {
-        val dto = oneInchClient.quote(chainId, from, to) // TODO: 01.09.2021 change to swap when working
-//        val tx = createTx(dto)
-//        val isGood = isRateGood(dto.from, dto.to, dto.percentage)
-//        if (isGood) sender.sendTransaction(tx, from)
+        val dto = oneInchClient.swap(chainId, from, to) // TODO: 01.09.2021 change to swap when working
+        if(dto != null) {
+            val tx = createTx(dto)
+            val isGood = isRateGood(dto.from, dto.to, dto.percentage)
+            if (isGood) sender.sendTransaction(tx, from, dto.to)
+        }
     }
 
     private fun createTx(dto: SwapDto): Transaction {
