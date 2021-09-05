@@ -12,9 +12,11 @@ class FakeRequester(private val sender: ISender<FakeTransaction>) : AbstractRequ
 
     override fun swap(chainId: Int, from: TokenQuote, to: Token) {
         val dto = oneInchClient.quote(chainId, from, to)
-        val tx = createTx(dto)
-        val isGood = isRateGood(dto.from, dto.to, dto.percentage)
-        if (isGood) sender.sendTransaction(tx, from, dto.to)
+        if(dto != null) {
+            val tx = createTx(dto)
+            val isGood = isRateGood(dto.from, dto.to, dto.percentage)
+            if (isGood) sender.sendTransaction(tx, from, dto.to)
+        }
     }
 
     private fun createTx(dto: QuoteDto): FakeTransaction {
