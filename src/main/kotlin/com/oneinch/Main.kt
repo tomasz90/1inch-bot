@@ -5,7 +5,6 @@ import com.oneinch.`object`.Token
 import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.IBalance
 import com.oneinch.one_inch_api.requester.AbstractRequester
-import getLogger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
@@ -26,10 +25,10 @@ class Main {
     private lateinit var settings: Settings
 
     fun run() {
-//    getLogger().debug("Set waiting time in sec: ")
+//    com.oneinch.getLogger().debug("Set waiting time in sec: ")
 //    val waitingTime = readLine()?.toLong()!!
 //
-//    getLogger().debug("Clean log? [y/n]")
+//    com.oneinch.getLogger().debug("Clean log? [y/n]")
 //    if (readLine().equals("y")) {
 //        withCleanLog(true)
 //    }
@@ -47,7 +46,7 @@ class Main {
             when (val tokenQuote = balance.getERC20(pair.first)) {
                 null -> { }
                 else -> {
-                    if (tokenQuote.readable > settings.minimalSwapQuote) {
+                    if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
                         requester.swap(chain.id, tokenQuote, pair.second)
                     }
                 }

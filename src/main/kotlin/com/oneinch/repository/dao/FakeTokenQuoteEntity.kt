@@ -15,6 +15,6 @@ fun FakeTokenQuoteEntity.toTokenQuote(): TokenQuote {
     return TokenQuote(symbol, address, origin)
 }
 
-fun TokenQuote.toFakeTokenQuoteEntity(): FakeTokenQuoteEntity {
+fun TokenQuote.toFakeTokenQuoteEntity(readable: Double): FakeTokenQuoteEntity {
     return FakeTokenQuoteEntity(this.symbol, this.address, readable, origin)
 }

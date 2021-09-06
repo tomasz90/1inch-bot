@@ -3,7 +3,7 @@ package com.oneinch.one_inch_api.api
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.oneinch.config.Properties
-import getLogger
+import com.oneinch.getLogger
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol

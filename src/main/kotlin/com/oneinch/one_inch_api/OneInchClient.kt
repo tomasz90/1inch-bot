@@ -5,7 +5,7 @@ import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
 import com.oneinch.one_inch_api.api.OneInchApi
 import com.oneinch.one_inch_api.api.data.*
-import getLogger
+import com.oneinch.getLogger
 import org.json.JSONObject
 import org.springframework.stereotype.Component
 import retrofit2.Response

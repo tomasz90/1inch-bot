@@ -1,7 +1,5 @@
 package com.oneinch.spring_config
 
-import Const.precision
-import Const.tokens
 import com.oneinch.`object`.Chain
 import com.oneinch.config.PropertiesLoader
 import com.oneinch.config.SettingsLoader
@@ -13,6 +11,7 @@ import kotlin.reflect.full.declaredMemberProperties
 
 @Configuration
 open class Config {
+
     @Autowired
     lateinit var propertiesLoader: PropertiesLoader
 
@@ -38,9 +37,4 @@ open class Config {
     @Bean
     open fun oneInch() = ApiProvider(properties()).create()
 
-    @Bean
-    open fun setNeededValues() {
-        precision = settings().logDecimalPrecision
-        tokens = chain().tokens
-    }
 }

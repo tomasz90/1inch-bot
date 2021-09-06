@@ -8,6 +8,7 @@ import com.oneinch.repository.dao.FakeTokenQuoteEntity
 import com.oneinch.repository.dao.toFakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
 import org.springframework.stereotype.Component
+import kotlin.math.pow
 
 @Component
 open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) : IRepositoryManager {
@@ -30,13 +31,13 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
 
     fun updateBalance(from: TokenQuote, to: TokenQuote) {
         val entity = repository.findByAddress(from.address)!!
-        entity.readable -= from.readable // TODO: 05.09.2021 minus origin
+        entity.readable -= from.calcReadable(chain) // TODO: 05.09.2021 minus origin
         entity.origin -= from.origin // TODO: 05.09.2021 minus origin
         var entity2 = repository.findByAddress(to.address)
         if (entity2 == null) {
-            entity2 = createTokenQuoteEntity(to.symbol, to.readable)
+            entity2 = createTokenQuoteEntity(to.symbol, to.calcReadable(chain))
         } else {
-            entity2.readable += to.readable
+            entity2.readable += to.calcReadable(chain)
             entity2.origin += to.origin
         }
         save(entity)
@@ -44,15 +45,16 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
     }
 
     private fun fillWithFakeBalanceIfEmpty() {
-//        if (repository.count() == 0L) {
-//            val usdt = createTokenQuoteEntity("USDT", 10000.0)
-//            save(usdt)
-//        }
+        if (repository.count() == 0L) {
+            val usdt = createTokenQuoteEntity("USDT", 10000.0)
+            save(usdt)
+        }
     }
 
     private fun createTokenQuoteEntity(symbol: String, readable: Double): FakeTokenQuoteEntity {
         val token = chain.tokens.first { it.symbol == symbol }
-        val tokenQuote = TokenQuote(token.symbol, token.address, readable)
-        return tokenQuote.toFakeTokenQuoteEntity()
+        val origin = (10.0.pow(token.decimals) * readable).toBigDecimal().toBigInteger()
+        val tokenQuote = TokenQuote(token.symbol, token.address, origin)
+        return tokenQuote.toFakeTokenQuoteEntity(readable)
     }
 }
