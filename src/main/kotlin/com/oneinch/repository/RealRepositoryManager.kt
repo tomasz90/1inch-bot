@@ -25,17 +25,19 @@ class RealRepositoryManager(
 
     fun saveTransaction(from: TokenQuote, to: TokenQuote, gasPrice: BigInteger, txHash: String, maxSlippage: Double) {
         val tx = RealTxEntity(
-            chain.id,
-            txHash,
-            gasPrice,
-            maxSlippage,
-            from.address,
-            from.origin.toString(),
-            from.calcReadable(chain),
-            to.address,
-            to.origin.toString(),
-            to.calcReadable(chain)
+            chainId = chain.id,
+            hash = txHash,
+            fromReadable = from.calcReadable(chain).round(),
+            toReadable = to.calcReadable(chain).round(),
+            fromAddress = from.address,
+            toAddress = to.address,
+            fromAmount = from.origin.toString(),
+            toAmount = to.origin.toString(),
+            gasPrice = gasPrice,
+            maxSlippage = maxSlippage
         )
         iRealTxRepository.save(tx)
     }
 }
+
+fun Double.round() = Math.round(this * 100.0) / 100.0
