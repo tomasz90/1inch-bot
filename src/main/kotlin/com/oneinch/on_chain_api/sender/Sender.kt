@@ -27,9 +27,8 @@ class Sender(
         val txHash = rawTransactionManager
             .sendTransaction(newGasPrice, newGasLimit, t.address, t.data, t.value)
             .transactionHash
-        repository.saveTransaction(from, to, t, txHash)
+        repository.saveTransaction(from, to, newGasPrice, txHash)
         getLogger().info(txHash)
-
         getLogger().info("WAITING FOR TRANSACTION SUCCEED")
         TimeUnit.SECONDS.sleep(30)
         balance.update(from)

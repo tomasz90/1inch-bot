@@ -1,13 +1,40 @@
 package com.oneinch.repository
 
+import com.oneinch.`object`.Chain
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.on_chain_api.tx.Transaction
+import com.oneinch.repository.dao.RealTxEntity
+import com.oneinch.repository.dao.TokenEntity
 import org.springframework.stereotype.Component
+import java.math.BigInteger
 
 @Component
-class RealRepositoryManager: IRepositoryManager {
+class RealRepositoryManager(
+    val iTokenEntityRepository: ITokenEntityRepository,
+    val iRealTxRepository: IRealTxRepository,
+    val chain: Chain
+) {
 
-    fun saveTransaction(from: TokenQuote, to: TokenQuote, t: Transaction, txHash: String) {
-        // TODO: 05.09.2021  
+    init {
+        if (iTokenEntityRepository.findByChainId(chain.id).isEmpty()) {
+            chain.tokens.forEach {
+                val tokenEntity = TokenEntity(it.symbol, it.address, chain.id)
+                iTokenEntityRepository.save(tokenEntity)
+            }
+        }
+    }
+
+    fun saveTransaction(from: TokenQuote, to: TokenQuote, gasPrice: BigInteger, txHash: String) {
+        val tx = RealTxEntity(
+            chain.id,
+            txHash,
+            gasPrice,
+            from.address,
+            from.origin.toString(),
+            from.calcReadable(chain),
+            to.address,
+            to.origin.toString(),
+            to.calcReadable(chain)
+        )
+        iRealTxRepository.save(tx)
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface IRepository : CrudRepository<FakeTokenQuoteEntity, String> {
+interface IFakeBalanceRepository : CrudRepository<FakeTokenQuoteEntity, String> {
 
     fun findByAddress(address: String): FakeTokenQuoteEntity?
 

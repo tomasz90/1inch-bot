@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import kotlin.math.pow
 
 @Component
-open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) : IRepositoryManager {
+open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val chain: Chain) {
 
     init {
         fillWithFakeBalanceIfEmpty("USDT", 2000.0)
