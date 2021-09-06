@@ -23,11 +23,12 @@ class RealRepositoryManager(
         }
     }
 
-    fun saveTransaction(from: TokenQuote, to: TokenQuote, gasPrice: BigInteger, txHash: String) {
+    fun saveTransaction(from: TokenQuote, to: TokenQuote, gasPrice: BigInteger, txHash: String, maxSlippage: Double) {
         val tx = RealTxEntity(
             chain.id,
             txHash,
             gasPrice,
+            maxSlippage,
             from.address,
             from.origin.toString(),
             from.calcReadable(chain),
