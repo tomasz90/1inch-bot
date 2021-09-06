@@ -19,24 +19,34 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
     }
 
-    override fun getERC20(erc20: Token): TokenQuote {
-        var x = repository.findByAddress(erc20.address)
-        if (x == null) {
-            x = getFromChain(erc20.symbol, erc20.address)
-            repository.save(x)
+    override fun getERC20(erc20: Token): TokenQuote? {
+        var tokenQuote = repository.findByAddress(erc20.address)
+        if (tokenQuote == null) {
+            tokenQuote = getFromChain(erc20.symbol, erc20.address)
+            if (tokenQuote != null) {
+                repository.save(tokenQuote)
+            }
         }
-        return x
+        return tokenQuote
     }
 
     fun update(tokenQuote: TokenQuote) {
-        val x = getFromChain(tokenQuote.symbol, tokenQuote.address)
-        repository.update(x)
+        val newTokenQuote = getFromChain(tokenQuote.symbol, tokenQuote.address)
+        if (newTokenQuote != null) {
+            repository.update(newTokenQuote)
+        }
     }
 
-    private fun getFromChain(symbol: String, address: String): TokenQuote {
+    private fun getFromChain(symbol: String, address: String): TokenQuote? {
         val txManager = ClientTransactionManager(web3j, myAddress)
         val contract = load(address, web3j, txManager, DefaultGasProvider())
-        val quote = contract.balanceOf(myAddress).send() //todo: catch sockettimeout excepion
+        val quote: BigInteger
+        try {
+            quote = contract.balanceOf(myAddress).send()
+        } catch (e: Exception) {
+            getLogger().info("Exception during getting balance: ${e.message}")
+            return null
+        }
         getLogger().info("Getting balance from chain: $quote")
         return TokenQuote(symbol, address, quote)
     }
