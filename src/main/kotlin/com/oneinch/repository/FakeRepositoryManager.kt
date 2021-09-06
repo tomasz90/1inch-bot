@@ -5,7 +5,6 @@ import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.on_chain_api.tx.FakeTransaction
 import com.oneinch.repository.dao.FakeTokenQuoteEntity
-import com.oneinch.repository.dao.toFakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
 import org.springframework.stereotype.Component
 import kotlin.math.pow
@@ -14,7 +13,7 @@ import kotlin.math.pow
 open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) : IRepositoryManager {
 
     init {
-        fillWithFakeBalanceIfEmpty()
+        fillWithFakeBalanceIfEmpty("USDT", 2000.0)
     }
 
     fun save(TokenQuoteEntity: FakeTokenQuoteEntity): FakeTokenQuoteEntity {
@@ -29,32 +28,35 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
         return repository.findByAddress(erc20.address)?.toTokenQuote()
     }
 
-    fun updateBalance(from: TokenQuote, to: TokenQuote) {
-        val entity = repository.findByAddress(from.address)!!
-        entity.readable -= from.calcReadable(chain) // TODO: 05.09.2021 minus origin
-        entity.origin -= from.origin // TODO: 05.09.2021 minus origin
-        var entity2 = repository.findByAddress(to.address)
-        if (entity2 == null) {
-            entity2 = createTokenQuoteEntity(to.symbol, to.calcReadable(chain))
-        } else {
-            entity2.readable += to.calcReadable(chain)
-            entity2.origin += to.origin
-        }
+    fun updateBalances(from: TokenQuote, to: TokenQuote) {
+        removeBalance(from)
+        addBalance(to)
+    }
+
+    private fun removeBalance(from: TokenQuote) {
+        val entity = findEntity(from)
+        entity.readable -= from.calcReadable(chain)
+        entity.origin = (entity.origin.toBigInteger() - from.origin.toBigDecimal().toBigInteger()).toString()
         save(entity)
-        save(entity2)
     }
 
-    private fun fillWithFakeBalanceIfEmpty() {
+    private fun addBalance(to: TokenQuote) {
+        val entity = findEntity(to)
+        entity.readable += to.calcReadable(chain)
+        entity.origin = (entity.origin.toBigInteger() + to.origin.toBigDecimal().toBigInteger()).toString()
+        save(entity)
+    }
+
+    private fun findEntity(to: TokenQuote): FakeTokenQuoteEntity {
+        return repository.findByAddress(to.address) ?: FakeTokenQuoteEntity(to.symbol, to.address, 0.0, "0")
+    }
+
+    private fun fillWithFakeBalanceIfEmpty(symbol: String, readable: Double) {
         if (repository.count() == 0L) {
-            val usdt = createTokenQuoteEntity("USDT", 10000.0)
-            save(usdt)
+            val token = chain.tokens.first { it.symbol == symbol }
+            val origin = (10.0.pow(token.decimals) * readable).toBigDecimal().toBigInteger().toString()
+            val entity = FakeTokenQuoteEntity(symbol, token.address, readable, origin)
+            save(entity)
         }
-    }
-
-    private fun createTokenQuoteEntity(symbol: String, readable: Double): FakeTokenQuoteEntity {
-        val token = chain.tokens.first { it.symbol == symbol }
-        val origin = (10.0.pow(token.decimals) * readable).toBigDecimal().toBigInteger()
-        val tokenQuote = TokenQuote(token.symbol, token.address, origin)
-        return tokenQuote.toFakeTokenQuoteEntity(readable)
     }
 }
