@@ -13,7 +13,7 @@ import kotlin.math.pow
 open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val chain: Chain) {
 
     init {
-        fillWithFakeBalanceIfEmpty("USDT", 2000.0)
+        fillWithFakeBalanceIfEmpty("USDC", 10000.0)
     }
 
     fun save(TokenQuoteEntity: FakeTokenQuoteEntity): FakeTokenQuoteEntity {

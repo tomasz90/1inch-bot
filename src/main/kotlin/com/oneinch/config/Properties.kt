@@ -17,4 +17,4 @@ class PropertiesLoader : IResources<Properties> {
     }
 }
 
-class Properties(val oneInchUrl: String, val bsc: Chain, val matic: Chain)
+class Properties(val oneInchUrl: String, val bsc: Chain, val matic: Chain, val optimism: Chain)
