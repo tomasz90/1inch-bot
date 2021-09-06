@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface IRepository : CrudRepository<FakeTokenQuoteEntity, String> {
 
     fun findByAddress(address: String): FakeTokenQuoteEntity?
+
+    fun findByChainId(chainId: Int): List<FakeTokenQuoteEntity>
 }

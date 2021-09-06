@@ -48,14 +48,14 @@ open class FakeRepositoryManager(val repository: IRepository, val chain: Chain) 
     }
 
     private fun findEntity(to: TokenQuote): FakeTokenQuoteEntity {
-        return repository.findByAddress(to.address) ?: FakeTokenQuoteEntity(to.symbol, to.address, 0.0, "0")
+        return repository.findByAddress(to.address) ?: FakeTokenQuoteEntity(chain.id, to.symbol, to.address, 0.0, "0")
     }
 
     private fun fillWithFakeBalanceIfEmpty(symbol: String, readable: Double) {
-        if (repository.count() == 0L) {
+        if (repository.findByChainId(chain.id).isEmpty()) {
             val token = chain.tokens.first { it.symbol == symbol }
             val origin = (10.0.pow(token.decimals) * readable).toBigDecimal().toBigInteger().toString()
-            val entity = FakeTokenQuoteEntity(symbol, token.address, readable, origin)
+            val entity = FakeTokenQuoteEntity(chain.id, symbol, token.address, readable, origin)
             save(entity)
         }
     }
