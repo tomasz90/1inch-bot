@@ -25,13 +25,7 @@ class Main {
     private lateinit var settings: Settings
 
     fun run() {
-//    com.oneinch.getLogger().debug("Set waiting time in sec: ")
-//    val waitingTime = readLine()?.toLong()!!
-//
-//    com.oneinch.getLogger().debug("Clean log? [y/n]")
-//    if (readLine().equals("y")) {
-//        withCleanLog(true)
-//    }
+        // TODO: 07.09.2021 fix settings/properties path when running jar 
         val pairs = createUniquePairs(chain.tokens)
 
         while (true) {

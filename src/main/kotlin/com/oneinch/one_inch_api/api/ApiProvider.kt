@@ -64,7 +64,7 @@ class TimeoutInterceptorImpl : TimeoutInterceptor{
         try {
             val response = chain.proceed(chain.request())
             response.close()
-        } catch (e: SocketTimeoutException) {
+        } catch (e: Exception) {
             getLogger().info("Response did not return on time - time out")
             return true
         }
