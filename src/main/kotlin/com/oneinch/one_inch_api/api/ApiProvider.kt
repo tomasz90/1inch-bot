@@ -42,9 +42,9 @@ class ApiProvider(private val properties: Properties) {
         .create(OneInchApi::class.java)
 }
 
-interface TimeoutInterceptor: Interceptor
+interface TimeoutInterceptor : Interceptor
 
-class TimeoutInterceptorImpl : TimeoutInterceptor{
+class TimeoutInterceptorImpl : TimeoutInterceptor {
 
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val errorBody = JSONObject().put("message", "TIMEOUT").toString()
@@ -57,7 +57,19 @@ class TimeoutInterceptorImpl : TimeoutInterceptor{
                 .body(errorBody.toResponseBody(null))
                 .build()
         }
-        return chain.proceed(chain.request())
+        return try {
+            chain.proceed(chain.request())
+        } catch (e: Exception) {
+            getLogger().error("Timeout?????")
+            // TODO: 08.09.2021 to refactor, first check if working without problems
+            okhttp3.Response.Builder()
+                .request(chain.request())
+                .protocol(Protocol.HTTP_1_1)
+                .code(400)
+                .message("client config invalid")
+                .body(errorBody.toResponseBody(null))
+                .build()
+        }
     }
 
     private fun isConnectionTimedOut(chain: Interceptor.Chain): Boolean {
