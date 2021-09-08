@@ -27,5 +27,6 @@ class Settings(
     val demandPercentAdvantage: Double,
     val maxSlippage: Double,
     val increasedGasLimit: Double,
-    val increasedGasPrice: Double
+    val increasedGasPrice: Double,
+    val sleepTime: Long
 )

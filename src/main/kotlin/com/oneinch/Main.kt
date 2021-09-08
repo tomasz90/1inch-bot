@@ -19,7 +19,7 @@ class Main(val requester: AbstractRequester, val balance: IBalance, val chain: C
         while (true) {
             checkRatesForEveryPair(pairs, chain, requester)
             getLogger().info("---------------- WAIT ----------------")
-            TimeUnit.SECONDS.sleep(5)
+            TimeUnit.SECONDS.sleep(settings.sleepTime)
         }
     }
 

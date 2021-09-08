@@ -8,3 +8,4 @@ demandPercentAdvantage: 0.3
 maxSlippage: 1
 increasedGasLimit: 1.25
 increasedGasPrice: 3
+sleepTime: 5
