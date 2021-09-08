@@ -35,18 +35,19 @@ class Main {
     }
 
     private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>, chain: Chain, requester: AbstractRequester) {
-        pairs.forEach { pair ->
-            when (val tokenQuote = balance.getERC20(pair.first)) {
-                null -> { }
-                else -> {
-                    if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
-                        requester.swap(chain.id, tokenQuote, pair.second)
-                    }
+        pairs.forEach { pair -> checkRatesForPair(pair, chain, requester) }
+    }
+
+    private fun checkRatesForPair(pair: Pair<Token, Token>, chain: Chain, requester: AbstractRequester) {
+        when (val tokenQuote = balance.getERC20(pair.first)) {
+            null -> { }
+            else -> {
+                if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
+                    requester.swap(chain.id, tokenQuote, pair.second)
                 }
             }
         }
     }
-
 
     private fun createUniquePairs(tokens: List<Token>): List<Pair<Token, Token>> {
         return tokens.flatMap { token ->
