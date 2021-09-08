@@ -14,6 +14,7 @@ class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
         val dto = oneInchClient.swap(chainId, from, to)
         if(dto != null) {
             val tx = createTx(dto)
+            // TODO: 08.09.2021 readjust slippage when percentage is high
             val isGood = isRateGood(dto.from, dto.to, utils.calculateAdvantage(dto.from, dto.to))
             if (isGood) sender.sendTransaction(tx, from, dto.to)
         }
