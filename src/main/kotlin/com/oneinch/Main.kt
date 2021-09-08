@@ -25,7 +25,6 @@ class Main {
     private lateinit var settings: Settings
 
     fun run() {
-        // TODO: 07.09.2021 fix settings/properties path when running jar 
         val pairs = createUniquePairs(chain.tokens)
 
         while (true) {

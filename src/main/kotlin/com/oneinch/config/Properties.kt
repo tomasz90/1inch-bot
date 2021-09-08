@@ -12,8 +12,10 @@ import java.nio.file.Paths
 class PropertiesLoader : IResources<Properties> {
     override fun load(): Properties {
         val dir = Paths.get("src", "main", "resources", "properties.yml")
+        val altDir = Paths.get("properties.yml")
         val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
-        return newBufferedReader(dir).use { mapper.readValue(it, Properties::class.java) }
+        val bufferedReader = readOneOfSource(dir, altDir)
+        return bufferedReader.use { mapper.readValue(it, Properties::class.java) }
     }
 }
 
