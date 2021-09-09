@@ -34,7 +34,7 @@ class Wallet {
         if (files.isEmpty()) {
             throw Exception("There is no keystore..")
         }
-        val password = "abc" //providePassword()
+        val password = "***REMOVED***" //providePassword()
         return WalletUtils.loadCredentials(password, files[0])
     }
 
