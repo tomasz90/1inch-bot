@@ -48,20 +48,9 @@ class TimeoutInterceptorImpl : TimeoutInterceptor {
 
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         val errorBody = JSONObject().put("message", "TIMEOUT").toString()
-        if (isConnectionTimedOut(chain)) {
-            return okhttp3.Response.Builder()
-                .request(chain.request())
-                .protocol(Protocol.HTTP_1_1)
-                .code(400)
-                .message("client config invalid")
-                .body(errorBody.toResponseBody(null))
-                .build()
-        }
         return try {
             chain.proceed(chain.request())
         } catch (e: Exception) {
-            getLogger().error("Timeout?????")
-            // TODO: 08.09.2021 to refactor, first check if working without problems
             okhttp3.Response.Builder()
                 .request(chain.request())
                 .protocol(Protocol.HTTP_1_1)
@@ -70,16 +59,5 @@ class TimeoutInterceptorImpl : TimeoutInterceptor {
                 .body(errorBody.toResponseBody(null))
                 .build()
         }
-    }
-
-    private fun isConnectionTimedOut(chain: Interceptor.Chain): Boolean {
-        try {
-            val response = chain.proceed(chain.request())
-            response.close()
-        } catch (e: Exception) {
-            getLogger().info("Response did not return on time - time out")
-            return true
-        }
-        return false
     }
 }
