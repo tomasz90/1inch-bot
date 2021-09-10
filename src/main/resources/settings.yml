@@ -1,5 +1,5 @@
-account: fakeAccount
-chain: optimism
+account: realAccount
+chain: matic
 myAddress: ***REMOVED***
 timeout: 5
 logDecimalPrecision: 2
