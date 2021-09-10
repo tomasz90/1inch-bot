@@ -16,7 +16,6 @@ open class App : CommandLineRunner {
     @Autowired
     lateinit var main: Main
 
-    @DelicateCoroutinesApi
     override fun run(vararg args: String?) {
         main.run()
     }

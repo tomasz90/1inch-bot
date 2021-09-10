@@ -27,10 +27,12 @@ class Sender(
         val txHash = rawTransactionManager
             .sendTransaction(newGasPrice, newGasLimit, t.address, t.data, t.value)
             .transactionHash
+        // TODO: 10.09.2021 max slippage is wrong here
         repository.saveTransaction(from, to, newGasPrice, txHash, settings.maxSlippage)
         getLogger().info(txHash)
         getLogger().info("WAITING FOR TRANSACTION SUCCEED")
-        TimeUnit.SECONDS.sleep(30)
+        // TODO: 09.09.2021 wait more
+        TimeUnit.SECONDS.sleep(60)
         balance.update(from)
         balance.update(to)
     }
