@@ -6,6 +6,7 @@ import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
 import com.oneinch.one_inch_api.OneInchClient
+import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 
 abstract class AbstractRequester {
@@ -22,7 +23,7 @@ abstract class AbstractRequester {
     @Autowired
     lateinit var chain: Chain
 
-    open fun swap(from: TokenQuote, to: Token){}
+    open suspend fun swap(from: TokenQuote, to: Token, coroutine: CoroutineScope){}
 
     fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double, demandAdvantage: Double): Boolean {
         utils.logRatesInfo(from, to, percentage, demandAdvantage)

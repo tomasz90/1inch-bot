@@ -17,30 +17,30 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class Main(val requester: AbstractRequester, val balance: IBalance, val chain: Chain, val settings: Settings) {
-    val coroutine = CoroutineScope(CoroutineName("coroutine"))
     fun run() {
         val pairs = createUniquePairs(chain.tokens)
         runBlocking {
             while (true) {
-                checkRatesForEveryPair(pairs)
+                var coroutine = CoroutineScope(CoroutineName("coroutine"))
+                checkRatesForEveryPair(pairs, coroutine)
             }
         }
     }
 
-    private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
+    private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>, coroutine: CoroutineScope) {
         pairs.forEach { pair ->
-            coroutine.launch { checkRatesForPair(pair) }
+            coroutine.launch { checkRatesForPair(pair, coroutine) }
         }
-        delay(500)
+        delay(200)
     }
 
-    private fun checkRatesForPair(pair: Pair<Token, Token>) {
+    private suspend fun checkRatesForPair(pair: Pair<Token, Token>, coroutine: CoroutineScope) {
         when (val tokenQuote = balance.getERC20(pair.first)) {
             null -> {
             }
             else -> {
                 if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
-                    requester.swap(tokenQuote, pair.second)
+                    requester.swap(tokenQuote, pair.second, coroutine)
                 }
             }
         }
