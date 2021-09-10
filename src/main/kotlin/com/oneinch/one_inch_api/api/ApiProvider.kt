@@ -3,7 +3,7 @@ package com.oneinch.one_inch_api.api
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.oneinch.config.Properties
-import com.oneinch.getLogger
+import com.oneinch.config.Settings
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
@@ -12,12 +12,11 @@ import org.json.JSONObject
 import org.springframework.stereotype.Component
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
-import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 
 @Component
-class ApiProvider(private val properties: Properties) {
+class ApiProvider(val properties: Properties, val settings: Settings) {
 
     private val mapper: ObjectMapper = ObjectMapper()
 
@@ -29,9 +28,9 @@ class ApiProvider(private val properties: Properties) {
     private val jacksonConverter = JacksonConverterFactory.create(mapper)
     private val httpClient = OkHttpClient.Builder()
         .addInterceptor(interceptor)
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .writeTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(20, TimeUnit.SECONDS)
+        .connectTimeout(settings.timeout, TimeUnit.SECONDS)
+        .writeTimeout(settings.timeout, TimeUnit.SECONDS)
+        .readTimeout(settings.timeout, TimeUnit.SECONDS)
         .build()
 
     fun create(): OneInchApi = Retrofit.Builder()

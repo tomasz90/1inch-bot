@@ -24,9 +24,9 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
         }
     }
 
-    fun swap(chainId: Int, from: TokenQuote, to: Token): SwapDto? {
+    fun swap(chainId: Int, from: TokenQuote, to: Token, maxSlippage: Double): SwapDto? {
         val response =
-            oneInch.swap(chainId, from.address, to.address, from.origin, myAddress, settings.maxSlippage).execute()
+            oneInch.swap(chainId, from.address, to.address, from.origin, myAddress, maxSlippage).execute()
         if (response.isSuccessful) {
             return response.body()!!.toDto()
         } else {

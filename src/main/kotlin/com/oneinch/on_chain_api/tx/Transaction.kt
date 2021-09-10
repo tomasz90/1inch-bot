@@ -7,5 +7,6 @@ class Transaction(
     val gasLimit: BigInteger,
     val value: BigInteger,
     val address: String,
-    val data: String
+    val data: String,
+    val maxSlippage: Double
 ) : ITransaction

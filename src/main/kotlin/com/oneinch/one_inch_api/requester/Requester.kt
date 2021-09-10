@@ -11,18 +11,19 @@ import org.springframework.stereotype.Component
 class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
 
     override fun swap(chainId: Int, from: TokenQuote, to: Token) {
-        val dto = oneInchClient.swap(chainId, from, to)
+        val swapSettings = settings.swapSettings.random()
+        val dto = oneInchClient.swap(chainId, from, to, swapSettings.maxSlippage)
         if(dto != null) {
-            val tx = createTx(dto)
-            // TODO: 08.09.2021 readjust slippage when percentage is high
-            val isGood = isRateGood(dto.from, dto.to, utils.calculateAdvantage(dto.from, dto.to))
+            val tx = createTx(dto, swapSettings.maxSlippage)
+            val advantage = utils.calculateAdvantage(dto.from, dto.to)
+            val isGood = isRateGood(dto.from, dto.to, advantage, swapSettings.demandAdvantage)
             if (isGood) sender.sendTransaction(tx, from, dto.to)
         }
     }
 
-    private fun createTx(dto: SwapDto): Transaction {
+    private fun createTx(dto: SwapDto, maxSlippage: Double): Transaction {
         val tx = dto.tx
-        return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data)
+        return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data, maxSlippage)
     }
 }
 

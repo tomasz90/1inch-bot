@@ -20,9 +20,9 @@ abstract class AbstractRequester {
 
     open fun swap(chainId: Int, from: TokenQuote, to: Token){}
 
-    fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double): Boolean {
-        utils.logRatesInfo(from, to, percentage)
-        if (percentage > settings.demandPercentAdvantage) {
+    fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double, demandAdvantage: Double): Boolean {
+        utils.logRatesInfo(from, to, percentage, demandAdvantage)
+        if (percentage > demandAdvantage) {
             utils.logSwapInfo(from, to)
             return true
         }

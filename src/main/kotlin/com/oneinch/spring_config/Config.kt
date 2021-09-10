@@ -35,6 +35,6 @@ open class Config {
     }
 
     @Bean
-    open fun oneInch() = ApiProvider(properties()).create()
+    open fun oneInch() = ApiProvider(properties(), settings()).create()
 
 }

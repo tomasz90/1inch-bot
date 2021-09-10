@@ -2,10 +2,10 @@ package com.oneinch.on_chain_api.sender
 
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
+import com.oneinch.getLogger
 import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.repository.RealRepositoryManager
-import com.oneinch.getLogger
 import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
@@ -27,11 +27,9 @@ class Sender(
         val txHash = rawTransactionManager
             .sendTransaction(newGasPrice, newGasLimit, t.address, t.data, t.value)
             .transactionHash
-        // TODO: 10.09.2021 max slippage is wrong here
-        repository.saveTransaction(from, to, newGasPrice, txHash, settings.maxSlippage)
+        repository.saveTransaction(from, to, newGasPrice, txHash, t.maxSlippage)
         getLogger().info(txHash)
         getLogger().info("WAITING FOR TRANSACTION SUCCEED")
-        // TODO: 09.09.2021 wait more
         TimeUnit.SECONDS.sleep(60)
         balance.update(from)
         balance.update(to)
