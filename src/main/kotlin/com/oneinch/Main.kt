@@ -17,17 +17,17 @@ class Main(val requester: AbstractRequester, val balance: IBalance, val chain: C
         val pairs = createUniquePairs(chain.tokens)
 
         while (true) {
-            checkRatesForEveryPair(pairs, chain, requester)
+            checkRatesForEveryPair(pairs)
             getLogger().info("---------------- WAIT ----------------")
             TimeUnit.SECONDS.sleep(settings.sleepTime)
         }
     }
 
-    private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>, chain: Chain, requester: AbstractRequester) {
-        pairs.forEach { pair -> checkRatesForPair(pair, chain, requester) }
+    private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
+        pairs.forEach { pair -> checkRatesForPair(pair) }
     }
 
-    private fun checkRatesForPair(pair: Pair<Token, Token>, chain: Chain, requester: AbstractRequester) {
+    private fun checkRatesForPair(pair: Pair<Token, Token>) {
         when (val tokenQuote = balance.getERC20(pair.first)) {
             null -> { }
             else -> {
