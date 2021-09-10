@@ -1,6 +1,7 @@
 package com.oneinch.one_inch_api.requester
 
 import com.oneinch.Utils
+import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
@@ -18,7 +19,10 @@ abstract class AbstractRequester {
     @Autowired
     lateinit var utils: Utils
 
-    open fun swap(chainId: Int, from: TokenQuote, to: Token){}
+    @Autowired
+    lateinit var chain: Chain
+
+    open fun swap(from: TokenQuote, to: Token){}
 
     fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double, demandAdvantage: Double): Boolean {
         utils.logRatesInfo(from, to, percentage, demandAdvantage)

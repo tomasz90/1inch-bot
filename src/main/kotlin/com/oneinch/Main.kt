@@ -32,7 +32,7 @@ class Main(val requester: AbstractRequester, val balance: IBalance, val chain: C
             null -> { }
             else -> {
                 if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
-                    requester.swap(chain.id, tokenQuote, pair.second)
+                    requester.swap(tokenQuote, pair.second)
                 }
             }
         }

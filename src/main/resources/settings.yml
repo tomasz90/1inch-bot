@@ -1,22 +1,13 @@
 account: fakeAccount
 chain: optimism
-myAddress: 0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E
+myAddress: ***REMOVED***
 timeout: 5
 logDecimalPrecision: 2
-minimalSwapQuote: 0.01
-swapSettings:
-  -
-    demandAdvantage: 0.2
-    maxSlippage: 0.2
-  -
-    demandAdvantage: 0.4
-    maxSlippage: 0.4
-  -
-    demandAdvantage: 0.6
-    maxSlippage: 0.6
-  -
-    demandAdvantage: 1.0
-    maxSlippage: 1.0
+minimalSwapQuote: 1.0
+advantage:
+  - 0.2
+  - 0.4
+  - 0.6
 increasedGasLimit: 1.25
 increasedGasPrice: 3
-sleepTime: 5
+sleepTime: 1
