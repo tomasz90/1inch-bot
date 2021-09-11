@@ -30,7 +30,7 @@ class Sender(
             .transactionHash
         repository.saveTransaction(from, to, newGasPrice, txHash, t.maxSlippage)
         getLogger().info(txHash)
-        getLogger().info("WAITING FOR TRANSACTION SUCCEED")
+        getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
         TimeUnit.SECONDS.sleep(120)
         balance.update(from)
         balance.update(to)

@@ -24,9 +24,17 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
         }
     }
 
-    fun swap(chainId: Int, from: TokenQuote, to: Token, maxSlippage: Double): SwapDto? {
+    fun swap(chainId: Int, from: TokenQuote, to: Token, maxSlippage: Double, allowPartialFill: Boolean): SwapDto? {
         val response =
-            oneInch.swap(chainId, from.address, to.address, from.origin, myAddress, maxSlippage).execute()
+            oneInch.swap(
+                chainId,
+                from.address,
+                to.address,
+                from.origin,
+                myAddress,
+                maxSlippage,
+                allowPartialFill
+            ).execute()
         if (response.isSuccessful) {
             return response.body()!!.toDto()
         } else {
@@ -38,7 +46,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
 
 fun <T> Response<T>.logErrorMessage(info: String) {
     val text = this.errorBody()!!.charStream().readText()
-    getLogger().error("$info Response status: ${this.code()}\n $text")
+    getLogger().error("$info Response status: ${this.code()} $text")
 }
 
 

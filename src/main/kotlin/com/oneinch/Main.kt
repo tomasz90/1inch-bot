@@ -35,7 +35,7 @@ class Main(val requester: AbstractRequester, val balance: IBalance, val chain: C
         pairs.forEach { pair ->
             coroutine.launch { checkRatesForPair(pair, coroutine) }
         }
-        delay(200)
+        delay(250)
     }
 
     private suspend fun checkRatesForPair(pair: Pair<Token, Token>, coroutine: CoroutineScope) {

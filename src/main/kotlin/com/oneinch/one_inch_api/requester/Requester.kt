@@ -17,7 +17,7 @@ class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token, coroutine: CoroutineScope) {
         val slippageAdvantage = settings.advantage.random()
-        val dto = oneInchClient.swap(chain.id, from, to, slippageAdvantage)
+        val dto = oneInchClient.swap(chain.id, from, to, slippageAdvantage, true)
         if (dto != null) {
             val advantage = utils.calculateAdvantage(dto.from, dto.to)
             val isGood = isRateGood(dto.from, dto.to, advantage, slippageAdvantage)
