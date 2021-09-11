@@ -5,6 +5,7 @@ import com.oneinch.config.Settings
 import com.oneinch.getLogger
 import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.tx.Transaction
+import com.oneinch.one_inch_api.requester.EnterSwap.canEnter
 import com.oneinch.repository.RealRepositoryManager
 import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
@@ -30,9 +31,10 @@ class Sender(
         repository.saveTransaction(from, to, newGasPrice, txHash, t.maxSlippage)
         getLogger().info(txHash)
         getLogger().info("WAITING FOR TRANSACTION SUCCEED")
-        TimeUnit.SECONDS.sleep(60)
+        TimeUnit.SECONDS.sleep(120)
         balance.update(from)
         balance.update(to)
+        canEnter = true
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {

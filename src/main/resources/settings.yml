@@ -5,9 +5,9 @@ timeout: 5
 logDecimalPrecision: 2
 minimalSwapQuote: 1.0
 advantage:
+  - 0.1
   - 0.2
-  - 0.4
-  - 0.6
+  - 0.3
 increasedGasLimit: 1.25
 increasedGasPrice: 2
 sleepTime: 1

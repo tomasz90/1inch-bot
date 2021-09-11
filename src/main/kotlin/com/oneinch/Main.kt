@@ -17,16 +17,20 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class Main(val requester: AbstractRequester, val balance: IBalance, val chain: Chain, val settings: Settings) {
+
+    val pairs = createUniquePairs(chain.tokens)
+    lateinit var coroutine: CoroutineScope
+
     fun run() {
-        val pairs = createUniquePairs(chain.tokens)
         runBlocking {
             while (true) {
-                var coroutine = CoroutineScope(CoroutineName("coroutine"))
+                coroutine = CoroutineScope(CoroutineName("coroutine"))
                 checkRatesForEveryPair(pairs, coroutine)
             }
         }
     }
 
+    // TODO: 10.09.2021 add two counters rps, maybe second when too long time in one currency
     private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>, coroutine: CoroutineScope) {
         pairs.forEach { pair ->
             coroutine.launch { checkRatesForPair(pair, coroutine) }
