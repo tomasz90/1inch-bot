@@ -23,9 +23,11 @@ class Settings(
     val myAddress: String,
     val logDecimalPrecision: Int,
     val minimalSwapQuote: Double,
-    val advantage: List<Double>,
+    val swapSettings: List<SwapSettings>,
     val increasedGasLimit: Double,
     val increasedGasPrice: Double,
     val sleepTime: Long,
     val timeout: Long
 )
+
+class SwapSettings(val advantage: Double, val slippage: Double)

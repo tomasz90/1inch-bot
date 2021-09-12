@@ -25,8 +25,8 @@ abstract class AbstractRequester {
 
     open suspend fun swap(from: TokenQuote, to: Token, coroutine: CoroutineScope) {}
 
-    fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double, demandAdvantage: Double): Boolean {
-        utils.logRatesInfo(from, to, percentage, demandAdvantage)
-        return percentage > (demandAdvantage * 0.8)
+    fun isRateGood(from: TokenQuote, to: TokenQuote, realAdvantage: Double, demandAdvantage: Double): Boolean {
+        utils.logRatesInfo(from, to, realAdvantage, demandAdvantage)
+        return realAdvantage > demandAdvantage
     }
 }

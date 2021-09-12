@@ -20,7 +20,7 @@ class Sender(
     val balance: Balance
 ) : ISender<Transaction> {
 
-    override fun sendTransaction(t: Transaction, from: TokenQuote, to: TokenQuote) {
+    override fun sendTransaction(t: Transaction, from: TokenQuote, to: TokenQuote, string: String) {
         val newGasLimit = increaseGasLimit(t.gasLimit)
         val newGasPrice = increaseGasPrice(t.gasPrice)
         getLogger().info("Swapping, gasPrice: ${t.gasPrice} gasLimit: $newGasLimit")
@@ -28,6 +28,7 @@ class Sender(
         val txHash = rawTransactionManager
             .sendTransaction(newGasPrice, newGasLimit, t.address, t.data, t.value)
             .transactionHash
+        getLogger().info("SWAP_ID: $string")
         repository.saveTransaction(from, to, newGasPrice, txHash, t.maxSlippage)
         getLogger().info(txHash)
         getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
