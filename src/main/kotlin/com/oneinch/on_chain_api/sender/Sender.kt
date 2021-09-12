@@ -22,16 +22,15 @@ class Sender(
 ) : ISender<Transaction> {
 
     @OptIn(ExperimentalTime::class)
-    override suspend fun sendTransaction(t: Transaction, from: TokenQuote, to: TokenQuote, string: String) {
-        val newGasLimit = increaseGasLimit(t.gasLimit)
-        val newGasPrice = increaseGasPrice(t.gasPrice)
-        getLogger().info("Swapping, gasPrice: ${t.gasPrice} gasLimit: $newGasLimit")
+    override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
+        val newGasLimit = increaseGasLimit(tx.gasLimit)
+        val newGasPrice = increaseGasPrice(tx.gasPrice)
+        getLogger().info("Swapping, gasPrice: ${tx.gasPrice} gasLimit: $newGasLimit")
         getLogger().info("from: ${from.origin} to: ${to.origin}")
         val txHash = rawTransactionManager
-            .sendTransaction(newGasPrice, newGasLimit, t.address, t.data, t.value)
+            .sendTransaction(newGasPrice, newGasLimit, tx.address, tx.data, tx.value)
             .transactionHash
-        getLogger().info("SWAP_ID: $string")
-        repository.saveTransaction(from, to, newGasPrice, txHash, t.maxSlippage)
+        repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.requestTimestamp)
         getLogger().info(txHash)
         getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
         delay(Duration.seconds(120))

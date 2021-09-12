@@ -13,4 +13,5 @@ swapSettings:
     slippage:  1.3
 increasedGasLimit: 1.25
 increasedGasPrice: 2
-sleepTime: 1
+allowPartialFill: true
+sleepTime: 200

@@ -5,36 +5,32 @@ import com.oneinch.`object`.TokenQuote
 import com.oneinch.on_chain_api.sender.ISender
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.one_inch_api.api.data.SwapDto
-import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
-import kotlin.random.Random
-import kotlin.random.nextULong
+import java.util.*
 
 @Component
 class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
         timer.addCall()
-        val swapId = Random.nextULong().toString()
-        getLogger().info("SWAP_ID: $swapId")
-        val settings = settings.swapSettings.random()
-        val dto = oneInchClient.swap(chain.id, from, to, settings.slippage, true)
+        val requestTimestamp = Date()
+        val swapSettings = settings.swapSettings.random()
+        val dto = oneInchClient.swap(chain.id, from, to, swapSettings.slippage, settings.allowPartialFill)
         if (dto != null) {
             val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
-            val isGood = isRateGood(dto.from, dto.to, realAdvantage, settings.advantage)
+            val isGood = isRateGood(dto.from, dto.to, realAdvantage, swapSettings.advantage)
             if (isGood && !isSwapping.get()) {
                 isSwapping.set(true)
-                getLogger().info("entered to swap")
-                val tx = createTx(dto, settings.slippage)
-                sender.sendTransaction(tx, from, dto.to, swapId)
+                val tx = createTx(dto, swapSettings.slippage, requestTimestamp)
+                sender.sendTransaction(tx, from, dto.to)
                 isSwapping.set(false)
             }
         }
     }
 
-    private fun createTx(dto: SwapDto, maxSlippage: Double): Transaction {
+    private fun createTx(dto: SwapDto, maxSlippage: Double, requestTimestamp: Date): Transaction {
         val tx = dto.tx
-        return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data, maxSlippage)
+        return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data, maxSlippage, requestTimestamp)
     }
 }
 

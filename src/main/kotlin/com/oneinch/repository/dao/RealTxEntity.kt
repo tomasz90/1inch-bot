@@ -15,6 +15,7 @@ class RealTxEntity(
     var id: Long = 0L,
     @CreationTimestamp
     var date: Date = Date(),
+    var requestTimeStamp: Date,
     var chainId: Int,
     var hash: String,
     var fromReadable: Double,
@@ -30,6 +31,7 @@ class RealTxEntity(
     constructor() :
             this(
                 0,
+                Date(),
                 Date(),
                 0,
                 "",

@@ -24,6 +24,7 @@ class Settings(
     val logDecimalPrecision: Int,
     val minimalSwapQuote: Double,
     val swapSettings: List<SwapSettings>,
+    val allowPartialFill: Boolean,
     val increasedGasLimit: Double,
     val increasedGasPrice: Double,
     val sleepTime: Long,

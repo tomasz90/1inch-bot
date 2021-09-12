@@ -18,7 +18,7 @@ class FakeRequester(val sender: ISender<FakeTransaction>) : AbstractRequester() 
         if(dto != null) {
             val tx = createTx(dto)
             val isGood = isRateGood(dto.from, dto.to, utils.calculateAdvantage(dto.from, dto.to), demandAdvantage)
-            if (isGood) sender.sendTransaction(tx, from, dto.to, "")
+            if (isGood) sender.sendTransaction(tx, from, dto.to)
         }
     }
 

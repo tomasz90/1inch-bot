@@ -44,7 +44,7 @@ class Main(
         pairs.forEach { pair ->
             coroutine.launch { checkRatesForPair(pair) }
         }
-        delay(200)
+        delay(settings.sleepTime)
     }
 
     private suspend fun checkRatesForPair(pair: Pair<Token, Token>) {

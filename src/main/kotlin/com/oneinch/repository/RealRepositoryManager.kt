@@ -7,6 +7,7 @@ import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import java.math.BigInteger
+import java.util.*
 
 @Component
 class RealRepositoryManager(
@@ -24,12 +25,20 @@ class RealRepositoryManager(
         }
     }
 
-    fun saveTransaction(from: TokenQuote, to: TokenQuote, gasPrice: BigInteger, txHash: String?, maxSlippage: Double) {
-        if(txHash == null) {
+    fun saveTransaction(
+        from: TokenQuote,
+        to: TokenQuote,
+        gasPrice: BigInteger,
+        txHash: String?,
+        maxSlippage: Double,
+        requestTimeStamp: Date
+    ) {
+        if (txHash == null) {
             getLogger().error("TxHash is null, did not receive proper response")
             return
         }
         val tx = RealTxEntity(
+            requestTimeStamp = requestTimeStamp,
             chainId = chain.id,
             hash = txHash,
             fromReadable = from.calcReadable(chain).round(),
