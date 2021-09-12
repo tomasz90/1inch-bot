@@ -1,12 +1,14 @@
 package com.oneinch.one_inch_api.requester
 
-import com.oneinch.Utils
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
 import com.oneinch.one_inch_api.OneInchClient
+import com.oneinch.util.Timer
+import com.oneinch.util.Utils
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class AbstractRequester {
 
@@ -22,14 +24,16 @@ abstract class AbstractRequester {
     @Autowired
     lateinit var chain: Chain
 
-    open fun swap(from: TokenQuote, to: Token){}
+    @Autowired
+    lateinit var isSwapping: AtomicBoolean
 
-    fun isRateGood(from: TokenQuote, to: TokenQuote, percentage: Double, demandAdvantage: Double): Boolean {
-        utils.logRatesInfo(from, to, percentage, demandAdvantage)
-        if (percentage > demandAdvantage) {
-            utils.logSwapInfo(from, to)
-            return true
-        }
-        return false
+    @Autowired
+    lateinit var timer: Timer
+
+    open suspend fun swap(from: TokenQuote, to: Token) {}
+
+    fun isRateGood(from: TokenQuote, to: TokenQuote, realAdvantage: Double, demandAdvantage: Double): Boolean {
+        utils.logRatesInfo(from, to, realAdvantage, demandAdvantage)
+        return realAdvantage > demandAdvantage
     }
 }

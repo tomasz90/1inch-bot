@@ -2,14 +2,16 @@ package com.oneinch.on_chain_api.sender
 
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
-import com.oneinch.getLogger
 import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.repository.RealRepositoryManager
+import com.oneinch.util.getLogger
+import kotlinx.coroutines.delay
 import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 
 @Component
 class Sender(
@@ -19,18 +21,19 @@ class Sender(
     val balance: Balance
 ) : ISender<Transaction> {
 
-    override fun sendTransaction(t: Transaction, from: TokenQuote, to: TokenQuote) {
-        val newGasLimit = increaseGasLimit(t.gasLimit)
-        val newGasPrice = increaseGasPrice(t.gasPrice)
-        getLogger().info("Swapping, gasPrice: ${t.gasPrice} gasLimit: $newGasLimit")
+    @OptIn(ExperimentalTime::class)
+    override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
+        val newGasLimit = increaseGasLimit(tx.gasLimit)
+        val newGasPrice = increaseGasPrice(tx.gasPrice)
+        getLogger().info("Swapping, gasPrice: ${tx.gasPrice} gasLimit: $newGasLimit")
         getLogger().info("from: ${from.origin} to: ${to.origin}")
         val txHash = rawTransactionManager
-            .sendTransaction(newGasPrice, newGasLimit, t.address, t.data, t.value)
+            .sendTransaction(newGasPrice, newGasLimit, tx.address, tx.data, tx.value)
             .transactionHash
-        repository.saveTransaction(from, to, newGasPrice, txHash, t.maxSlippage)
+        repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.requestTimestamp)
         getLogger().info(txHash)
-        getLogger().info("WAITING FOR TRANSACTION SUCCEED")
-        TimeUnit.SECONDS.sleep(60)
+        getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
+        delay(Duration.seconds(120))
         balance.update(from)
         balance.update(to)
     }

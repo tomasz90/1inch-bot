@@ -1,6 +1,6 @@
 package com.oneinch.wallet
 
-import com.oneinch.getLogger
+import com.oneinch.util.getLogger
 import org.web3j.crypto.Bip32ECKeyPair
 import org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT
 import org.web3j.crypto.Credentials

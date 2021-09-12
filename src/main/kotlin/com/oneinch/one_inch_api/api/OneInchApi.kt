@@ -26,7 +26,7 @@ interface OneInchApi {
         @Query("amount") amount: BigInteger,
         @Query("fromAddress") fromAddress: String,
         @Query("slippage") slippage: Double,
-        @Query("allowPartialFill") allowPartialFill: Boolean = true,
-        @Query("gasPrice") gasPrice: BigInteger? = null
+        //@Query("gasPrice") gasPrice: BigInteger? = null,
+        @Query("allowPartialFill") allowPartialFill: Boolean
     ): Call<SwapResponse>
 }

@@ -1,7 +1,6 @@
 package com.oneinch
 
 import com.oneinch.config.SettingsLoader
-import kotlinx.coroutines.DelicateCoroutinesApi
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
