@@ -8,9 +8,9 @@ swapSettings:
   - advantage: 0.2
     slippage:  0.3
   - advantage: 0.5
-    slippage:  0.7
+    slippage:  0.6
   - advantage: 1.0
-    slippage:  1.3
+    slippage:  1.2
 increasedGasLimit: 1.25
 increasedGasPrice: 2
 sleepTime: 1
