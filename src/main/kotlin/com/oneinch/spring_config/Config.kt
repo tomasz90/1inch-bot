@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.full.declaredMemberProperties
 
 @Configuration
@@ -38,5 +39,8 @@ open class Config {
 
     @Bean
     open fun oneInch() = ApiProvider(properties(), settings()).create()
+
+    @Bean
+    open fun isSwapping() = AtomicBoolean()
 
 }

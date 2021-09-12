@@ -3,11 +3,11 @@ package com.oneinch.one_inch_api
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
-import com.oneinch.getLogger
 import com.oneinch.one_inch_api.api.OneInchApi
 import com.oneinch.one_inch_api.api.data.QuoteDto
 import com.oneinch.one_inch_api.api.data.SwapDto
 import com.oneinch.one_inch_api.api.data.toDto
+import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import retrofit2.Response
 

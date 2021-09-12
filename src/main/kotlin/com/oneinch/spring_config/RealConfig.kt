@@ -55,7 +55,4 @@ open class RealConfig {
     @Bean
     open fun requester() = Requester(sender())
 
-    @Bean
-    open fun isSwapping() = AtomicBoolean()
-
 }

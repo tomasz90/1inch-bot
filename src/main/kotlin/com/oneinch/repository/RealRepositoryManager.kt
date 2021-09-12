@@ -2,9 +2,9 @@ package com.oneinch.repository
 
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.getLogger
 import com.oneinch.repository.dao.RealTxEntity
 import com.oneinch.repository.dao.TokenEntity
+import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 

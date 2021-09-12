@@ -2,10 +2,10 @@ package com.oneinch.on_chain_api.sender
 
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
-import com.oneinch.getLogger
 import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.repository.RealRepositoryManager
+import com.oneinch.util.getLogger
 import kotlinx.coroutines.delay
 import org.springframework.stereotype.Component
 import org.web3j.tx.RawTransactionManager

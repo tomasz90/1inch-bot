@@ -39,7 +39,7 @@ class Main(
         }
     }
 
-    // TODO: 10.09.2021 add two counters rps, maybe second when too long time in one currency
+    // TODO: 10.09.2021 add counter when too long time in one currency
     private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>, coroutine: CoroutineScope) {
         pairs.forEach { pair ->
             coroutine.launch { checkRatesForPair(pair) }

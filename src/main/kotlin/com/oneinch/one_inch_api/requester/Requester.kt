@@ -2,10 +2,10 @@ package com.oneinch.one_inch_api.requester
 
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.getLogger
 import com.oneinch.on_chain_api.sender.ISender
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.one_inch_api.api.data.SwapDto
+import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import kotlin.random.Random
 import kotlin.random.nextULong
@@ -14,6 +14,7 @@ import kotlin.random.nextULong
 class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
+        timer.addCall()
         val swapId = Random.nextULong().toString()
         getLogger().info("SWAP_ID: $swapId")
         val settings = settings.swapSettings.random()
