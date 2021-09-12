@@ -2,8 +2,9 @@ account: realAccount
 chain: matic
 myAddress: ***REMOVED***
 timeout: 5
-logDecimalPrecision: 2
+sleepTime: 200
 minimalSwapQuote: 1.0
+allowPartialFill: true
 swapSettings:
   - advantage: 0.2
     slippage:  0.3
@@ -13,5 +14,4 @@ swapSettings:
     slippage:  1.3
 increasedGasLimit: 1.25
 increasedGasPrice: 2
-allowPartialFill: true
-sleepTime: 200
+logDecimalPrecision: 2
