@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit
 @Component
 class Main(val requester: AbstractRequester, val balance: IBalance, val chain: Chain, val settings: Settings) {
 
-    fun run() {
-        val pairs = createUniquePairs(chain.tokens)
+    val pairs = createUniquePairs(chain.tokens)
 
+    fun run() {
         while (true) {
             checkRatesForEveryPair(pairs)
             getLogger().info("---------------- WAIT ----------------")

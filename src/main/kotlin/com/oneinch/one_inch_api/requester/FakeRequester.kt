@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class FakeRequester(val sender: ISender<FakeTransaction>) : AbstractRequester() {
 
     override fun swap(from: TokenQuote, to: Token) {
-        val demandAdvantage = settings.advantage.random()
+        val demandAdvantage = settings.swapSettings.random().advantage
         val dto = oneInchClient.quote(chain.id, from, to)
         if(dto != null) {
             val tx = createTx(dto)

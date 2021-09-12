@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component
 class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
 
     override fun swap(from: TokenQuote, to: Token) {
-        val slippageAdvantage = settings.advantage.random()
-        val dto = oneInchClient.swap(chain.id, from, to, slippageAdvantage)
+        val settings = settings.swapSettings.random()
+        val dto = oneInchClient.swap(chain.id, from, to, settings.slippage)
         if (dto != null) {
-            val advantage = utils.calculateAdvantage(dto.from, dto.to)
-            val isGood = isRateGood(dto.from, dto.to, advantage, slippageAdvantage)
+            val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
+            val isGood = isRateGood(dto.from, dto.to, realAdvantage, settings.advantage)
             if (isGood) {
-                val tx = createTx(dto, slippageAdvantage)
+                val tx = createTx(dto, settings.slippage)
                 sender.sendTransaction(tx, from, dto.to)
             }
         }
