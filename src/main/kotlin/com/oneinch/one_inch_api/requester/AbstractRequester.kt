@@ -8,6 +8,7 @@ import com.oneinch.config.Settings
 import com.oneinch.one_inch_api.OneInchClient
 import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class AbstractRequester {
 
@@ -23,7 +24,10 @@ abstract class AbstractRequester {
     @Autowired
     lateinit var chain: Chain
 
-    open suspend fun swap(from: TokenQuote, to: Token, coroutine: CoroutineScope) {}
+    @Autowired
+    lateinit var isSwapping: AtomicBoolean
+
+    open suspend fun swap(from: TokenQuote, to: Token) {}
 
     fun isRateGood(from: TokenQuote, to: TokenQuote, realAdvantage: Double, demandAdvantage: Double): Boolean {
         utils.logRatesInfo(from, to, realAdvantage, demandAdvantage)

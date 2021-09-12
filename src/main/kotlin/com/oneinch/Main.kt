@@ -14,18 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.Duration
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
-class Main(val requester: AbstractRequester, val balance: IBalance, val chain: Chain, val settings: Settings) {
+class Main(
+    val requester: AbstractRequester,
+    val balance: IBalance,
+    val chain: Chain,
+    val settings: Settings,
+    val isSwapping: AtomicBoolean
+) {
 
     val pairs = createUniquePairs(chain.tokens)
-    lateinit var coroutine: CoroutineScope
-
+    val coroutine = CoroutineScope(CoroutineName("coroutine"))
     fun run() {
+        isSwapping.set(false)
         runBlocking {
             while (true) {
-                coroutine = CoroutineScope(CoroutineName("coroutine"))
-                checkRatesForEveryPair(pairs, coroutine)
+                if (!isSwapping.get()) {
+                    checkRatesForEveryPair(pairs, coroutine)
+                }
+                yield()
             }
         }
     }
@@ -33,18 +42,17 @@ class Main(val requester: AbstractRequester, val balance: IBalance, val chain: C
     // TODO: 10.09.2021 add two counters rps, maybe second when too long time in one currency
     private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>, coroutine: CoroutineScope) {
         pairs.forEach { pair ->
-            coroutine.launch { checkRatesForPair(pair, coroutine) }
+            coroutine.launch { checkRatesForPair(pair) }
         }
-        delay(300)
+        delay(200)
     }
 
-    private suspend fun checkRatesForPair(pair: Pair<Token, Token>, coroutine: CoroutineScope) {
+    private suspend fun checkRatesForPair(pair: Pair<Token, Token>) {
         when (val tokenQuote = balance.getERC20(pair.first)) {
-            null -> {
-            }
+            null -> { }
             else -> {
                 if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
-                    requester.swap(tokenQuote, pair.second, coroutine)
+                    requester.swap(tokenQuote, pair.second)
                 }
             }
         }

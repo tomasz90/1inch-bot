@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Profile
 import org.web3j.protocol.core.JsonRpc2_0Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.RawTransactionManager
+import java.util.concurrent.atomic.AtomicBoolean
 
 @Configuration
 @Profile("realAccount")
@@ -53,5 +54,8 @@ open class RealConfig {
 
     @Bean
     open fun requester() = Requester(sender())
+
+    @Bean
+    open fun isSwapping() = AtomicBoolean()
 
 }

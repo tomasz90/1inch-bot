@@ -6,10 +6,6 @@ import com.oneinch.getLogger
 import com.oneinch.on_chain_api.sender.ISender
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.one_inch_api.api.data.SwapDto
-import com.oneinch.one_inch_api.requester.EnterSwap.canEnter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
 import org.springframework.stereotype.Component
 import kotlin.random.Random
 import kotlin.random.nextULong
@@ -17,7 +13,7 @@ import kotlin.random.nextULong
 @Component
 class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
 
-    override suspend fun swap(from: TokenQuote, to: Token, coroutine: CoroutineScope) {
+    override suspend fun swap(from: TokenQuote, to: Token) {
         val swapId = Random.nextULong().toString()
         getLogger().info("SWAP_ID: $swapId")
         val settings = settings.swapSettings.random()
@@ -25,14 +21,12 @@ class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
         if (dto != null) {
             val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
             val isGood = isRateGood(dto.from, dto.to, realAdvantage, settings.advantage)
-            if (isGood && canEnter) {
-                canEnter = false
+            if (isGood && !isSwapping.get()) {
+                isSwapping.set(true)
                 getLogger().info("entered to swap")
-                coroutineScope {
-                    coroutine.cancel()
-                    val tx = createTx(dto, settings.slippage)
-                    sender.sendTransaction(tx, from, dto.to, swapId)
-                }
+                val tx = createTx(dto, settings.slippage)
+                sender.sendTransaction(tx, from, dto.to, swapId)
+                isSwapping.set(false)
             }
         }
     }
@@ -41,9 +35,5 @@ class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
         val tx = dto.tx
         return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data, maxSlippage)
     }
-}
-
-object EnterSwap {
-    var canEnter = true
 }
 
