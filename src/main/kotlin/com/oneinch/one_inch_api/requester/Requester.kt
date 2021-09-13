@@ -15,7 +15,7 @@ class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
         timer.addCall()
         val requestTimestamp = Date()
         val swapSettings = settings.swapSettings.random()
-        val dto = oneInchClient.swap(chain.id, from, to, swapSettings.slippage, settings.allowPartialFill, protocols.asString())
+        val dto = oneInchClient.swap(chain.id, from, to, swapSettings.slippage, settings.allowPartialFill, protocols)
         if (dto != null) {
             val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
             val isGood = isRateGood(dto.from, dto.to, realAdvantage, swapSettings.advantage)

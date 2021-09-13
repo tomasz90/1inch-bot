@@ -13,6 +13,7 @@ open class InMemoryRepository {
         allBalance.add(tokenQuote)
     }
 
+    @Synchronized  // TODO: 13.09.2021 if exception occur once again delete it
     fun findByAddress(address: String): TokenQuote? {
         return allBalance.firstOrNull { it.address == address }
     }

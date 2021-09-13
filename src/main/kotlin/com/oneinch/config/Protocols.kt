@@ -17,9 +17,9 @@ class ProtocolsLoader : IResources<Protocols> {
     }
 }
 
-class Protocols(val list: List<String>) {
-    fun asString(): String {
-        return list.toString()
+class Protocols(val matic: List<String>, val bsc: List<String>, val optimism: List<String>) {
+    fun asString(protocol: List<String>): String {
+        return protocol.toString()
             .replace(", ", ",")
             .replace("[", "")
             .replace("]", "")

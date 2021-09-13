@@ -32,7 +32,7 @@ abstract class AbstractRequester {
     lateinit var timer: Timer
 
     @Autowired
-    lateinit var protocols: Protocols
+    lateinit var protocols: String
 
     open suspend fun swap(from: TokenQuote, to: Token) {}
 
