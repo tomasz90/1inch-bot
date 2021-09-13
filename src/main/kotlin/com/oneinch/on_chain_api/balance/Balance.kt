@@ -20,6 +20,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
     }
 
     override fun getERC20(erc20: Token): TokenQuote? {
+        // TODO: 13.09.2021 java.util.ConcurrentModificationException need fix
         var tokenQuote = repository.findByAddress(erc20.address)
         if (tokenQuote == null) {
             tokenQuote = getFromChain(erc20.symbol, erc20.address)

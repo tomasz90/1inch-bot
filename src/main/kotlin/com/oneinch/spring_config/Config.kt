@@ -2,6 +2,7 @@ package com.oneinch.spring_config
 
 import com.oneinch.`object`.Chain
 import com.oneinch.config.PropertiesLoader
+import com.oneinch.config.ProtocolsLoader
 import com.oneinch.config.SettingsLoader
 import com.oneinch.one_inch_api.api.ApiProvider
 import kotlinx.coroutines.CoroutineName
@@ -21,11 +22,17 @@ open class Config {
     @Autowired
     lateinit var settingsLoader: SettingsLoader
 
+    @Autowired
+    lateinit var protocolsLoader: ProtocolsLoader
+
     @Bean
     open fun properties() = propertiesLoader.load()
 
     @Bean
     open fun settings() = settingsLoader.load()
+
+    @Bean
+    open fun protocols() = protocolsLoader.load()
 
     @Bean
     open fun chain(): Chain {
