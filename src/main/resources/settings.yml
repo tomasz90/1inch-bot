@@ -3,6 +3,7 @@ chain: matic
 myAddress: ***REMOVED***
 timeout: 5
 sleepTime: 200
+waitTimeAfterSwap: 60
 minimalSwapQuote: 1.0
 allowPartialFill: true
 swapSettings:

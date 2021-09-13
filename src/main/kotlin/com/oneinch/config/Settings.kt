@@ -28,7 +28,8 @@ class Settings(
     val increasedGasLimit: Double,
     val increasedGasPrice: Double,
     val sleepTime: Long,
-    val timeout: Long
-)
+    val timeout: Long,
+    val waitTimeAfterSwap: Long
+    )
 
 class SwapSettings(val advantage: Double, val slippage: Double)

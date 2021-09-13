@@ -8,6 +8,7 @@ import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.util.getLogger
 import kotlinx.coroutines.delay
 import org.springframework.stereotype.Component
+import org.web3j.exceptions.MessageDecodingException
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
 import kotlin.time.Duration
@@ -27,15 +28,19 @@ class Sender(
         val newGasPrice = increaseGasPrice(tx.gasPrice)
         getLogger().info("Swapping, gasPrice: ${tx.gasPrice} gasLimit: $newGasLimit")
         getLogger().info("from: ${from.origin} to: ${to.origin}")
-        val txHash = rawTransactionManager
-            .sendTransaction(newGasPrice, newGasLimit, tx.address, tx.data, tx.value)
-            .transactionHash
-        repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.requestTimestamp)
-        getLogger().info(txHash)
-        getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
-        delay(Duration.seconds(120))
-        balance.update(from)
-        balance.update(to)
+        try {
+            val txHash = rawTransactionManager
+                .sendTransaction(newGasPrice, newGasLimit, tx.address, tx.data, tx.value)
+                .transactionHash
+            repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.requestTimestamp)
+            getLogger().info(txHash)
+            getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
+            delay(Duration.seconds(settings.waitTimeAfterSwap))
+            balance.update(from)
+            balance.update(to)
+        } catch (e: MessageDecodingException) {
+            getLogger().error("Transaction failed: ${e.stackTrace}")
+        }
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {
