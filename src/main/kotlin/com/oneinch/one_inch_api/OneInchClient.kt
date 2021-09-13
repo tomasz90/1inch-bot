@@ -1,5 +1,6 @@
 package com.oneinch.one_inch_api
 
+import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
@@ -12,22 +13,22 @@ import org.springframework.stereotype.Component
 import retrofit2.Response
 
 @Component
-class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings: Settings) {
+class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings: Settings, val chain: Chain) {
 
-    fun quote(chainId: Int, from: TokenQuote, to: Token): QuoteDto? {
-        val response = oneInch.quote(chainId, from.address, to.address, from.origin).execute()
-        if (response.isSuccessful) {
-            return response.body()!!.toDto()
+    fun quote(from: TokenQuote, to: Token): QuoteDto? {
+        val response = oneInch.quote(chain.id, from.address, to.address, from.origin).execute()
+        return if (response.isSuccessful) {
+            response.body()!!.toDto()
         } else {
             response.logErrorMessage("Error during quote.")
-            return null
+            null
         }
     }
 
-    fun swap(chainId: Int, from: TokenQuote, to: Token, maxSlippage: Double, allowPartialFill: Boolean, protocols: String): SwapDto? {
+    fun swap(from: TokenQuote, to: Token, maxSlippage: Double, allowPartialFill: Boolean, protocols: String): SwapDto? {
         val response =
             oneInch.swap(
-                chainId,
+                chain.id,
                 from.address,
                 to.address,
                 from.origin,
@@ -36,11 +37,11 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
                 allowPartialFill,
                 protocols
             ).execute()
-        if (response.isSuccessful) {
-            return response.body()!!.toDto()
+        return if (response.isSuccessful) {
+            response.body()!!.toDto()
         } else {
             response.logErrorMessage("Error during swap.")
-            return null
+            null
         }
     }
 }
