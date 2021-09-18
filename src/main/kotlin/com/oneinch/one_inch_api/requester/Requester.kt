@@ -16,10 +16,11 @@ class Requester(val sender: Sender) : AbstractRequester() {
         val swapSettings = settings.swapSettings.random()
         val dto = oneInchClient.swap(from, to, swapSettings.slippage, settings.allowPartialFill, protocols)
         if (dto != null) {
-            val isGood = isRateGood(dto.from, dto.to, swapSettings.advantage)
+            val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
+            val isGood = isRateGood(dto.from, dto.to, realAdvantage, swapSettings.advantage)
             if (isGood && !isSwapping.get()) {
                 isSwapping.set(true)
-                val tx = createTx(dto, swapSettings.slippage, swapSettings.advantage, requestTimestamp)
+                val tx = createTx(dto, swapSettings.slippage, realAdvantage, requestTimestamp)
                 sender.sendTransaction(tx, from, dto.to)
                 isSwapping.set(false)
             }

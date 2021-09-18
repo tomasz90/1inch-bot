@@ -4,10 +4,7 @@ import com.oneinch.repository.dao.Passed.UNKNOWN
 import org.hibernate.annotations.CreationTimestamp
 import java.math.BigInteger
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class RealTxEntity(
@@ -30,6 +27,7 @@ class RealTxEntity(
     var gasPrice: BigInteger,
     var maxSlippage: Double,
     var advantage: Double,
+    @Enumerated(EnumType.STRING)
     var passed: Passed
 ) {
 

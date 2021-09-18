@@ -27,8 +27,7 @@ abstract class AbstractRequester {
 
     open suspend fun swap(from: TokenQuote, to: Token) {}
 
-    fun isRateGood(from: TokenQuote, to: TokenQuote, demandAdvantage: Double): Boolean {
-        val realAdvantage = utils.calculateAdvantage(from, to)
+    fun isRateGood(from: TokenQuote, to: TokenQuote, realAdvantage: Double, demandAdvantage: Double): Boolean {
         utils.logRatesInfo(from, to, realAdvantage, demandAdvantage)
         return realAdvantage > demandAdvantage
     }

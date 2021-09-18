@@ -15,7 +15,8 @@ class FakeRequester(val sender: FakeSender) : AbstractRequester() {
         val dto = oneInchClient.quote(from, to)
         if(dto != null) {
             val tx = createTx(dto)
-            val isGood = isRateGood(dto.from, dto.to, demandAdvantage)
+            val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
+            val isGood = isRateGood(dto.from, dto.to, realAdvantage, demandAdvantage)
             if (isGood) sender.sendTransaction(tx, from, dto.to)
         }
     }
