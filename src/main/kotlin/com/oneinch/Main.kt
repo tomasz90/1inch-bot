@@ -29,30 +29,28 @@ class Main(
     private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
 
     fun run() {
-        runBlocking {
-            while (true) {
-                if (!isSwapping.get()) {
-                    checkRatesForEveryPair(pairs)
-                }
+        while (true) {
+            if (!isSwapping.get()) {
+                checkRatesForEveryPair(pairs)
             }
         }
     }
 
     // TODO: 10.09.2021 add counter when too long time in one currency
-    private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
+    private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
         pairs.forEach { pair -> checkRatesForPair(pair) }
     }
 
-    private suspend fun checkRatesForPair(pair: Pair<Token, Token>) {
-            when (val tokenQuote = balance.getERC20(pair.first)) {
-                null -> { }
-                else -> { swapIfMinimalBalance(tokenQuote, pair.second) }
+    private fun checkRatesForPair(pair: Pair<Token, Token>) {
+        when (val tokenQuote = balance.getERC20(pair.first)) {
+            null -> { }
+            else -> { swapIfMinimalBalance(tokenQuote, pair.second) }
         }
     }
 
-    private suspend fun swapIfMinimalBalance(tokenQuote: TokenQuote, token: Token) {
+    private fun swapIfMinimalBalance(tokenQuote: TokenQuote, token: Token) {
         if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
-            swap.invoke(tokenQuote, token)
+            runBlocking { swap.invoke(tokenQuote, token) }
         }
     }
 

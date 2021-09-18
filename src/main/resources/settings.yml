@@ -2,7 +2,7 @@ account: realAccount
 chain: matic
 myAddress: ***REMOVED***
 timeout: 5
-maxRps: 5
+maxRps: 25
 waitTimeAfterSwap: 60
 minimalSwapQuote: 1.0
 allowPartialFill: true
