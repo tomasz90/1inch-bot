@@ -12,7 +12,6 @@ import java.util.*
 class Requester(val sender: ISender<Transaction>) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
-        timer.addCall()
         val requestTimestamp = Date()
         val swapSettings = settings.swapSettings.random()
         val dto = oneInchClient.swap(from, to, swapSettings.slippage, settings.allowPartialFill, protocols)

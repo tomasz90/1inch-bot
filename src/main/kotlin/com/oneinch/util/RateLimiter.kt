@@ -4,22 +4,24 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicInteger
 
 class RateLimiter(private val maxRps: Int) {
 
+    var currentCalls = 0
+
     @Volatile
-    private var callsDone: AtomicLong = AtomicLong(0)
+    private var callsDone = AtomicInteger(0)
     private val coroutine = CoroutineScope(CoroutineName("timer"))
 
     init {
-        coroutine.launch { start() }
+        coroutine.launch { resetCalls() }
     }
 
-    private suspend fun start() {
+    private suspend fun resetCalls() {
         while (true) {
             delay(1000)
-            callsDone.setRelease(0)
+            currentCalls = callsDone.getAndSet(0)
         }
     }
 
@@ -29,7 +31,8 @@ class RateLimiter(private val maxRps: Int) {
 
     private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
         while (true) {
-            if (callsDone.incrementAndGet() <= maxRps) {
+            if (callsDone.get() <= maxRps) {
+                callsDone.incrementAndGet()
                 function(t, s)
                 break
             } else {

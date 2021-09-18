@@ -18,13 +18,13 @@ fun cleanLog(boolean: Boolean) {
     }
 }
 @Component
-class Utils(val chain: Chain, val settings: Settings, val timer: Timer) {
+class Utils(val chain: Chain, val settings: Settings, val limiter: RateLimiter) {
 
     fun logRatesInfo(from: TokenQuote, to: TokenQuote, percent: Double, demandAdvantage: Double) {
         getLogger().info(
             "${from.symbol}: ${from.calcReadable(chain).precision()}, " +
                     "${to.symbol}: ${to.calcReadable(chain).precision()},  advantage: ${percent.precision(2)}," +
-                    "  demandAdvantage: ${demandAdvantage.precision(2)},  ${timer.getRps()} rps"
+                    "  demandAdvantage: ${demandAdvantage.precision(2)},  ${limiter.currentCalls} rps"
         )
     }
 
