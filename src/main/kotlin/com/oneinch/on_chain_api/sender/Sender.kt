@@ -36,8 +36,7 @@ class Sender(
             getLogger().info(txHash)
             getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
             delay(Duration.seconds(settings.waitTimeAfterSwap))
-            balance.update(from)
-            balance.update(to)
+            balance.updateAll()
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }

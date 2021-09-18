@@ -1,5 +1,6 @@
 package com.oneinch.on_chain_api.balance
 
+import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.repository.InMemoryRepository
@@ -13,7 +14,8 @@ import org.web3j.tx.gas.DefaultGasProvider
 import java.math.BigInteger
 
 @Component
-class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository: InMemoryRepository) : IBalance {
+class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository: InMemoryRepository, val chain: Chain) :
+    IBalance {
 
     fun get(): BigInteger {
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
@@ -50,6 +52,12 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         }
         getLogger().info("Getting balance from chain: $quote")
         return TokenQuote(symbol, address, quote)
+    }
+
+    fun updateAll() {
+        chain.tokens
+            .mapNotNull { getFromChain(it.symbol, it.address) }
+            .forEach { repository.update(it) }
     }
 }
 

@@ -47,7 +47,7 @@ open class RealConfig {
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain.id.toLong())
 
     @Bean
-    open fun balance() = Balance(web3j(), myAddress(), inMemoryRepository)
+    open fun balance() = Balance(web3j(), myAddress(), inMemoryRepository, chain)
 
     @Bean
     open fun sender() = Sender(settings, rawTransactionManager(), repository, balance())
