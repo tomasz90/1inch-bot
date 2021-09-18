@@ -31,7 +31,7 @@ class RateLimiter(private val maxRps: Int) {
 
     private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
         while (true) {
-            if (callsDone.get() <= maxRps) {
+            if (callsDone.get() < maxRps) {
                 callsDone.incrementAndGet()
                 function(t, s)
                 break

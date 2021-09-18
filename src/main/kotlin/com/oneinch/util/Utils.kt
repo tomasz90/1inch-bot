@@ -22,6 +22,13 @@ class Utils(val chain: Chain, val settings: Settings, val limiter: RateLimiter) 
         )
     }
 
+    fun logSwapInfo(from: TokenQuote, to: TokenQuote) {
+        getLogger().info(
+            "SWAP: fromToken ${from.symbol}, fromAmount: ${from.calcReadable(chain).precision()}," +
+                    "toToken: ${to.symbol}, toAmount: ${to.calcReadable(chain).precision()}"
+        )
+    }
+
     fun calculateAdvantage(from: TokenQuote, to: TokenQuote): Double {
         return (to.calcReadable(chain) - from.calcReadable(chain)) / from.calcReadable(chain) * 100
     }

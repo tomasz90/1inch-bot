@@ -3,10 +3,7 @@ package com.oneinch.spring_config
 import com.oneinch.`object`.Chain
 import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.Balance
-import com.oneinch.on_chain_api.sender.Sender
-import com.oneinch.one_inch_api.requester.Requester
 import com.oneinch.repository.InMemoryRepository
-import com.oneinch.repository.FakeRepositoryManager
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +13,6 @@ import org.springframework.context.annotation.Profile
 import org.web3j.protocol.core.JsonRpc2_0Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.RawTransactionManager
-import java.util.concurrent.atomic.AtomicBoolean
 
 @Configuration
 @Profile("realAccount")
@@ -48,11 +44,5 @@ open class RealConfig {
 
     @Bean
     open fun balance() = Balance(web3j(), myAddress(), inMemoryRepository, chain)
-
-    @Bean
-    open fun sender() = Sender(settings, rawTransactionManager(), repository, balance())
-
-    @Bean
-    open fun requester() = Requester(sender())
 
 }
