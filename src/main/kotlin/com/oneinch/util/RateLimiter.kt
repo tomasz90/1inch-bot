@@ -1,24 +1,60 @@
 package com.oneinch.util
 
-import io.github.resilience4j.ratelimiter.RateLimiter
-import io.github.resilience4j.ratelimiter.RequestNotPermitted
-import kotlinx.coroutines.delay
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicLong
 
-fun <T, S> RateLimiter.decorateSuspendedConsumer(block: suspend (T, S) -> Unit): suspend (T, S) -> Unit {
-    return { t: T, s: S -> executeSuspendConsumer(t, s, block) }
-}
+class RateLimiter(private val maxRps: Int) {
 
-suspend fun <T, S> RateLimiter.executeSuspendConsumer(t: T, s: S, block: suspend (T, S) -> Unit) {
-    awaitPermission()
-    block(t, s)
-}
+    var currentRps = 0L
+    private var callsDone: AtomicLong = AtomicLong(0)
+    private val coroutine = CoroutineScope(CoroutineName("timer"))
 
-internal suspend fun RateLimiter.awaitPermission() {
-    val waitTimeNs = reservePermission()
-    when {
-        waitTimeNs > 0 -> delay(TimeUnit.NANOSECONDS.toMillis(waitTimeNs))
-        waitTimeNs < 0 -> throw RequestNotPermitted.createRequestNotPermitted(this)
+    init {
+        coroutine.launch { start() }
+    }
+
+    private suspend fun start() {
+        while (true) {
+            delay(1000)
+            currentRps = callsDone.get()
+            callsDone.set(0)
+        }
+    }
+
+    fun <T, S> decorateFunction(function: suspend (T, S) -> Unit): suspend (T, S) -> Unit {
+        return { t: T, s: S -> executeFunction(t, s, function) }
+    }
+
+    private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
+        while (true) {
+            when (callsDone.get() < maxRps) {
+                true -> {
+                    makeCall(t, s, function)
+                    break
+                }
+                false -> wait()
+            }
+        }
+    }
+
+    private suspend fun <T, S> makeCall(t: T, s: S, block: suspend (T, S) -> Unit) {
+        block(t, s)
+        callsDone.incrementAndGet()
+    }
+
+    private suspend fun wait() {
+        delay(10)
     }
 }
 
+fun main() {
+    val rateLimiter = RateLimiter(2)
+    val func = rateLimiter.decorateFunction { s: String, t: String -> println(s + t) }
+
+    runBlocking {
+        while (true) {
+            yield()
+            launch { func.invoke("x", "DDD") }
+        }
+    }
+}
