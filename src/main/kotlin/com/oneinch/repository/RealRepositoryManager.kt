@@ -31,6 +31,7 @@ class RealRepositoryManager(
         gasPrice: BigInteger,
         txHash: String?,
         maxSlippage: Double,
+        advantage: Double,
         requestTimeStamp: Date
     ) {
         if (txHash == null) {
@@ -50,7 +51,8 @@ class RealRepositoryManager(
             toReadable = to.calcReadable(chain).round(),
             toAmount = to.origin.toString(),
             gasPrice = gasPrice,
-            maxSlippage = maxSlippage
+            maxSlippage = maxSlippage,
+            advantage = advantage
         )
         iRealTxRepository.save(tx)
     }

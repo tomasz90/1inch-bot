@@ -27,7 +27,8 @@ class RealTxEntity(
     var toReadable: Double,
     var toAmount: String,
     var gasPrice: BigInteger,
-    var maxSlippage: Double
+    var maxSlippage: Double,
+    var advantage: Double
 ) {
 
     constructor() :
@@ -46,6 +47,7 @@ class RealTxEntity(
                 0.0,
                 "",
                 BigInteger("0"),
+                0.0,
                 0.0
             )
 }

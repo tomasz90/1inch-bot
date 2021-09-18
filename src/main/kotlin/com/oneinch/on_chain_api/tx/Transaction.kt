@@ -10,5 +10,6 @@ class Transaction(
     val address: String,
     val data: String,
     val maxSlippage: Double,
+    val advantage: Double,
     val requestTimestamp: Date
 ) : ITransaction
