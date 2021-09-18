@@ -33,13 +33,6 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return tokenQuote
     }
 
-    fun update(tokenQuote: TokenQuote) {
-        val newTokenQuote = getFromChain(tokenQuote.symbol, tokenQuote.address)
-        if (newTokenQuote != null) {
-            repository.update(newTokenQuote)
-        }
-    }
-
     private fun getFromChain(symbol: String, address: String): TokenQuote? {
         val txManager = ClientTransactionManager(web3j, myAddress)
         val contract = load(address, web3j, txManager, DefaultGasProvider())

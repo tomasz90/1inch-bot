@@ -11,12 +11,6 @@ import org.springframework.stereotype.Component
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 
-fun cleanLog(boolean: Boolean) {
-    if (boolean) {
-        val appender: FileAppender = LogManager.getRootLogger().getAppender("FILE") as FileAppender
-        appender.setFile("log.out", false, false, DEFAULT_BUFFER_SIZE)
-    }
-}
 @Component
 class Utils(val chain: Chain, val settings: Settings, val limiter: RateLimiter) {
 
@@ -25,13 +19,6 @@ class Utils(val chain: Chain, val settings: Settings, val limiter: RateLimiter) 
             "${from.symbol}: ${from.calcReadable(chain).precision()}, " +
                     "${to.symbol}: ${to.calcReadable(chain).precision()},  advantage: ${percent.precision(2)}," +
                     "  demandAdvantage: ${demandAdvantage.precision(2)},  ${limiter.currentCalls} rps"
-        )
-    }
-
-    fun logSwapInfo(from: TokenQuote, to: TokenQuote) {
-        getLogger().info(
-            "SWAP: fromToken ${from.symbol}, fromAmount: ${from.calcReadable(chain).precision()}," +
-                    "toToken: ${to.symbol}, toAmount: ${to.calcReadable(chain).precision()}"
         )
     }
 

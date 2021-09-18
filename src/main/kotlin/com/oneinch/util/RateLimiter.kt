@@ -42,6 +42,6 @@ class RateLimiter(private val maxRps: Int) {
     }
 
     private suspend fun wait() {
-        delay(20)
+        delay(10)
     }
 }
