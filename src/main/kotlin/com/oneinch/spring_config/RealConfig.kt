@@ -25,9 +25,6 @@ open class RealConfig {
     lateinit var chain: Chain
 
     @Autowired
-    lateinit var inMemoryRepository: InMemoryRepository
-
-    @Autowired
     lateinit var repository: RealRepositoryManager
 
     @Bean
@@ -41,8 +38,5 @@ open class RealConfig {
 
     @Bean
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain.id.toLong())
-
-    @Bean
-    open fun balance() = Balance(web3j(), myAddress(), inMemoryRepository, chain)
 
 }
