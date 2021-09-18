@@ -1,5 +1,6 @@
 package com.oneinch.repository.dao
 
+import com.oneinch.repository.dao.Passed.UNKNOWN
 import org.hibernate.annotations.CreationTimestamp
 import java.math.BigInteger
 import java.util.*
@@ -28,7 +29,8 @@ class RealTxEntity(
     var toAmount: String,
     var gasPrice: BigInteger,
     var maxSlippage: Double,
-    var advantage: Double
+    var advantage: Double,
+    var passed: Passed
 ) {
 
     constructor() :
@@ -48,6 +50,9 @@ class RealTxEntity(
                 "",
                 BigInteger("0"),
                 0.0,
-                0.0
+                0.0,
+                UNKNOWN
             )
 }
+
+enum class Passed { PASSED, PARTIALLY, FAIL, UNKNOWN }

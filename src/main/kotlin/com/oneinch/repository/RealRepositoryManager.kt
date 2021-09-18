@@ -2,6 +2,7 @@ package com.oneinch.repository
 
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.TokenQuote
+import com.oneinch.repository.dao.Passed.UNKNOWN
 import com.oneinch.repository.dao.RealTxEntity
 import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
@@ -52,7 +53,8 @@ class RealRepositoryManager(
             toAmount = to.origin.toString(),
             gasPrice = gasPrice,
             maxSlippage = maxSlippage,
-            advantage = advantage
+            advantage = advantage,
+            passed = UNKNOWN
         )
         iRealTxRepository.save(tx)
     }
