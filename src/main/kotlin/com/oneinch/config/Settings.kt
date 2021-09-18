@@ -27,7 +27,7 @@ class Settings(
     val allowPartialFill: Boolean,
     val increasedGasLimit: Double,
     val increasedGasPrice: Double,
-    val sleepTime: Long,
+    val maxRps: Int,
     val timeout: Long,
     val waitTimeAfterSwap: Long
     )

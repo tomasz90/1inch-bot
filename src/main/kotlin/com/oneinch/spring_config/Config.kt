@@ -5,6 +5,7 @@ import com.oneinch.config.PropertiesLoader
 import com.oneinch.config.ProtocolsLoader
 import com.oneinch.config.SettingsLoader
 import com.oneinch.one_inch_api.api.ApiProvider
+import com.oneinch.util.RateLimiter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -59,4 +60,11 @@ open class Config {
     @Bean
     open fun isSwapping() = AtomicBoolean()
 
+    @Bean
+    open fun setNotSwapping() {
+        isSwapping().set(false) // set for startup only
+    }
+
+    @Bean
+    open fun limiter() = RateLimiter(settings().maxRps)
 }

@@ -2,10 +2,15 @@ package com.oneinch
 
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
+import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.IBalance
 import com.oneinch.one_inch_api.requester.AbstractRequester
-import kotlinx.coroutines.*
+import com.oneinch.util.RateLimiter
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -15,40 +20,44 @@ class Main(
     val balance: IBalance,
     val chain: Chain,
     val settings: Settings,
-    val isSwapping: AtomicBoolean
+    val isSwapping: AtomicBoolean,
+    limiter: RateLimiter
 ) {
 
-    val pairs = createUniquePairs(chain.tokens)
-    val coroutine = CoroutineScope(CoroutineName("coroutine"))
+    private val pairs = createUniquePairs(chain.tokens)
+    private val coroutine = CoroutineScope(CoroutineName("coroutine"))
+    private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
+
     fun run() {
-        isSwapping.set(false)
         runBlocking {
             while (true) {
                 if (!isSwapping.get()) {
-                    checkRatesForEveryPair(pairs, coroutine)
+                    checkRatesForEveryPair(pairs)
                 }
-                yield()
             }
         }
     }
 
     // TODO: 10.09.2021 add counter when too long time in one currency
-    private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>, coroutine: CoroutineScope) {
-        pairs.forEach { pair ->
-            coroutine.launch { checkRatesForPair(pair) }
-            delay(settings.sleepTime)
-        }
+    private suspend fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
+        pairs.forEach { pair -> checkRatesForPair(pair) }
     }
 
     private suspend fun checkRatesForPair(pair: Pair<Token, Token>) {
-        when (val tokenQuote = balance.getERC20(pair.first)) {
-            null -> { }
-            else -> {
-                if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
-                    requester.swap(tokenQuote, pair.second)
-                }
-            }
+            when (val tokenQuote = balance.getERC20(pair.first)) {
+                null -> { }
+                else -> { swapIfMinimalBalance(tokenQuote, pair.second) }
         }
+    }
+
+    private suspend fun swapIfMinimalBalance(tokenQuote: TokenQuote, token: Token) {
+        if (tokenQuote.calcReadable(chain) > settings.minimalSwapQuote) {
+            swap.invoke(tokenQuote, token)
+        }
+    }
+
+    private suspend fun swap(tokenQuote: TokenQuote, token: Token) {
+        coroutine.launch { requester.swap(tokenQuote, token) }
     }
 
     private fun createUniquePairs(tokens: List<Token>): List<Pair<Token, Token>> {
