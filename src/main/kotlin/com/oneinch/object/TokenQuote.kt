@@ -10,4 +10,9 @@ class TokenQuote(val symbol: String, val address: String, val origin: BigInteger
         val multiplication = 10.0.pow(decimals)
         return origin.toBigDecimal().toDouble()/multiplication
     }
+
+    fun toToken(chain: Chain): Token {
+        val decimals = chain.tokens.first { it.address ==  this.address}.decimals
+        return Token(symbol, address, decimals)
+    }
 }

@@ -2,7 +2,7 @@ package com.oneinch.repository
 
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.repository.dao.Passed.UNKNOWN
+import com.oneinch.repository.dao.Passed
 import com.oneinch.repository.dao.RealTxEntity
 import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
@@ -33,7 +33,8 @@ class RealRepositoryManager(
         txHash: String?,
         maxSlippage: Double,
         advantage: Double,
-        requestTimeStamp: Date
+        requestTimeStamp: Date,
+        passed: Passed
     ) {
         if (txHash == null) {
             getLogger().error("TxHash is null, did not receive proper response")
@@ -54,7 +55,7 @@ class RealRepositoryManager(
             gasPrice = gasPrice,
             maxSlippage = maxSlippage,
             advantage = advantage,
-            passed = UNKNOWN
+            passed = passed
         )
         iRealTxRepository.save(tx)
     }

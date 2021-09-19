@@ -1,10 +1,14 @@
 package com.oneinch.on_chain_api.sender
 
+import com.oneinch.`object`.Chain
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.repository.RealRepositoryManager
+import com.oneinch.repository.dao.Passed
+import com.oneinch.repository.dao.Passed.FAIL
+import com.oneinch.repository.dao.Passed.PASSED
 import com.oneinch.util.Utils
 import com.oneinch.util.getLogger
 import kotlinx.coroutines.delay
@@ -21,7 +25,8 @@ class Sender(
     val rawTransactionManager: RawTransactionManager,
     val repository: RealRepositoryManager,
     val balance: Balance,
-    val utils: Utils
+    val utils: Utils,
+    val chain: Chain
 ) : ISender<Transaction> {
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
@@ -32,11 +37,15 @@ class Sender(
             val txHash = rawTransactionManager
                 .sendTransaction(newGasPrice, newGasLimit, tx.address, tx.data, tx.value)
                 .transactionHash
-            repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.advantage, tx.requestTimestamp)
             getLogger().info(txHash)
             getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
             delay(settings.waitTimeAfterSwap * 1000)
             balance.updateAll()
+            if(balance.getERC20(from.toToken(chain))?.origin == from.origin) {
+                repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.advantage, tx.requestTimestamp, FAIL)
+            } else {
+                repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.advantage, tx.requestTimestamp, PASSED)
+            }
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
