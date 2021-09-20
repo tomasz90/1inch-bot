@@ -1,9 +1,8 @@
 package com.oneinch.spring_config
 
 import com.oneinch.`object`.Chain
+import com.oneinch.config.AbiLoader
 import com.oneinch.config.Settings
-import com.oneinch.on_chain_api.balance.Balance
-import com.oneinch.repository.InMemoryRepository
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +26,9 @@ open class RealConfig {
     @Autowired
     lateinit var repository: RealRepositoryManager
 
+    @Autowired
+    lateinit var abiLoader: AbiLoader
+
     @Bean
     open fun web3j() = JsonRpc2_0Web3j(HttpService(chain.rpc))
 
@@ -38,5 +40,8 @@ open class RealConfig {
 
     @Bean
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain.id.toLong())
+
+    @Bean
+    open fun abi() = abiLoader.load()
 
 }

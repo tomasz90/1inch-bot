@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.5'
+    implementation 'com.esaulpaugh:headlong:5.4.0'
     implementation('org.springframework.boot:spring-boot-starter-data-jpa:2.3.12.RELEASE') {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
     }
