@@ -1,5 +1,6 @@
 package com.oneinch.spring_config
 
+import com.esaulpaugh.headlong.abi.Function
 import com.oneinch.`object`.Chain
 import com.oneinch.config.AbiLoader
 import com.oneinch.config.Settings
@@ -42,6 +43,8 @@ open class RealConfig {
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain.id.toLong())
 
     @Bean
-    open fun abi() = abiLoader.load()
-
+    open fun function(): Function {
+        val json = abiLoader.load()
+        return Function.fromJson(json.toString())
+    }
 }
