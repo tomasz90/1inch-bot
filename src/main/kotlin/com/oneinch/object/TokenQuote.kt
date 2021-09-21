@@ -11,6 +11,7 @@ class TokenQuote(val token: Token, val origin: BigInteger) {
     }
 
     fun calcMinReturnAmountOfDifferentToken(differentToken: Token): BigInteger {
-       return origin.multiply(differentToken.decimals.divide(token.decimals))
+        val factor = differentToken.decimals.toBigDecimal().divide(token.decimals.toBigDecimal())
+        return origin.toBigDecimal().multiply(factor).toBigInteger()
     }
 }

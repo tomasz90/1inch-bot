@@ -1,25 +1,89 @@
-import com.oneinch.object.Token
+import com.oneinch.config.Properties
 import com.oneinch.object.TokenQuote
-import spock.lang.Specification
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Import
+import org.springframework.test.context.ContextConfiguration
 
-class TokenQuoteSpec extends Specification {
+@ContextConfiguration
+@Import(TestConfig.class)
+class TokenQuoteSpec extends BaseTest {
 
-    def symbol = "USDC"
-    def address = "0x0fad488c45e44B72A17e4eBFc20ce16ff284de3E"
-//
-//    def "should convert readable to origin"(double readable, int decimals, BigInteger origin) {
-//        given:
-//            def token = new Token(symbol, address, decimals)
-//            def tokenQuote = new TokenQuote(token, readable)
-//        expect:
-//            tokenQuote.origin == origin
-//        where:
-//            readable  | decimals || origin
-//            0.00002   | 18        | new BigInteger("20000000000000")
-//            1.0       | 6        || new BigInteger("1000000")
-//            200000    | 9        || new BigInteger("200000000000000")
-//            300000.00 | 18       || new BigInteger("300000000000000000000000")
-//    }
+    @Autowired
+    Properties properties
+
+    def "should calculate minimum return amount of different matic token"(String fromToken,
+                                                                          String toToken,
+                                                                          String fromQuote,
+                                                                          String minimumExpectedAmount) {
+        given:
+          def tokens = properties.matic.tokens
+          def from = tokens.find { it.symbol == fromToken }
+          def to = tokens.find { it.symbol == toToken }
+          def quote = new TokenQuote(from, new BigInteger(fromQuote))
+        when:
+          def calculatedAmount = quote.calcMinReturnAmountOfDifferentToken(to)
+        then:
+          calculatedAmount == new BigInteger(minimumExpectedAmount)
+        where:
+          fromToken | toToken | fromQuote             | minimumExpectedAmount
+          "USDC"    | "DAI"   | "1000000000000"       | "1000000000000000000000000"
+          "USDC"    | "USDT"  | "1000000000000"       | "1000000000000"
+          "USDC"    | "UST"   | "1000000000000"       | "1000000000000000000000000"
+
+          "USDT"    | "DAI"   | "1000000000000"       | "1000000000000000000000000"
+          "USDT"    | "USDC"  | "1000000000000"       | "1000000000000"
+          "USDT"    | "UST"   | "1000000000000"       | "1000000000000000000000000"
+
+          "UST"     | "DAI"   | "1000000000000"       | "1000000000000"
+          "UST"     | "USDC"  | "1000000000000000000" | "1000000"
+          "UST"     | "USDT"  | "1000000000000000000" | "1000000"
+
+          "DAI"     | "UST"   | "1000000000000"       | "1000000000000"
+          "DAI"     | "USDC"  | "1000000000000000000" | "1000000"
+          "DAI"     | "USDT"  | "1000000000000000000" | "1000000"
+    }
+
+    def "should calculate minimum return amount of different bsc token"(String fromToken,
+                                                                        String toToken,
+                                                                        String fromQuote,
+                                                                        String minimumExpectedAmount) {
+        given:
+          def tokens = properties.bsc.tokens
+          def from = tokens.find { it.symbol == fromToken }
+          def to = tokens.find { it.symbol == toToken }
+          def quote = new TokenQuote(from, new BigInteger(fromQuote))
+        when:
+          def calculatedAmount = quote.calcMinReturnAmountOfDifferentToken(to)
+        then:
+          calculatedAmount == new BigInteger(minimumExpectedAmount)
+        where:
+          fromToken | toToken | fromQuote       | minimumExpectedAmount
+          "USDC"    | "DAI"   | "1000000000000" | "1000000000000"
+          "USDC"    | "USDT"  | "1000000000000" | "1000000000000"
+          "USDC"    | "TUSD"  | "1000000000000" | "1000000000000"
+          "USDC"    | "UST"   | "1000000000000" | "1000000000000"
+
+          "USDT"    | "DAI"   | "1000000000000" | "1000000000000"
+          "USDT"    | "TUSD"  | "1000000000000" | "1000000000000"
+          "USDT"    | "USDC"  | "1000000000000" | "1000000000000"
+          "USDT"    | "UST"   | "1000000000000" | "1000000000000"
+
+          "UST"     | "DAI"   | "1000000000000" | "1000000000000"
+          "UST"     | "TUSD"  | "1000000000000" | "1000000000000"
+          "UST"     | "USDC"  | "1000000000000" | "1000000000000"
+          "UST"     | "USDT"  | "1000000000000" | "1000000000000"
+
+          "DAI"     | "UST"   | "1000000000000" | "1000000000000"
+          "DAI"     | "TUSD"  | "1000000000000" | "1000000000000"
+          "DAI"     | "USDC"  | "1000000000000" | "1000000000000"
+          "DAI"     | "USDT"  | "1000000000000" | "1000000000000"
+
+          "TUSD"    | "UST"   | "1000000000000" | "1000000000000"
+          "TUSD"    | "DAI"   | "1000000000000" | "1000000000000"
+          "TUSD"    | "USDC"  | "1000000000000" | "1000000000000"
+          "TUSD"    | "USDT"  | "1000000000000" | "1000000000000"
+    }
+
 //
 //    def "should convert origin to readable"(BigInteger origin, int decimals, double readable) {
 //        given:
