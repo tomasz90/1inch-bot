@@ -24,8 +24,8 @@ class RealTxEntity(
     var toAddress: String,
     var toReadable: Double,
     var toAmount: String,
-    var gasPrice: BigInteger,
-    var minReturnAmount: BigInteger,
+    var gasPrice: String,
+    var minReturnAmount: String,
     var advantage: Double,
     @Enumerated(EnumType.STRING)
     var passed: Passed
@@ -46,8 +46,8 @@ class RealTxEntity(
                 "",
                 0.0,
                 "",
-                BigInteger("0"),
-                BigInteger.valueOf(0),
+                "",
+                "",
                 0.0,
                 UNKNOWN
             )

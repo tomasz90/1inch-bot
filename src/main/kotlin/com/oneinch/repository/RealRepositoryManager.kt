@@ -52,8 +52,8 @@ class RealRepositoryManager(
             toAddress = to.token.address,
             toReadable = to.calcReadable().round(),
             toAmount = to.origin.toString(),
-            gasPrice = gasPrice,
-            minReturnAmount = minReturnAmount,
+            gasPrice = gasPrice.toString(),
+            minReturnAmount = minReturnAmount.toString(),
             advantage = advantage,
             passed = passed
         )
