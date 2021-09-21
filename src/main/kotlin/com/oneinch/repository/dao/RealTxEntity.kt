@@ -9,7 +9,7 @@ class RealTxEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     var id: Long = 0L,
-    var sendTxTimeStamp: Date,
+    var sendTxTime: Date,
     var requestTimeS: Double,
     var txTimeS: Double,
     var chainId: Int,
@@ -20,7 +20,7 @@ class RealTxEntity(
     var toSymbol: String,
     var toReadable: Double,
     var toAmount: String,
-    var gasPrice: String,
+    var gasPrice: Double,
     var minReturnAmount: String,
     var returnAmount: String,
     var advantage: Double,
@@ -42,7 +42,7 @@ class RealTxEntity(
                 "",
                 0.0,
                 "",
-                "",
+                0.0,
                 "",
                 "",
                 0.0,

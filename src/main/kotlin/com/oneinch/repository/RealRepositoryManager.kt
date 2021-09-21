@@ -43,7 +43,7 @@ class RealRepositoryManager(
             return
         }
         val rtx = RealTxEntity(
-            sendTxTimeStamp = sendTxTimeStamp,
+            sendTxTime = sendTxTimeStamp,
             requestTimeS = requestTimeS,
             txTimeS = txTimeS,
             chainId = chain.id,
@@ -54,10 +54,10 @@ class RealRepositoryManager(
             toSymbol = to.token.symbol,
             toReadable = to.calcReadable().round(),
             toAmount = to.origin.toString(),
-            gasPrice = tx.gasPrice.toString(),
+            gasPrice = (tx.gasPrice.toDouble()/1000000000).round(),
             returnAmount = returnAmount.toString(),
             minReturnAmount = tx.minReturnAmount.toString(),
-            advantage = tx.advantage,
+            advantage = tx.advantage.round(),
             status = status
         )
         iRealTxRepository.save(rtx)
