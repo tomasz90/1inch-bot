@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component
 import java.math.BigInteger
 
 @Component
-class SlippageModifier {
-
-    @Autowired
-    lateinit var function: Function
+class SlippageModifier(val function: Function) {
 
     fun modify(inputData: String, newMinReturnAmount: BigInteger): String {
         val origin = decode(function, inputData.substring(2))

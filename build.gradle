@@ -12,6 +12,10 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    all*.exclude module : 'spring-boot-starter-logging'
+}
+
 dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
@@ -36,10 +40,13 @@ dependencies {
     runtimeOnly 'com.h2database:h2:1.4.197'
     runtimeOnly 'org.jetbrains.kotlin:kotlin-reflect:1.5.30'
 
-
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.12.RELEASE'
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.5'
+    testImplementation ('org.spockframework:spock-spring:2.0-groovy-3.0'){
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+    }
+    testImplementation 'com.google.code.gson:gson:2.8.8'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
 
 }
 
