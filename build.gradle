@@ -2,7 +2,7 @@ plugins {
     id 'application'
     id 'groovy'
     id 'org.jetbrains.kotlin.jvm' version '1.5.30'
-    id "org.springframework.boot" version "2.5.4"
+    id 'org.springframework.boot' version '2.5.4'
 }
 
 group = 'me.tomas'
@@ -31,20 +31,13 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.5'
     implementation 'com.esaulpaugh:headlong:5.4.0'
-    implementation('org.springframework.boot:spring-boot-starter-data-jpa:2.3.12.RELEASE') {
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-    }
-    implementation ('org.springframework.boot:spring-boot-starter-web:2.3.12.RELEASE') {
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-    }
+    implementation'org.springframework.boot:spring-boot-starter-data-jpa:2.3.12.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.3.12.RELEASE'
     runtimeOnly 'com.h2database:h2:1.4.197'
     runtimeOnly 'org.jetbrains.kotlin:kotlin-reflect:1.5.30'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.12.RELEASE'
-    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
-    testImplementation ('org.spockframework:spock-spring:2.0-groovy-3.0'){
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-    }
+    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
 
 }
