@@ -10,14 +10,19 @@ class SlippageModifierSpec extends BaseTest {
     @Autowired
     SlippageModifier slippageModifier
 
-    def "should do sth"() {
+    def "should modify minimum return amount"(String input, String modified, BigInteger minAmount) {
         given:
-          def inputData = txInputData.getString("tx1Input")
-          def expectedNewData = txInputData.getString("tx1Expected")
-          def newMinReturn = BigInteger.valueOf(1000)
+          def inputData = txInputData.getString(input)
+          def newMinReturn = minAmount
         when:
           def newInputData = slippageModifier.modify(inputData, newMinReturn)
         then:
-          newInputData == expectedNewData
+          newInputData == txInputData.getString(modified)
+        where:
+          input      | minAmount                                  | modified
+          "tx1Input" | new BigInteger("1000")                     | "tx1Expected"
+          "tx2Input" | new BigInteger("20000000000000")           | "tx2Expected"
+          "tx3Input" | new BigInteger("200000000000000")          | "tx3Expected"
+          "tx4Input" | new BigInteger("300000000000000000000000") | "tx4Expected"
     }
 }
