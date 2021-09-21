@@ -1,7 +1,7 @@
 import com.esaulpaugh.headlong.abi.Function
+import com.github.openjson.JSONObject
 import com.oneinch.config.AbiLoader
 import com.oneinch.util.SlippageModifier
-import org.json.JSONObject
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 

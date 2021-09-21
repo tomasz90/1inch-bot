@@ -1,7 +1,7 @@
 package com.oneinch.config
 
-import org.json.JSONObject
-import org.json.JSONTokener
+import com.github.openjson.JSONObject
+import com.github.openjson.JSONTokener
 import org.springframework.stereotype.Component
 import java.nio.file.Paths
 
