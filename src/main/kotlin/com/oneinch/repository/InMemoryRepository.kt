@@ -15,11 +15,11 @@ open class InMemoryRepository {
 
     @Synchronized  // TODO: 13.09.2021 if exception occur once again delete it
     fun findByAddress(address: String): TokenQuote? {
-        return allBalance.firstOrNull { it.address == address }
+        return allBalance.firstOrNull { it.token.address == address }
     }
 
     fun update(tokenQuote: TokenQuote) {
-        val index = allBalance.indexOfFirst { it.address == tokenQuote.address }
+        val index = allBalance.indexOfFirst { it.token.address == tokenQuote.token.address }
         if (index > -1) {
             allBalance.removeAt(index)
         }

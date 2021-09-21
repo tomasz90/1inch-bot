@@ -25,7 +25,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         // TODO: 13.09.2021 java.util.ConcurrentModificationException need fix
         var tokenQuote = repository.findByAddress(erc20.address)
         if (tokenQuote == null) {
-            tokenQuote = getFromChain(erc20.symbol, erc20.address)
+            tokenQuote = getFromChain(erc20.address)
             if (tokenQuote != null) {
                 repository.save(tokenQuote)
             }
@@ -33,7 +33,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return tokenQuote
     }
 
-    private fun getFromChain(symbol: String, address: String): TokenQuote? {
+    private fun getFromChain(address: String): TokenQuote? {
         val txManager = ClientTransactionManager(web3j, myAddress)
         val contract = load(address, web3j, txManager, DefaultGasProvider())
         val quote: BigInteger
@@ -44,12 +44,13 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
             return null
         }
         getLogger().info("Getting balance from chain: $quote")
-        return TokenQuote(symbol, address, quote)
+        val token = chain.tokens.first { address == it.address }
+        return TokenQuote(token, quote)
     }
 
     fun updateAll() {
         chain.tokens
-            .mapNotNull { getFromChain(it.symbol, it.address) }
+            .mapNotNull { getFromChain(it.address) }
             .forEach { repository.update(it) }
     }
 }

@@ -41,7 +41,7 @@ class Sender(
             getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
             delay(settings.waitTimeAfterSwap * 1000)
             balance.updateAll()
-            if(balance.getERC20(from.toToken(chain))?.origin == from.origin) {
+            if(balance.getERC20(from.token)?.origin == from.origin) {
                 repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.advantage, tx.requestTimestamp, FAIL)
             } else {
                 repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.advantage, tx.requestTimestamp, PASSED)

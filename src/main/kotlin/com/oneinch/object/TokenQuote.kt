@@ -3,16 +3,10 @@ package com.oneinch.`object`
 import java.math.BigInteger
 import kotlin.math.pow
 
-class TokenQuote(val symbol: String, val address: String, val origin: BigInteger) {
+class TokenQuote(val token: Token, val origin: BigInteger) {
 
-    fun calcReadable(chain: Chain): Double {
-        val decimals = chain.tokens.first { it.address ==  this.address}.decimals
-        val multiplication = 10.0.pow(decimals)
+    fun calcReadable(): Double {
+        val multiplication = 10.0.pow(token.decimals)
         return origin.toBigDecimal().toDouble()/multiplication
-    }
-
-    fun toToken(chain: Chain): Token {
-        val decimals = chain.tokens.first { it.address ==  this.address}.decimals
-        return Token(symbol, address, decimals)
     }
 }
