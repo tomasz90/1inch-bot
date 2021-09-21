@@ -1,21 +1,13 @@
 package com.oneinch.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.oneinch.`object`.Chain
 import org.springframework.stereotype.Component
-import java.nio.file.Files.newBufferedReader
-import java.nio.file.Paths
 
 @Component
 class PropertiesLoader : IResources<Properties> {
     override fun load(): Properties {
-        val dir = Paths.get("src", "main", "resources", "properties.yml")
-        val altDir = Paths.get("properties.yml")
-        val mapper = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
-        val bufferedReader = readOneOfSource(dir, altDir)
-        return bufferedReader.use { mapper.readValue(it, Properties::class.java) }
+        val bufferedReader = readFile("properties.yml")
+        return bufferedReader.use { getYmlMapper().readValue(it, Properties::class.java) }
     }
 }
 
