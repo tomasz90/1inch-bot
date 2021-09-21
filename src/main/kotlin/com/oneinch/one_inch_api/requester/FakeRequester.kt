@@ -11,12 +11,11 @@ import org.springframework.stereotype.Component
 class FakeRequester(val sender: FakeSender) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
-        val demandAdvantage = settings.swapSettings.random().advantage
         val dto = oneInchClient.quote(from, to)
         if(dto != null) {
             val tx = createTx(dto)
             val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
-            val isGood = isRateGood(dto.from, dto.to, realAdvantage, demandAdvantage)
+            val isGood = isRateGood(dto.from, dto.to, realAdvantage, settings.advantage)
             if (isGood) sender.sendTransaction(tx, from, dto.to)
         }
     }

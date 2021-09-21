@@ -31,7 +31,7 @@ class RealRepositoryManager(
         to: TokenQuote,
         gasPrice: BigInteger,
         txHash: String?,
-        maxSlippage: Double,
+        minReturnAmount: BigInteger,
         advantage: Double,
         requestTimeStamp: Date,
         passed: Passed
@@ -53,7 +53,7 @@ class RealRepositoryManager(
             toReadable = to.calcReadable().round(),
             toAmount = to.origin.toString(),
             gasPrice = gasPrice,
-            maxSlippage = maxSlippage,
+            minReturnAmount = minReturnAmount,
             advantage = advantage,
             passed = passed
         )

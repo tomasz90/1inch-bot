@@ -42,9 +42,9 @@ class Sender(
             delay(settings.waitTimeAfterSwap * 1000)
             balance.updateAll()
             if(balance.getERC20(from.token)?.origin == from.origin) {
-                repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.advantage, tx.requestTimestamp, FAIL)
+                repository.saveTransaction(from, to, newGasPrice, txHash, tx.minReturnAmount, tx.advantage, tx.requestTimestamp, FAIL)
             } else {
-                repository.saveTransaction(from, to, newGasPrice, txHash, tx.maxSlippage, tx.advantage, tx.requestTimestamp, PASSED)
+                repository.saveTransaction(from, to, newGasPrice, txHash, tx.minReturnAmount, tx.advantage, tx.requestTimestamp, PASSED)
             }
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")

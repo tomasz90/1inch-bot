@@ -24,7 +24,7 @@ class SwapResponse(
 class Tx(
     @JsonProperty("from") val from: String,
     @JsonProperty("to") val to: String,
-    @JsonProperty("data") val data: String,
+    @JsonProperty("data") var data: String,
     @JsonProperty("value") val value: BigInteger,
     @JsonProperty("gas") val gas: BigInteger,
     @JsonProperty("gasPrice") val gasPrice: BigInteger

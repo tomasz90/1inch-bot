@@ -1,4 +1,4 @@
-account: realAccount
+account: fakeAccount
 chain: matic
 myAddress: ***REMOVED***
 timeout: 5
@@ -6,9 +6,8 @@ maxRps: 1
 waitTimeAfterSwap: 60
 minimalSwapQuote: 1.0
 allowPartialFill: true
-swapSettings:
-  - advantage: 30.0
-    slippage:  0.1
+advantage: 30.0
+slippage:  1.0
 increasedGasLimit: 1.25
 increasedGasPrice: 2
 logDecimalPrecision: 2

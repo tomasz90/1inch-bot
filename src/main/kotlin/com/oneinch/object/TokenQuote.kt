@@ -9,4 +9,8 @@ class TokenQuote(val token: Token, val origin: BigInteger) {
         val multiplication = token.decimals.toBigDecimal()
         return origin.toBigDecimal().divide(multiplication).toDouble()
     }
+
+    fun calcMinReturnAmountOfDifferentToken(differentToken: Token): BigInteger {
+       return origin.multiply(differentToken.decimals.divide(token.decimals))
+    }
 }
