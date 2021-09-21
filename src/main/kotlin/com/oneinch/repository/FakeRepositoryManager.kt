@@ -25,7 +25,7 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
     }
 
     fun getBalance(erc20: Token): TokenQuote? {
-        return repository.findByAddress(erc20.address)?.toTokenQuote()
+        return repository.findByAddress(erc20.address)?.toTokenQuote(chain)
     }
 
     fun updateBalances(from: TokenQuote, to: TokenQuote) {
@@ -36,26 +36,23 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
     private fun removeBalance(from: TokenQuote) {
         val entity = findEntity(from)
         entity.readable -= from.calcReadable()
-        entity.origin = (entity.origin.toBigInteger() - from.origin.toBigDecimal().toBigInteger()).toString()
         save(entity)
     }
 
     private fun addBalance(to: TokenQuote) {
         val entity = findEntity(to)
         entity.readable += to.calcReadable()
-        entity.origin = (entity.origin.toBigInteger() + to.origin.toBigDecimal().toBigInteger()).toString()
         save(entity)
     }
 
     private fun findEntity(to: TokenQuote): FakeTokenQuoteEntity {
-        return repository.findByAddress(to.token.address) ?: FakeTokenQuoteEntity(chain.id, to.token.symbol, to.token.address, 0.0, "0", to.token.decimals)
+        return repository.findByAddress(to.token.address) ?: FakeTokenQuoteEntity(chain.id, to.token.symbol, to.token.address, 0.0)
     }
 
     private fun fillWithFakeBalanceIfEmpty(symbol: String, readable: Double) {
         if (repository.findByChainId(chain.id).isEmpty()) {
             val token = chain.tokens.first { it.symbol == symbol }
-            val origin = (token.decimals.toDouble() * readable).toString()
-            val entity = FakeTokenQuoteEntity(chain.id, symbol, token.address, readable, origin, token.decimals)
+            val entity = FakeTokenQuoteEntity(chain.id, symbol, token.address, readable)
             save(entity)
         }
     }
