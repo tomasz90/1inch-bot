@@ -1,27 +1,18 @@
-import com.esaulpaugh.headlong.abi.Function
 import com.github.openjson.JSONObject
-import com.oneinch.config.AbiLoader
-import com.oneinch.util.SlippageModifier
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
+import com.github.openjson.JSONTokener
+import spock.lang.Specification
 
-@TestConfiguration
-@Import(AbiLoader.class)
-abstract class BaseTest {
+import java.nio.file.Files
+import java.nio.file.Paths
 
-    @Autowired
-    AbiLoader abiLoader
+abstract class BaseTest extends Specification {
 
-    @Bean
-    Function function() {
-        JSONObject json = abiLoader.load()
-        return Function.fromJson(json.toString())
-    }
+    static JSONObject txInputData
 
-    @Bean
-    SlippageModifier slippageModifier() {
-        return new SlippageModifier(function())
+    static {
+        def path = Paths.get("src", "test", "resources", "txInputData.json")
+        def bufferedReader = Files.newBufferedReader(path)
+        def tokener = new JSONTokener(bufferedReader)
+        txInputData = new JSONObject(tokener)
     }
 }
