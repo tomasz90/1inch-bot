@@ -6,23 +6,23 @@ bsc:
     -
       symbol: DAI
       address: 0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3
-      decimals: 18
+      decimals: 1000000000000000000
     -
       symbol: UST
       address: 0x23396cf899ca06c4472205fc903bdb4de249d6fc
-      decimals: 18
+      decimals: 1000000000000000000
     -
       symbol: USDC
       address: 0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d
-      decimals: 18
+      decimals: 1000000000000000000
     -
       symbol: USDT
       address: 0x55d398326f99059ff775485246999027b3197955
-      decimals: 18
+      decimals: 1000000000000000000
     -
       symbol: TUSD
       address: 0x14016e85a25aeb13065688cafb43044c2ef86784
-      decimals: 18
+      decimals: 1000000000000000000
 matic:
   id: 137
   rpc: ***REMOVED***
@@ -30,19 +30,19 @@ matic:
     -
       symbol: DAI
       address: 0x8f3cf7ad23cd3cadbd9735aff958023239c6a063
-      decimals: 18
+      decimals: 1000000000000000000
     -
       symbol: UST
       address: 0x692597b009d13c4049a947cab2239b7d6517875f
-      decimals: 18
+      decimals: 1000000000000000000
     -
       symbol: USDC
       address: 0x2791bca1f2de4661ed88a30c99a7a9449aa84174
-      decimals: 6
+      decimals: 1000000
     -
       symbol: USDT
       address: 0xc2132d05d31c914a87c6611c10748aeb04b58e8f
-      decimals: 6
+      decimals: 1000000
 optimism:
   id: 10
   rpc: https://mainnet.optimism.io
@@ -50,16 +50,16 @@ optimism:
     -
       symbol: USDC
       address: 0x7f5c764cbc14f9669b88837ca1490cca17c31607
-      decimals: 6
+      decimals: 1000000
     -
       symbol: DAI
       address: 0xda10009cbd5d07dd0cecc66161fc93d7c9000da1
-      decimals: 18
+      decimals: 1000000000000000000
     -
       symbol: USDT
       address: 0x94b008aa00579c1307b0ef2c499ad98a8ce58e58
-      decimals: 6
+      decimals: 1000000
     -
       symbol: SUSD
       address: 0x8c6f28f2f1a3c87f0f938b96d27520d9751ec8d9
-      decimals: 18
+      decimals: 1000000000000000000

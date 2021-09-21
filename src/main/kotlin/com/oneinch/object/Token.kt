@@ -1,3 +1,5 @@
 package com.oneinch.`object`
 
-class Token(val symbol: String, val address: String, val decimals: Int)
+import java.math.BigInteger
+
+class Token(val symbol: String, val address: String, val decimals: BigInteger)

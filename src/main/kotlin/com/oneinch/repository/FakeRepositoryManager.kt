@@ -54,7 +54,7 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
     private fun fillWithFakeBalanceIfEmpty(symbol: String, readable: Double) {
         if (repository.findByChainId(chain.id).isEmpty()) {
             val token = chain.tokens.first { it.symbol == symbol }
-            val origin = (10.0.pow(token.decimals) * readable).toBigDecimal().toBigInteger().toString()
+            val origin = (token.decimals.toDouble() * readable).toString()
             val entity = FakeTokenQuoteEntity(chain.id, symbol, token.address, readable, origin, token.decimals)
             save(entity)
         }

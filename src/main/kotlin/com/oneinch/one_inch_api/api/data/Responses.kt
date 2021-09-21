@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import java.math.BigInteger
+import kotlin.math.pow
 
 class QuoteResponse(
     @JsonProperty("fromTokenAmount") val fromTokenAmount: BigInteger,
@@ -36,19 +37,23 @@ class TokenProperties(
 )
 
 fun QuoteResponse.toDto(): QuoteDto {
-    val fromToken = Token(fromToken.symbol, fromToken.address, fromToken.decimals)
+    val fromToken = Token(fromToken.symbol, fromToken.address, fromToken.decimals.toFullDecimals())
     val from = TokenQuote(fromToken, fromTokenAmount)
 
-    val toToken = Token(toToken.symbol, toToken.address, toToken.decimals)
+    val toToken = Token(toToken.symbol, toToken.address, toToken.decimals.toFullDecimals())
     val to = TokenQuote(toToken, toTokenAmount)
     return QuoteDto(from, to)
 }
 
 fun SwapResponse.toDto(): SwapDto {
-    val fromToken = Token(fromToken.symbol, fromToken.address, fromToken.decimals)
+    val fromToken = Token(fromToken.symbol, fromToken.address, fromToken.decimals.toFullDecimals())
     val from = TokenQuote(fromToken, fromTokenAmount)
-    val toToken = Token(toToken.symbol, toToken.address, toToken.decimals)
+    val toToken = Token(toToken.symbol, toToken.address, toToken.decimals.toFullDecimals())
     val to = TokenQuote(toToken, toTokenAmount)
     val tx = this.tx
     return SwapDto(from, to, tx)
+}
+
+private fun Int.toFullDecimals(): BigInteger {
+    return 10.0.pow(this).toBigDecimal().toBigInteger()
 }
