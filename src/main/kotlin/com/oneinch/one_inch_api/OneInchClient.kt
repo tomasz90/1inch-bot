@@ -25,7 +25,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
         }
     }
 
-    fun swap(from: TokenQuote, to: Token, maxSlippage: Double, allowPartialFill: Boolean, protocols: String): SwapDto? {
+    fun swap(from: TokenQuote, to: Token, allowPartialFill: Boolean, protocols: String): SwapDto? {
         val response =
             oneInch.swap(
                 chain.id,
@@ -33,7 +33,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
                 to.address,
                 from.origin,
                 myAddress,
-                maxSlippage,
+                settings.slippage,
                 allowPartialFill,
                 protocols
             ).execute()

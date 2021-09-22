@@ -15,7 +15,7 @@ class Requester(val sender: Sender, val slippageModifier: SlippageModifier) : Ab
 
     override suspend fun swap(from: TokenQuote, to: Token) {
         val requestTimestamp = Date()
-        val dto = oneInchClient.swap(from, to, settings.slippage, settings.allowPartialFill, protocols)
+        val dto = oneInchClient.swap(from, to, settings.allowPartialFill, protocols)
         if (dto != null) {
             val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
             val isGood = isRateGood(dto.from, dto.to, realAdvantage, settings.advantage)
