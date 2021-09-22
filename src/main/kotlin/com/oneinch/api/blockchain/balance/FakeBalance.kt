@@ -1,4 +1,4 @@
-package com.oneinch.on_chain_api.balance
+package com.oneinch.api.blockchain.balance
 
 import com.oneinch.repository.FakeRepositoryManager
 import com.oneinch.`object`.Token

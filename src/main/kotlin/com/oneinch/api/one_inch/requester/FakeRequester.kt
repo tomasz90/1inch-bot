@@ -1,10 +1,10 @@
-package com.oneinch.one_inch_api.requester
+package com.oneinch.api.one_inch.requester
 
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.on_chain_api.sender.FakeSender
-import com.oneinch.on_chain_api.tx.FakeTransaction
-import com.oneinch.one_inch_api.api.data.QuoteDto
+import com.oneinch.api.blockchain.sender.FakeSender
+import com.oneinch.api.blockchain.tx.FakeTransaction
+import com.oneinch.api.one_inch.api.data.QuoteDto
 import org.springframework.stereotype.Component
 
 @Component

@@ -1,7 +1,7 @@
-package com.oneinch.on_chain_api.sender
+package com.oneinch.api.blockchain.sender
 
 import com.oneinch.repository.FakeRepositoryManager
-import com.oneinch.on_chain_api.tx.FakeTransaction
+import com.oneinch.api.blockchain.tx.FakeTransaction
 import com.oneinch.`object`.TokenQuote
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit

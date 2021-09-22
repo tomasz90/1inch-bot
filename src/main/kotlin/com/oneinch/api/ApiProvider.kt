@@ -1,8 +1,9 @@
-package com.oneinch.one_inch_api.api
+package com.oneinch.api.one_inch.api
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.openjson.JSONObject
+import com.oneinch.api.gas_station.GasStationApi
 import com.oneinch.config.Properties
 import com.oneinch.config.Settings
 import okhttp3.Interceptor
@@ -33,12 +34,19 @@ class ApiProvider(val properties: Properties, val settings: Settings) {
         .readTimeout(settings.timeout, TimeUnit.SECONDS)
         .build()
 
-    fun create(): OneInchApi = Retrofit.Builder()
+    fun createOneInch(): OneInchApi = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(properties.oneInchUrl)
         .addConverterFactory(jacksonConverter)
         .build()
         .create(OneInchApi::class.java)
+
+    fun createGasStation(): GasStationApi = Retrofit.Builder()
+        .client(httpClient)
+        .baseUrl(properties.gasStationUrl)
+        .addConverterFactory(jacksonConverter)
+        .build()
+        .create(GasStationApi::class.java)
 }
 
 interface TimeoutInterceptor : Interceptor

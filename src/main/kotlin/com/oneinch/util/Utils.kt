@@ -2,7 +2,7 @@ package com.oneinch.util
 
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
-import com.oneinch.one_inch_api.api.data.Dto
+import com.oneinch.api.one_inch.api.data.Dto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component

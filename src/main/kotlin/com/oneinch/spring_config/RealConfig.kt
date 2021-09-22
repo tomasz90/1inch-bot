@@ -2,7 +2,9 @@ package com.oneinch.spring_config
 
 import com.esaulpaugh.headlong.abi.Function
 import com.oneinch.`object`.Chain
+import com.oneinch.api.one_inch.api.ApiProvider
 import com.oneinch.config.AbiLoader
+import com.oneinch.config.Properties
 import com.oneinch.config.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
@@ -20,6 +22,9 @@ open class RealConfig {
 
     @Autowired
     lateinit var settings: Settings
+
+    @Autowired
+    lateinit var properties: Properties
 
     @Autowired
     lateinit var chain: Chain
@@ -41,6 +46,9 @@ open class RealConfig {
 
     @Bean
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain.id.toLong())
+
+    @Bean
+    open fun gasStation() = ApiProvider(properties, settings).createGasStation()
 
     @Bean
     open fun function(): Function {

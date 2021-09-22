@@ -1,4 +1,4 @@
-package com.oneinch.one_inch_api.api.data
+package com.oneinch.api.one_inch.api.data
 
 import com.oneinch.`object`.TokenQuote
 

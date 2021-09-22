@@ -4,8 +4,8 @@ import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
-import com.oneinch.on_chain_api.balance.IBalance
-import com.oneinch.one_inch_api.requester.AbstractRequester
+import com.oneinch.api.blockchain.balance.IBalance
+import com.oneinch.api.one_inch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope

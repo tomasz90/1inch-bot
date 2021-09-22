@@ -1,4 +1,4 @@
-package com.oneinch.on_chain_api.sender
+package com.oneinch.api.blockchain.sender
 
 import com.oneinch.`object`.TokenQuote
 

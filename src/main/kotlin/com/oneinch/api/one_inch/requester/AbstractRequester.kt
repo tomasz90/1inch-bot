@@ -1,10 +1,10 @@
-package com.oneinch.one_inch_api.requester
+package com.oneinch.api.one_inch.requester
 
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.config.Settings
-import com.oneinch.one_inch_api.OneInchClient
-import com.oneinch.one_inch_api.api.data.Dto
+import com.oneinch.api.one_inch.OneInchClient
+import com.oneinch.api.one_inch.api.data.Dto
 import com.oneinch.util.Utils
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.atomic.AtomicBoolean

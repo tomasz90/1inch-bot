@@ -1,7 +1,7 @@
-package com.oneinch.one_inch_api.api
+package com.oneinch.api.one_inch.api
 
-import com.oneinch.one_inch_api.api.data.QuoteResponse
-import com.oneinch.one_inch_api.api.data.SwapResponse
+import com.oneinch.api.one_inch.api.data.QuoteResponse
+import com.oneinch.api.one_inch.api.data.SwapResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

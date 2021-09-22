@@ -1,5 +1,4 @@
 import com.oneinch.config.Properties
-import com.oneinch.object.Token
 import com.oneinch.object.TokenQuote
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import

@@ -1,13 +1,13 @@
-package com.oneinch.one_inch_api
+package com.oneinch.api.one_inch
 
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
+import com.oneinch.api.one_inch.api.OneInchApi
+import com.oneinch.api.one_inch.api.data.QuoteDto
+import com.oneinch.api.one_inch.api.data.SwapDto
+import com.oneinch.api.one_inch.api.data.toDto
 import com.oneinch.config.Settings
-import com.oneinch.one_inch_api.api.OneInchApi
-import com.oneinch.one_inch_api.api.data.QuoteDto
-import com.oneinch.one_inch_api.api.data.SwapDto
-import com.oneinch.one_inch_api.api.data.toDto
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import retrofit2.Response

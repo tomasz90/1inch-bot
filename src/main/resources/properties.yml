@@ -1,4 +1,5 @@
 oneInchUrl: https://api.1inch.exchange/
+gasStationUrl: https://gasstation-mainnet.matic.network
 bsc:
   id: 56
   rpc: https://bsc-dataseed.binance.org/

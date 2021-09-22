@@ -1,6 +1,7 @@
-package com.oneinch.on_chain_api.tx
+package com.oneinch.api.blockchain.tx
 
 import com.oneinch.config.Settings
+import com.oneinch.util.GasPriceProvider
 import com.oneinch.util.SlippageModifier
 import java.math.BigInteger
 import java.util.*
@@ -20,6 +21,7 @@ class Transaction private constructor(
         fun create(
             settings: Settings,
             slippageModifier: SlippageModifier,
+            gasPriceProvider: GasPriceProvider,
             gasPrice: BigInteger,
             gasLimit: BigInteger,
             value: BigInteger,
@@ -31,7 +33,7 @@ class Transaction private constructor(
         ): Transaction {
             val tx = Transaction(gasPrice, gasLimit, value, address, data, minReturnAmount, advantage, requestTimestamp)
             tx.increaseGasLimit(settings)
-            tx.increaseGasPrice(settings)
+            tx.increaseGasPrice(gasPriceProvider)
             tx.modifyData(slippageModifier)
             return tx
         }
@@ -41,9 +43,8 @@ class Transaction private constructor(
         gasLimit = (gasLimit.toDouble() * settings.increasedGasLimit).toBigDecimal().toBigInteger()
     }
 
-    private fun increaseGasPrice(settings: Settings) {
-        val increase = settings.increasedGasPrice * advantage * 10
-        gasPrice = (gasPrice.toDouble() * increase).toBigDecimal().toBigInteger()
+    private fun increaseGasPrice(gasPriceProvider: GasPriceProvider) {
+        gasPrice = gasPriceProvider.gasPrice.get().toBigInteger()
     }
 
     private fun modifyData(slippageModifier: SlippageModifier) {

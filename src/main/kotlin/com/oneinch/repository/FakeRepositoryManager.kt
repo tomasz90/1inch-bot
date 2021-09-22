@@ -3,11 +3,10 @@ package com.oneinch.repository
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.on_chain_api.tx.FakeTransaction
+import com.oneinch.api.blockchain.tx.FakeTransaction
 import com.oneinch.repository.dao.FakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
 import org.springframework.stereotype.Component
-import kotlin.math.pow
 
 @Component
 open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val chain: Chain) {
