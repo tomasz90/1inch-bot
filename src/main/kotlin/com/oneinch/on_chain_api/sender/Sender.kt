@@ -5,8 +5,7 @@ import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.repository.RealRepositoryManager
-import com.oneinch.repository.dao.Status.FAIL
-import com.oneinch.repository.dao.Status.PASSED
+import com.oneinch.repository.dao.Status.*
 import com.oneinch.util.getLogger
 import com.oneinch.util.logSwapInfo
 import kotlinx.coroutines.delay
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component
 import org.web3j.exceptions.MessageDecodingException
 import org.web3j.protocol.Web3j
 import org.web3j.tx.RawTransactionManager
+import java.math.BigInteger
 
 @Component
 class Sender(
@@ -27,7 +27,11 @@ class Sender(
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
             val txHash = send(tx, from, to)
-            val status = if (sameBalance(from)) FAIL else PASSED
+            val status = when (getBalance(from)) {
+                BigInteger("0") -> PASSED
+                from.origin -> FAIL
+                else -> PARTIALLY
+            }
             repository.saveTransaction(txHash, tx, from, to, status)
             balance.updateAll()
         } catch (e: MessageDecodingException) {
@@ -51,7 +55,7 @@ class Sender(
         }
     }
 
-    private fun sameBalance(from: TokenQuote): Boolean {
-        return balance.getERC20(from.token)?.origin == from.origin
+    private fun getBalance(from: TokenQuote): BigInteger {
+        return balance.getERC20(from.token)!!.origin
     }
 }
