@@ -21,7 +21,7 @@ open class TestConfig {
     lateinit var repository: FakeRepositoryManager
 
     @Bean
-    open fun myAddress() = settings.myAddress
+    open fun myAddress() = "***REMOVED***"
 
     @Bean
     open fun balance() = FakeBalance(repository)

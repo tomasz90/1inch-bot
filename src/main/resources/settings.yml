@@ -1,6 +1,5 @@
 account: realAccount
 chain: matic
-myAddress: ***REMOVED***
 timeout: 5
 maxRps: 1
 minSwapQuote: 1.0

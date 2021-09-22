@@ -13,7 +13,6 @@ class SettingsLoader : IResources<Settings> {
 class Settings(
     val account: String,
     val chain: String,
-    val myAddress: String,
     val minSwapQuote: Double,
     val defaultSlippage: Double,
     val minAdvantage: Double,
