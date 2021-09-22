@@ -20,11 +20,12 @@ class Utils(val settings: Settings, val limiter: RateLimiter) {
         )
     }
 
-    fun logSwapInfo(from: TokenQuote, to: TokenQuote) {
+    fun logSwapInfo(txHash: String, from: TokenQuote, to: TokenQuote) {
         getLogger().info(
             "SWAP: fromToken ${from.token.symbol}, fromAmount: ${from.calcReadable().precision()}," +
                     "toToken: ${to.token.symbol}, toAmount: ${to.calcReadable().precision()}"
         )
+        getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
     }
 
     fun Double.precision(int: Int? = settings.logDecimalPrecision) = String.format("%.${int}f", this)

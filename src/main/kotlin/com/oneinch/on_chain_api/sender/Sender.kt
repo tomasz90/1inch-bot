@@ -40,8 +40,7 @@ class Sender(
         val txHash = rawTransactionManager
             .sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value)
             .transactionHash
-        utils.logSwapInfo(from, to)
-        getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
+        utils.logSwapInfo(txHash, from, to)
         delay(settings.waitTimeAfterSwap * 1000)
         return txHash
     }
