@@ -1,8 +1,7 @@
 package com.oneinch.repository.dao
 
-import com.oneinch.repository.dao.Passed.UNKNOWN
+import com.oneinch.repository.dao.Status.UNKNOWN
 import org.hibernate.annotations.CreationTimestamp
-import java.math.BigInteger
 import java.util.*
 import javax.persistence.*
 
@@ -28,7 +27,7 @@ class RealTxEntity(
     var minReturnAmount: String,
     var advantage: Double,
     @Enumerated(EnumType.STRING)
-    var passed: Passed
+    var status: Status
 ) {
 
     constructor() :
@@ -53,4 +52,4 @@ class RealTxEntity(
             )
 }
 
-enum class Passed { PASSED, PARTIALLY, FAIL, UNKNOWN }
+enum class Status { PASSED, PARTIALLY, FAIL, UNKNOWN }

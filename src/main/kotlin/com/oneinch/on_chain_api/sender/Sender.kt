@@ -6,18 +6,14 @@ import com.oneinch.config.Settings
 import com.oneinch.on_chain_api.balance.Balance
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.repository.RealRepositoryManager
-import com.oneinch.repository.dao.Passed
-import com.oneinch.repository.dao.Passed.FAIL
-import com.oneinch.repository.dao.Passed.PASSED
+import com.oneinch.repository.dao.Status.FAIL
+import com.oneinch.repository.dao.Status.PASSED
 import com.oneinch.util.Utils
 import com.oneinch.util.getLogger
 import kotlinx.coroutines.delay
 import org.springframework.stereotype.Component
 import org.web3j.exceptions.MessageDecodingException
 import org.web3j.tx.RawTransactionManager
-import java.math.BigInteger
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 @Component
 class Sender(
@@ -30,32 +26,27 @@ class Sender(
 ) : ISender<Transaction> {
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
-        val newGasLimit = increaseGasLimit(tx.gasLimit)
-        val newGasPrice = increaseGasPrice(tx.gasPrice)
-        utils.logSwapInfo(from, to)
         try {
-            val txHash = rawTransactionManager
-                .sendTransaction(newGasPrice, newGasLimit, tx.address, tx.data, tx.value)
-                .transactionHash
-            getLogger().info(txHash)
-            getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------")
-            delay(settings.waitTimeAfterSwap * 1000)
+            val txHash = send(tx, from, to)
             balance.updateAll()
-            if(balance.getERC20(from.token)?.origin == from.origin) {
-                repository.saveTransaction(from, to, newGasPrice, txHash, tx.minReturnAmount, tx.advantage, tx.requestTimestamp, FAIL)
-            } else {
-                repository.saveTransaction(from, to, newGasPrice, txHash, tx.minReturnAmount, tx.advantage, tx.requestTimestamp, PASSED)
-            }
+            val status = if(sameBalance(from)) FAIL else PASSED
+            repository.saveTransaction(txHash, tx, from, to, status)
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
     }
 
-    private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {
-        return (gasLimit.toDouble() * settings.increasedGasLimit).toBigDecimal().toBigInteger()
+    private suspend fun send(tx: Transaction, from: TokenQuote, to: TokenQuote): String {
+        val txHash = rawTransactionManager
+            .sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value)
+            .transactionHash
+        utils.logSwapInfo(from, to)
+        getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
+        delay(settings.waitTimeAfterSwap * 1000)
+        return txHash
     }
 
-    private fun increaseGasPrice(gasLimit: BigInteger): BigInteger {
-        return (gasLimit.toDouble() * settings.increasedGasPrice).toBigDecimal().toBigInteger()
+    private fun sameBalance(from: TokenQuote): Boolean {
+       return balance.getERC20(from.token)?.origin == from.origin
     }
 }

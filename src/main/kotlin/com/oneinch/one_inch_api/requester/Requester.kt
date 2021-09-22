@@ -38,8 +38,18 @@ class Requester(val sender: Sender, val slippageModifier: SlippageModifier) : Ab
     private fun createTx(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
         val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
         val tx = dto.tx
-        tx.data = slippageModifier.modify(tx.data, minReturnAmount)
-        return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data, minReturnAmount, advantage, requestTimestamp)
+        return Transaction.create(
+            settings,
+            slippageModifier,
+            tx.gasPrice,
+            tx.gas,
+            tx.value,
+            tx.to,
+            tx.data,
+            minReturnAmount,
+            advantage,
+            requestTimestamp
+        )
     }
 }
 

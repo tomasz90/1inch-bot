@@ -2,7 +2,8 @@ package com.oneinch.repository
 
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.repository.dao.Passed
+import com.oneinch.on_chain_api.tx.Transaction
+import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.RealTxEntity
 import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
@@ -27,21 +28,18 @@ class RealRepositoryManager(
     }
 
     fun saveTransaction(
+        txHash: String?,
+        tx: Transaction,
         from: TokenQuote,
         to: TokenQuote,
-        gasPrice: BigInteger,
-        txHash: String?,
-        minReturnAmount: BigInteger,
-        advantage: Double,
-        requestTimeStamp: Date,
-        passed: Passed
+        status: Status
     ) {
         if (txHash == null) {
             getLogger().error("TxHash is null, did not receive proper response")
             return
         }
-        val tx = RealTxEntity(
-            requestTimeStamp = requestTimeStamp,
+        val rtx = RealTxEntity(
+            requestTimeStamp = tx.requestTimestamp,
             chainId = chain.id,
             hash = txHash,
             fromSymbol = from.token.symbol,
@@ -52,12 +50,12 @@ class RealRepositoryManager(
             toAddress = to.token.address,
             toReadable = to.calcReadable().round(),
             toAmount = to.origin.toString(),
-            gasPrice = gasPrice.toString(),
-            minReturnAmount = minReturnAmount.toString(),
-            advantage = advantage,
-            passed = passed
+            gasPrice = tx.gasPrice.toString(),
+            minReturnAmount = tx.minReturnAmount.toString(),
+            advantage = tx.advantage,
+            status = status
         )
-        iRealTxRepository.save(tx)
+        iRealTxRepository.save(rtx)
     }
 }
 
