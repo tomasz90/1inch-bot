@@ -1,6 +1,6 @@
 package com.oneinch.repository.dao
 
-import com.oneinch.repository.dao.Status.UNKNOWN
+import com.oneinch.repository.dao.Status.FAIL
 import org.hibernate.annotations.CreationTimestamp
 import java.util.*
 import javax.persistence.*
@@ -48,8 +48,8 @@ class RealTxEntity(
                 "",
                 "",
                 0.0,
-                UNKNOWN
+                FAIL
             )
 }
 
-enum class Status { PASSED, PARTIALLY, FAIL, UNKNOWN }
+enum class Status { PASSED, PARTIALLY, FAIL }
