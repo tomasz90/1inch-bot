@@ -3,7 +3,6 @@ chain: matic
 myAddress: ***REMOVED***
 timeout: 5
 maxRps: 1
-waitTimeAfterSwap: 60
 minSwapQuote: 1.0
 minAdvantage: 30.0
 allowPartialFill: true

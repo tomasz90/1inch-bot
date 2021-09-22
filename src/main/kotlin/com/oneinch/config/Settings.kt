@@ -21,6 +21,5 @@ class Settings(
     val increasedGasLimit: Double,
     val increasedGasPrice: Double,
     val maxRps: Int,
-    val timeout: Long,
-    val waitTimeAfterSwap: Long
+    val timeout: Long
 )
