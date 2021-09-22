@@ -10,6 +10,7 @@ import com.oneinch.repository.dao.Status.FAIL
 import com.oneinch.repository.dao.Status.PASSED
 import com.oneinch.util.Utils
 import com.oneinch.util.getLogger
+import com.oneinch.util.logSwapInfo
 import kotlinx.coroutines.delay
 import org.springframework.stereotype.Component
 import org.web3j.exceptions.MessageDecodingException
@@ -21,8 +22,6 @@ class Sender(
     val rawTransactionManager: RawTransactionManager,
     val repository: RealRepositoryManager,
     val balance: Balance,
-    val utils: Utils,
-    val chain: Chain
 ) : ISender<Transaction> {
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
@@ -40,7 +39,7 @@ class Sender(
         val txHash = rawTransactionManager
             .sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value)
             .transactionHash
-        utils.logSwapInfo(txHash, from, to)
+        logSwapInfo(txHash, from, to)
         delay(settings.waitTimeAfterSwap * 1000)
         return txHash
     }

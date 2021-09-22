@@ -10,4 +10,3 @@ advantage: 30.0
 slippage:  1.0
 increasedGasLimit: 1.25
 increasedGasPrice: 2
-logDecimalPrecision: 2

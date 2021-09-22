@@ -15,25 +15,22 @@ class Utils(val settings: Settings, val limiter: RateLimiter) {
     fun logRatesInfo(dto: Dto, percent: Double) {
         getLogger().info(
             "${dto.from.token.symbol}: ${dto.from.calcReadable().precision()}, " +
-                    "${dto.to.token.symbol}: ${dto.to.calcReadable().precision()},  advantage: ${percent.precision(2)}," +
-                    "  demandAdvantage: ${settings.advantage.precision(2)},  ${limiter.currentCalls} rps"
+                    "${dto.to.token.symbol}: ${dto.to.calcReadable().precision()},  advantage: ${percent.precision()}," +
+                    "  demandAdvantage: ${settings.advantage.precision()},  ${limiter.currentCalls} rps"
         )
     }
-
-    fun logSwapInfo(txHash: String, from: TokenQuote, to: TokenQuote) {
-        getLogger().info(
-            "SWAP: fromToken ${from.token.symbol}, fromAmount: ${from.calcReadable().precision()}," +
-                    "toToken: ${to.token.symbol}, toAmount: ${to.calcReadable().precision()}"
-        )
-        getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
-    }
-
-    fun Double.precision(int: Int? = settings.logDecimalPrecision) = String.format("%.${int}f", this)
 
 }
 
-fun calculateAdvantage(dto: Dto): Double {
-    return (dto.to.calcReadable() - dto.from.calcReadable()) / dto.from.calcReadable() * 100
+
+fun Double.precision() = String.format("%.${2}f", this)
+
+fun logSwapInfo(txHash: String, from: TokenQuote, to: TokenQuote) {
+    getLogger().info(
+        "SWAP: fromToken ${from.token.symbol}, fromAmount: ${from.calcReadable().precision()}," +
+                "toToken: ${to.token.symbol}, toAmount: ${to.calcReadable().precision()}"
+    )
+    getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
 }
 
 

@@ -14,7 +14,6 @@ class Settings(
     val account: String,
     val chain: String,
     val myAddress: String,
-    val logDecimalPrecision: Int,
     val minimalSwapQuote: Double,
     val slippage: Double,
     val advantage: Double,
