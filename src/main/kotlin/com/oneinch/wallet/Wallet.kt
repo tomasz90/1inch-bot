@@ -12,7 +12,7 @@ import java.security.SecureRandom
 
 class Wallet {
 
-    private val file = File(System.getProperty("user.dir"))
+    private val file = File("${System.getProperty("user.dir")}/resources")
 
     fun generateMnemonic(): String {
         val initialEntropy = ByteArray(16)

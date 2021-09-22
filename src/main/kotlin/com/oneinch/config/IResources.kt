@@ -1,5 +1,6 @@
 package com.oneinch.config
 
+import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -14,17 +15,25 @@ interface IResources<T> {
 
     fun readFile(fileName: String): BufferedReader {
         return try {
-            Files.newBufferedReader(getResources().resolve(fileName))
+            Files.newBufferedReader(getProjectResources().resolve(fileName))
         } catch (e: NoSuchFileException) {
-            Files.newBufferedReader(Paths.get(fileName))
+            if (fileName != "settings.yml") {
+                Files.newBufferedReader(getResources().resolve(fileName))
+            } else {
+                Files.newBufferedReader(Paths.get(fileName)) // settings with easy access
+            }
         }
     }
 
     fun getYmlMapper(): ObjectMapper {
-        return ObjectMapper(YAMLFactory()).registerModule(KotlinModule())
+        return ObjectMapper(YAMLFactory()).registerModule(KotlinModule() as Module)
     }
 
     private fun getResources(): Path {
+        return Paths.get("resources")
+    }
+
+    private fun getProjectResources(): Path {
         return Paths.get("src", "main", "resources")
     }
 }

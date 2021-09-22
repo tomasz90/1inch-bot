@@ -1,4 +1,4 @@
-account: fakeAccount
+account: realAccount
 chain: matic
 myAddress: ***REMOVED***
 timeout: 5
@@ -8,5 +8,5 @@ minSwapQuote: 1.0
 minAdvantage: 30.0
 allowPartialFill: true
 increasedGasLimit: 1.25
-increasedGasPrice: 2
+increasedGasPrice: 1
 defaultSlippage:  1.0

@@ -11,6 +11,6 @@ spring:
         hbm2ddl:
           auto: update
   datasource:
-    url: jdbc:h2:file:./database
+    url: jdbc:h2:file:./resources/database
   main:
     allow-bean-definition-overriding: 'true'
