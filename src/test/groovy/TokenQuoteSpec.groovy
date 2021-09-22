@@ -1,4 +1,5 @@
 import com.oneinch.config.Properties
+import com.oneinch.object.Token
 import com.oneinch.object.TokenQuote
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -84,18 +85,30 @@ class TokenQuoteSpec extends BaseTest {
           "TUSD"    | "USDT"  | "1000000000000" | "1000000000000"
     }
 
-//
-//    def "should convert origin to readable"(BigInteger origin, int decimals, double readable) {
-//        given:
-//            def token = new Token(symbol, address, decimals)
-//            def tokenQuote = new TokenQuote(token, origin)
-//        expect:
-//            tokenQuote.readable == readable
-//        where:
-//            origin                                     | decimals || readable
-//            new BigInteger("1")                        | 18       || 0.000000000000000001
-//            new BigInteger("1000000")                  | 6        || 1.0
-//            new BigInteger("200000000000000")          | 9        || 200000
-//            new BigInteger("300000000000000000000000") | 18       || 300000.00
-//    }
+
+    def "should convert origin to readable"(BigInteger origin, double readable) {
+        given:
+          def tokens = properties.matic.tokens
+          def token = tokens.find { it.symbol == symbol }
+          def tokenQuote = new TokenQuote(token, origin)
+        expect:
+          tokenQuote.calcReadable() == readable
+        where:
+          symbol | origin                    | readable
+          "USDC" | 10000                     | 0.01
+          "USDT" | 10000                     | 0.01
+          "UST"  | 10000000000000000         | 0.01
+          "DAI"  | 10000000000000000         | 0.01
+
+          "USDC" | 1000000                   | 1
+          "USDT" | 1000000                   | 1
+          "UST"  | 1000000000000000000       | 1
+          "DAI"  | 1000000000000000000       | 1
+
+          "USDC" | 1000000000000             | 1000000
+          "USDT" | 1000000000000             | 1000000
+          "UST"  | 1000000000000000000000000 | 1000000
+          "DAI"  | 1000000000000000000000000 | 1000000
+
+    }
 }

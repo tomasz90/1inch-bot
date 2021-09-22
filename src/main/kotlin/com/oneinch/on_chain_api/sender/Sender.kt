@@ -27,7 +27,7 @@ class Sender(
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
             val txHash = send(tx, from, to)
-            val status = if(sameBalance(from)) FAIL else PASSED
+            val status = if (sameBalance(from)) FAIL else PASSED
             repository.saveTransaction(txHash, tx, from, to, status)
             balance.updateAll()
         } catch (e: MessageDecodingException) {
@@ -52,6 +52,6 @@ class Sender(
     }
 
     private fun sameBalance(from: TokenQuote): Boolean {
-       return balance.getERC20(from.token)?.origin == from.origin
+        return balance.getERC20(from.token)?.origin == from.origin
     }
 }
