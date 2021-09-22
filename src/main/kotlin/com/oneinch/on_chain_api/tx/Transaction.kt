@@ -42,7 +42,8 @@ class Transaction private constructor(
     }
 
     private fun increaseGasPrice(settings: Settings) {
-        gasPrice = (gasPrice.toDouble() * settings.increasedGasPrice).toBigDecimal().toBigInteger()
+        val increase = settings.increasedGasPrice * advantage * 10
+        gasPrice = (gasPrice.toDouble() * increase).toBigDecimal().toBigInteger()
     }
 
     private fun modifyData(slippageModifier: SlippageModifier) {

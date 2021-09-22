@@ -14,9 +14,9 @@ class Settings(
     val account: String,
     val chain: String,
     val myAddress: String,
-    val minimalSwapQuote: Double,
-    val slippage: Double,
-    val advantage: Double,
+    val minSwapQuote: Double,
+    val defaultSlippage: Double,
+    val minAdvantage: Double,
     val allowPartialFill: Boolean,
     val increasedGasLimit: Double,
     val increasedGasPrice: Double,
@@ -24,5 +24,3 @@ class Settings(
     val timeout: Long,
     val waitTimeAfterSwap: Long
 )
-
-class SwapSettings(val advantage: Double, val slippage: Double)

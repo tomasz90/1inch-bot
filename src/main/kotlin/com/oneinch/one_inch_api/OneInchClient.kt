@@ -33,7 +33,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
                 to.address,
                 from.origin,
                 myAddress,
-                settings.slippage,
+                settings.defaultSlippage,
                 allowPartialFill,
                 protocols
             ).execute()

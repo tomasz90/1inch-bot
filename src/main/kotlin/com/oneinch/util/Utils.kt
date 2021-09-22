@@ -16,12 +16,11 @@ class Utils(val settings: Settings, val limiter: RateLimiter) {
         getLogger().info(
             "${dto.from.token.symbol}: ${dto.from.calcReadable().precision()}, " +
                     "${dto.to.token.symbol}: ${dto.to.calcReadable().precision()},  advantage: ${percent.precision()}," +
-                    "  demandAdvantage: ${settings.advantage.precision()},  ${limiter.currentCalls} rps"
+                    "  demandAdvantage: ${settings.minAdvantage.precision()},  ${limiter.currentCalls} rps"
         )
     }
 
 }
-
 
 fun Double.precision() = String.format("%.${2}f", this)
 

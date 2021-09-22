@@ -27,7 +27,7 @@ class Requester(val sender: Sender, val slippageModifier: SlippageModifier) : Ab
     }
 
     private fun isProfitable(realAdvantage: Double): Boolean {
-        val condition = realAdvantage > settings.advantage && !isSwapping.get()
+        val condition = realAdvantage > settings.minAdvantage && !isSwapping.get()
         if (condition) {
             isSwapping.set(true)
         }
