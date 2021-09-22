@@ -8,6 +8,7 @@ import com.oneinch.repository.dao.RealTxEntity
 import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class RealRepositoryManager(
@@ -28,6 +29,7 @@ class RealRepositoryManager(
     fun saveTransaction(
         txHash: String?,
         tx: Transaction,
+        sendTxTimeStamp: Date,
         from: TokenQuote,
         to: TokenQuote,
         status: Status
@@ -38,6 +40,7 @@ class RealRepositoryManager(
         }
         val rtx = RealTxEntity(
             requestTimeStamp = tx.requestTimestamp,
+            sendTxTimeStamp = sendTxTimeStamp,
             chainId = chain.id,
             hash = txHash,
             fromSymbol = from.token.symbol,

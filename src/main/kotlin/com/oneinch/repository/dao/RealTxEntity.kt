@@ -10,9 +10,8 @@ class RealTxEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     var id: Long = 0L,
-    @CreationTimestamp
-    var date: Date = Date(),
     var requestTimeStamp: Date,
+    var sendTxTimeStamp: Date,
     var chainId: Int,
     var hash: String,
     var fromSymbol: String,

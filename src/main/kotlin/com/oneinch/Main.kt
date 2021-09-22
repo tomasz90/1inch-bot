@@ -38,6 +38,7 @@ class Main(
 
     // TODO: 10.09.2021 add counter when too long time in one currency, time in one token
     // todo: different advantages for different tokens???
+    // TODO: 22.09.2021 Add send transaction time
     private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
         pairs.forEach { pair -> checkRatesForPair(pair) }
     }

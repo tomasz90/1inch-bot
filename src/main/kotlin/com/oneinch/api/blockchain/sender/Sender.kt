@@ -14,6 +14,7 @@ import org.web3j.exceptions.MessageDecodingException
 import org.web3j.protocol.Web3j
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
+import java.util.*
 
 @Component
 class Sender(
@@ -26,13 +27,14 @@ class Sender(
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
+            val sendTxTimeStamp = Date()
             val txHash = send(tx, from, to)
             val status = when (getBalance(from)) {
                 BigInteger("0") -> PASSED
                 from.origin -> FAIL
                 else -> PARTIALLY
             }
-            repository.saveTransaction(txHash, tx, from, to, status)
+            repository.saveTransaction(txHash, tx, sendTxTimeStamp, from, to, status)
             balance.updateAll()
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
