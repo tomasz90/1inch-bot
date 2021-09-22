@@ -6,8 +6,8 @@ import com.oneinch.on_chain_api.sender.Sender
 import com.oneinch.on_chain_api.tx.Transaction
 import com.oneinch.one_inch_api.api.data.SwapDto
 import com.oneinch.util.SlippageModifier
+import com.oneinch.util.calculateAdvantage
 import org.springframework.stereotype.Component
-import java.math.BigInteger
 import java.util.*
 
 @Component
@@ -17,22 +17,28 @@ class Requester(val sender: Sender, val slippageModifier: SlippageModifier) : Ab
         val requestTimestamp = Date()
         val dto = oneInchClient.swap(from, to, settings.allowPartialFill, protocols)
         if (dto != null) {
-            val realAdvantage = utils.calculateAdvantage(dto.from, dto.to)
-            val isGood = isRateGood(dto.from, dto.to, realAdvantage, settings.advantage)
-            if (isGood && !isSwapping.get()) {
-                isSwapping.set(true)
-                val minReturnAmount = from.calcMinReturnAmountOfDifferentToken(to)
-                val newData = slippageModifier.modify(dto.tx.data, minReturnAmount)
-                dto.tx.data = newData
-                val tx = createTx(dto, minReturnAmount, realAdvantage, requestTimestamp)
+            val realAdvantage = calculateAdvantage(dto)
+            if (canPerformSwap(dto, realAdvantage)) {
+                val tx = createTx(dto, realAdvantage, requestTimestamp)
                 sender.sendTransaction(tx, from, dto.to)
                 isSwapping.set(false)
             }
         }
     }
 
-    private fun createTx(dto: SwapDto, minReturnAmount: BigInteger, advantage: Double, requestTimestamp: Date): Transaction {
+    private fun canPerformSwap(dto: SwapDto, realAdvantage: Double): Boolean {
+        utils.logRatesInfo(dto, realAdvantage)
+        val condition = realAdvantage > settings.advantage && !isSwapping.get()
+        if (condition) {
+            isSwapping.set(true)
+        }
+        return condition
+    }
+
+    private fun createTx(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
+        val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
         val tx = dto.tx
+        tx.data = slippageModifier.modify(tx.data, minReturnAmount)
         return Transaction(tx.gasPrice, tx.gas, tx.value, tx.to, tx.data, minReturnAmount, advantage, requestTimestamp)
     }
 }
