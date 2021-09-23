@@ -1,8 +1,8 @@
 account: realAccount
 chain: matic
-maxRps: 1
+maxRps: 25
 minSwapQuote: 1.0
-minAdvantage: 30.0
+minAdvantage: -0.1
 gasPriceMode: fast
 gasPriceLimit: 1000
 

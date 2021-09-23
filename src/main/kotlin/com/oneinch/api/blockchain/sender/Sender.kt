@@ -30,6 +30,7 @@ class Sender(
         try {
             val requestTimeS = getDuration(tx.requestTimestamp)
             val sendTxTimeStamp = Date()
+            var toBalance = getBalance(to)
             val txHash = send(tx, from, to)
             val txTimeS = getDuration(sendTxTimeStamp)
             delay(10000) // to be sure getting valid balance
@@ -39,7 +40,8 @@ class Sender(
                 from.origin -> FAIL
                 else -> PARTIALLY
             }
-            repository.saveTransaction(txHash, tx, requestTimeS, txTimeS, sendTxTimeStamp, from, to, getBalance(to), status)
+            toBalance = getBalance(to) - toBalance
+            repository.saveTransaction(txHash, tx, requestTimeS, txTimeS, sendTxTimeStamp, from, to, toBalance, status)
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
