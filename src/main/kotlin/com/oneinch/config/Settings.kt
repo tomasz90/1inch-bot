@@ -18,7 +18,10 @@ class Settings(
     val minAdvantage: Double,
     val allowPartialFill: Boolean,
     val increasedGasLimit: Double,
-    val increasedGasPrice: Double,
+    val gasPriceMode: GasMode,
+    val gasPriceLimit: Double,
     val maxRps: Int,
     val timeout: Long
 )
+
+enum class GasMode { standard, fast, fastest }

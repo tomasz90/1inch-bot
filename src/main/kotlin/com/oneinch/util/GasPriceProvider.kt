@@ -1,6 +1,8 @@
 package com.oneinch.util
 
 import com.oneinch.api.gas_station.GasStationClient
+import com.oneinch.config.GasMode.*
+import com.oneinch.config.Settings
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -9,7 +11,7 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
 
 @Component
-class GasPriceProvider(val gasStationClient: GasStationClient) {
+class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings) {
 
     val gasPrice: AtomicLong = AtomicLong(10_000_000_000) // default 10 gwei
     private val coroutine = CoroutineScope(CoroutineName("gasPriceProvider"))
@@ -22,9 +24,23 @@ class GasPriceProvider(val gasStationClient: GasStationClient) {
         while (true) {
             val gweiPrice = gasStationClient.getPrice()
             if (gweiPrice != null) {
-                gasPrice.set(gweiPrice.fast.toLong() * 1_000_000_000)
+                val price = when(settings.gasPriceMode) {
+                    fastest -> gweiPrice.fastest
+                    fast -> gweiPrice.fast
+                    standard -> gweiPrice.standard
+                }
+                gasPrice.set(price.setLimit().toWei())
             }
-            delay(5000)
+            delay(2000)
         }
+    }
+
+    private fun Double.setLimit(): Double {
+        val limit = settings.gasPriceLimit
+        return if(this < limit) this else limit
+    }
+
+    private fun Double.toWei(): Long {
+        return this.toLong() * 1_000_000_000
     }
 }

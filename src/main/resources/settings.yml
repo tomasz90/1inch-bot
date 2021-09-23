@@ -1,10 +1,12 @@
 account: realAccount
 chain: matic
-timeout: 5
 maxRps: 1
 minSwapQuote: 1.0
 minAdvantage: 30.0
-allowPartialFill: true
+gasPriceMode: fast
+gasPriceLimit: 1000
+
 increasedGasLimit: 1.25
-increasedGasPrice: 1
 defaultSlippage:  1.0
+allowPartialFill: true
+timeout: 5
