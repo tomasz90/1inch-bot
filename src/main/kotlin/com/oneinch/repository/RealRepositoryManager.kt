@@ -30,6 +30,7 @@ class RealRepositoryManager(
         txHash: String?,
         tx: Transaction,
         sendTxTimeStamp: Date,
+        settleTime: Long,
         from: TokenQuote,
         to: TokenQuote,
         status: Status
@@ -41,6 +42,7 @@ class RealRepositoryManager(
         val rtx = RealTxEntity(
             requestTimeStamp = tx.requestTimestamp,
             sendTxTimeStamp = sendTxTimeStamp,
+            settleTime = settleTime,
             chainId = chain.id,
             hash = txHash,
             fromSymbol = from.token.symbol,

@@ -1,9 +1,9 @@
 package com.oneinch.api.blockchain.sender
 
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.config.Settings
 import com.oneinch.api.blockchain.balance.Balance
 import com.oneinch.api.blockchain.tx.Transaction
+import com.oneinch.config.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.repository.dao.Status.*
 import com.oneinch.util.getLogger
@@ -28,6 +28,7 @@ class Sender(
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
             val sendTxTimeStamp = Date()
+            val settleTime = sendTxTimeStamp.time - tx.requestTimestamp.time
             val txHash = send(tx, from, to)
             balance.updateAll()
             val status = when (getBalance(from)) {
@@ -35,7 +36,7 @@ class Sender(
                 from.origin -> FAIL
                 else -> PARTIALLY
             }
-            repository.saveTransaction(txHash, tx, sendTxTimeStamp, from, to, status)
+            repository.saveTransaction(txHash, tx, sendTxTimeStamp, settleTime, from, to, status)
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
