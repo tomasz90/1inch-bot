@@ -16,7 +16,7 @@ class TokenQuoteSpec extends BaseTest {
                                                                           String fromQuote,
                                                                           String minimumExpectedAmount) {
         given:
-          def tokens = properties.matic.tokens
+          def tokens = properties.chains.find { it.name == "matic" }.tokens
           def from = tokens.find { it.symbol == fromToken }
           def to = tokens.find { it.symbol == toToken }
           def quote = new TokenQuote(from, new BigInteger(fromQuote))
@@ -48,7 +48,7 @@ class TokenQuoteSpec extends BaseTest {
                                                                         String fromQuote,
                                                                         String minimumExpectedAmount) {
         given:
-          def tokens = properties.bsc.tokens
+          def tokens = properties.chains.find { it.name == "bsc" }.tokens
           def from = tokens.find { it.symbol == fromToken }
           def to = tokens.find { it.symbol == toToken }
           def quote = new TokenQuote(from, new BigInteger(fromQuote))
@@ -87,7 +87,7 @@ class TokenQuoteSpec extends BaseTest {
 
     def "should convert origin to readable"(BigInteger origin, double readable) {
         given:
-          def tokens = properties.matic.tokens
+          def tokens =  properties.chains.find { it.name == "matic" }.tokens
           def token = tokens.find { it.symbol == symbol }
           def tokenQuote = new TokenQuote(token, origin)
         expect:
