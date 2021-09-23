@@ -4,7 +4,7 @@ import com.oneinch.`object`.Chain
 import com.oneinch.config.PropertiesLoader
 import com.oneinch.config.ProtocolsLoader
 import com.oneinch.config.SettingsLoader
-import com.oneinch.api.one_inch.api.ApiProvider
+import com.oneinch.api.ApiProvider
 import com.oneinch.util.RateLimiter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -34,6 +34,9 @@ open class Config {
     open fun allProtocols() = protocolsLoader.load()
 
     @Bean
+    open fun apiProvider() = ApiProvider(properties(), settings())
+
+    @Bean
     open fun chain(): Chain {
         val instance = properties()
         return instance.javaClass.kotlin
@@ -55,7 +58,7 @@ open class Config {
     }
 
     @Bean
-    open fun oneInch() = ApiProvider(properties(), settings()).createOneInch()
+    open fun oneInch() = apiProvider().createOneInch()
 
     @Bean
     open fun isSwapping() = AtomicBoolean()

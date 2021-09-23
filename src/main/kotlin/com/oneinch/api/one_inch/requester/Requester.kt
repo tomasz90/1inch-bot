@@ -20,7 +20,7 @@ class Requester(val sender: Sender, val slippageModifier: SlippageModifier, val 
         if (dto != null) {
             val realAdvantage = calculateAdvantage(dto)
             utils.logRatesInfo(dto, realAdvantage)
-            if (isProfitable(realAdvantage)) {
+            if (shouldSwap(realAdvantage)) {
                 val tx = createTx(dto, realAdvantage, requestTimestamp)
                 sender.sendTransaction(tx, from, dto.to)
                 isSwapping.set(false)
@@ -28,12 +28,14 @@ class Requester(val sender: Sender, val slippageModifier: SlippageModifier, val 
         }
     }
 
-    private fun isProfitable(realAdvantage: Double): Boolean {
-        val condition = realAdvantage > settings.minAdvantage && !isSwapping.get()
-        if (condition) {
-            isSwapping.set(true)
+    private fun shouldSwap(realAdvantage: Double): Boolean {
+        if (realAdvantage < settings.minAdvantage) {
+            return false
+        } else if (isSwapping.get()) {
+            return false
         }
-        return condition
+        isSwapping.set(true)
+        return true
     }
 
     private fun createTx(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {

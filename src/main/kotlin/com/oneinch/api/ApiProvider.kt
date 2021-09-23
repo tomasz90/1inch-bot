@@ -1,22 +1,20 @@
-package com.oneinch.api.one_inch.api
+package com.oneinch.api
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.openjson.JSONObject
 import com.oneinch.api.gas_station.GasStationApi
+import com.oneinch.api.one_inch.api.OneInchApi
 import com.oneinch.config.Properties
 import com.oneinch.config.Settings
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.springframework.stereotype.Component
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
 
-
-@Component
 class ApiProvider(val properties: Properties, val settings: Settings) {
 
     private val mapper: ObjectMapper = ObjectMapper()
