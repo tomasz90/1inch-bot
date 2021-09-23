@@ -6,6 +6,7 @@ import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.config.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.repository.dao.Status.*
+import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
 import com.oneinch.util.logSwapInfo
 import kotlinx.coroutines.delay
@@ -27,16 +28,18 @@ class Sender(
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
+            val requestTimeS = getDuration(tx.requestTimestamp)
             val sendTxTimeStamp = Date()
-            val settleTime = sendTxTimeStamp.time - tx.requestTimestamp.time
             val txHash = send(tx, from, to)
+            val txTimeS = getDuration(sendTxTimeStamp)
+            delay(10000) // to be sure getting valid balance
             balance.updateAll()
             val status = when (getBalance(from)) {
                 BigInteger("0") -> PASSED
                 from.origin -> FAIL
                 else -> PARTIALLY
             }
-            repository.saveTransaction(txHash, tx, sendTxTimeStamp, settleTime, from, to, status)
+            repository.saveTransaction(txHash, tx, requestTimeS, txTimeS, sendTxTimeStamp, from, to, getBalance(to), status)
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
@@ -54,9 +57,8 @@ class Sender(
     private suspend fun waitUntilTxDone(txHash: String) {
         val result = { -> web3j.ethGetTransactionReceipt(txHash).send().result }
         while (result.invoke() == null) {
-            delay(5000)
+            delay(500)
         }
-        delay(10000) // to be sure getting valid balance
     }
 
     private fun getBalance(from: TokenQuote): BigInteger {

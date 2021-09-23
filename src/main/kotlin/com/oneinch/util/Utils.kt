@@ -6,6 +6,7 @@ import com.oneinch.api.one_inch.api.data.Dto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.util.*
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 
@@ -30,6 +31,12 @@ fun logSwapInfo(txHash: String, from: TokenQuote, to: TokenQuote) {
                 "toToken: ${to.token.symbol}, toAmount: ${to.calcReadable().precision()}"
     )
     getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
+}
+
+fun getDuration(date: Date): Double {
+    val now = Date().time
+    val duration = now - date.time
+    return duration.toDouble() / 1000
 }
 
 

@@ -8,6 +8,7 @@ import com.oneinch.repository.dao.RealTxEntity
 import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
+import java.math.BigInteger
 import java.util.*
 
 @Component
@@ -29,10 +30,12 @@ class RealRepositoryManager(
     fun saveTransaction(
         txHash: String?,
         tx: Transaction,
+        requestTimeS: Double,
+        txTimeS: Double,
         sendTxTimeStamp: Date,
-        settleTime: Long,
         from: TokenQuote,
         to: TokenQuote,
+        returnAmount: BigInteger,
         status: Status
     ) {
         if (txHash == null) {
@@ -40,20 +43,19 @@ class RealRepositoryManager(
             return
         }
         val rtx = RealTxEntity(
-            requestTimeStamp = tx.requestTimestamp,
             sendTxTimeStamp = sendTxTimeStamp,
-            settleTime = settleTime,
+            requestTimeS = requestTimeS,
+            txTimeS = txTimeS,
             chainId = chain.id,
             hash = txHash,
             fromSymbol = from.token.symbol,
-            fromAddress = from.token.address,
             fromReadable = from.calcReadable().round(),
             fromAmount = from.origin.toString(),
             toSymbol = to.token.symbol,
-            toAddress = to.token.address,
             toReadable = to.calcReadable().round(),
             toAmount = to.origin.toString(),
             gasPrice = tx.gasPrice.toString(),
+            returnAmount = returnAmount.toString(),
             minReturnAmount = tx.minReturnAmount.toString(),
             advantage = tx.advantage,
             status = status
