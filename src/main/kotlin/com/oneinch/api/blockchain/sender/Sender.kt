@@ -55,6 +55,7 @@ class Sender(
         while (result.invoke() == null) {
             delay(5000)
         }
+        delay(10000) // to be sure getting valid balance
     }
 
     private fun getBalance(from: TokenQuote): BigInteger {
