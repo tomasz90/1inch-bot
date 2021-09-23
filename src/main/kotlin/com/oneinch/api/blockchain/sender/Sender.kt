@@ -29,13 +29,13 @@ class Sender(
         try {
             val sendTxTimeStamp = Date()
             val txHash = send(tx, from, to)
+            balance.updateAll()
             val status = when (getBalance(from)) {
                 BigInteger("0") -> PASSED
                 from.origin -> FAIL
                 else -> PARTIALLY
             }
             repository.saveTransaction(txHash, tx, sendTxTimeStamp, from, to, status)
-            balance.updateAll()
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
