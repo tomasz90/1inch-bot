@@ -1,9 +1,6 @@
 package com.oneinch.config
 
-import org.springframework.stereotype.Component
-
-@Component
-class SettingsLoader : IResources<Settings> {
+object SettingsLoader : IResources<Settings> {
     override fun load(): Settings {
         val bufferedReader = readFile("settings.yml")
         return bufferedReader.use { getYmlMapper().readValue(it, Settings::class.java) }

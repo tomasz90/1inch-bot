@@ -1,10 +1,8 @@
 package com.oneinch.config
 
 import com.oneinch.`object`.Chain
-import org.springframework.stereotype.Component
 
-@Component
-class PropertiesLoader : IResources<Properties> {
+object PropertiesLoader : IResources<Properties> {
     override fun load(): Properties {
         val bufferedReader = readFile("properties.yml")
         return bufferedReader.use { getYmlMapper().readValue(it, Properties::class.java) }
@@ -14,7 +12,5 @@ class PropertiesLoader : IResources<Properties> {
 class Properties(
     val oneInchUrl: String,
     val gasStationUrl: String,
-    val bsc: Chain,
-    val matic: Chain,
-    val optimism: Chain
+    val chains: List<Chain>
 )

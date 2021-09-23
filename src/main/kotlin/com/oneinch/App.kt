@@ -26,8 +26,7 @@ fun main(args: Array<String>) {
 }
 
 private fun setActiveProfile(args: Array<String>) {
-    val settings = SettingsLoader()
-    val profile = settings.load().account
+    val profile = SettingsLoader.load().account
     val environment: ConfigurableEnvironment = StandardEnvironment()
     environment.setActiveProfiles(profile)
     val application = SpringApplication(App::class.java)

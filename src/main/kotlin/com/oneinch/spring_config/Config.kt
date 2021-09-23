@@ -15,46 +15,28 @@ import kotlin.reflect.full.declaredMemberProperties
 @Configuration
 open class Config {
 
-    @Autowired
-    lateinit var propertiesLoader: PropertiesLoader
-
-    @Autowired
-    lateinit var settingsLoader: SettingsLoader
-
-    @Autowired
-    lateinit var protocolsLoader: ProtocolsLoader
+    @Bean
+    open fun properties() = PropertiesLoader.load()
 
     @Bean
-    open fun properties() = propertiesLoader.load()
+    open fun settings() = SettingsLoader.load()
 
     @Bean
-    open fun settings() = settingsLoader.load()
-
-    @Bean
-    open fun allProtocols() = protocolsLoader.load()
+    open fun allProtocols() = ProtocolsLoader.load()
 
     @Bean
     open fun apiProvider() = ApiProvider(properties(), settings())
 
     @Bean
     open fun chain(): Chain {
-        val instance = properties()
-        return instance.javaClass.kotlin
-            .declaredMemberProperties
-            .filter { it.name == settings().chain }
-            .map { it.get(instance) }
-            .first() as Chain
+        val name = settings().chain
+        return properties().chains.first { it.name == name }
     }
 
     @Bean
     open fun protocols(): String {
-        val instance = allProtocols()
-        val protocols = instance.javaClass.kotlin
-            .declaredMemberProperties
-            .filter { it.name == settings().chain }
-            .map { it.get(instance) }
-            .first() as List<String>
-        return instance.asString(protocols)
+        val name = settings().chain
+        return allProtocols().protocols.first { it.chain == name }.asString()
     }
 
     @Bean
