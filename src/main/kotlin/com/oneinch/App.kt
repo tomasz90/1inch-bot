@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
 private fun setActiveProfile(args: Array<String>) {
     val profile = SettingsLoader.load().account
     if (profile == "realAccount") {
-        Wallet.providePassword()
+        Wallet.assignPassword()
     }
     val environment: ConfigurableEnvironment = StandardEnvironment()
     environment.setActiveProfiles(profile)

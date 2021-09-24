@@ -38,10 +38,13 @@ object Wallet {
         return WalletUtils.loadCredentials(password, files[0])
     }
 
-    fun providePassword() {
+    fun assignPassword() {
         getLogger().info("Enter password to keystore:")
         val pass1 = "***REMOVED***"
-        val pass2 = readLine().toString()
+        val pass2 = when(val console = System.console()) {
+            null -> readLine().toString()
+            else -> String(console.readPassword())
+        }
         password = pass1 + pass2
     }
 }
