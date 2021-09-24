@@ -10,9 +10,10 @@ import java.io.File
 import java.io.FilenameFilter
 import java.security.SecureRandom
 
-class Wallet {
+object Wallet {
 
     private val file = File("${System.getProperty("user.dir")}/resources")
+    var password: String? = null
 
     fun generateMnemonic(): String {
         val initialEntropy = ByteArray(16)
@@ -34,14 +35,13 @@ class Wallet {
         if (files.isEmpty()) {
             throw Exception("There is no keystore..")
         }
-        val password = providePassword()
         return WalletUtils.loadCredentials(password, files[0])
     }
 
-    private fun providePassword(): String {
-        getLogger().debug("Enter password to keystore:")
+    fun providePassword() {
+        getLogger().info("Enter password to keystore:")
         val pass1 = "***REMOVED***"
         val pass2 = (System.console()?.readPassword() ?: readLine()).toString()
-        return pass1 + pass2
+        password = pass1 + pass2
     }
 }

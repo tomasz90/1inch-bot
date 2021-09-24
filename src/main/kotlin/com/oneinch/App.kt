@@ -1,6 +1,7 @@
 package com.oneinch
 
 import com.oneinch.config.SettingsLoader
+import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -27,6 +28,9 @@ fun main(args: Array<String>) {
 
 private fun setActiveProfile(args: Array<String>) {
     val profile = SettingsLoader.load().account
+    if (profile == "realAccount") {
+        Wallet.providePassword()
+    }
     val environment: ConfigurableEnvironment = StandardEnvironment()
     environment.setActiveProfiles(profile)
     val application = SpringApplication(App::class.java)

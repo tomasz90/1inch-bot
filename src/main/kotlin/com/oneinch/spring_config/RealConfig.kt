@@ -4,7 +4,6 @@ import com.esaulpaugh.headlong.abi.Function
 import com.oneinch.`object`.Chain
 import com.oneinch.api.ApiProvider
 import com.oneinch.config.AbiLoader
-import com.oneinch.config.Properties
 import com.oneinch.config.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
@@ -39,7 +38,7 @@ open class RealConfig {
     open fun web3j() = JsonRpc2_0Web3j(HttpService(chain.rpc))
 
     @Bean
-    open fun credentials() = Wallet().open()
+    open fun credentials() = Wallet.open()
 
     @Bean
     open fun myAddress() = credentials().address
