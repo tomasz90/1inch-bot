@@ -7,10 +7,12 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
 
 @Component
+@Profile("realAccount")
 class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings) {
 
     val gasPrice: AtomicLong = AtomicLong(10_000_000_000) // default 10 gwei
