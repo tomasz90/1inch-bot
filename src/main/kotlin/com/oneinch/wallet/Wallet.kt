@@ -34,12 +34,14 @@ class Wallet {
         if (files.isEmpty()) {
             throw Exception("There is no keystore..")
         }
-        val password = "***REMOVED***" //providePassword()
+        val password = providePassword()
         return WalletUtils.loadCredentials(password, files[0])
     }
 
     private fun providePassword(): String {
         getLogger().debug("Enter password to keystore:")
-        return (System.console()?.readPassword() ?: readLine()).toString()
+        val pass1 = "***REMOVED***"
+        val pass2 = (System.console()?.readPassword() ?: readLine()).toString()
+        return pass1 + pass2
     }
 }
