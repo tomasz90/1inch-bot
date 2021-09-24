@@ -41,7 +41,7 @@ object Wallet {
     fun providePassword() {
         getLogger().info("Enter password to keystore:")
         val pass1 = "***REMOVED***"
-        val pass2 = (System.console()?.readPassword() ?: readLine()).toString()
+        val pass2 = readLine().toString()
         password = pass1 + pass2
     }
 }
