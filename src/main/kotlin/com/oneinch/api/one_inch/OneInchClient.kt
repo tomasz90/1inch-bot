@@ -20,7 +20,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
         return if (response.isSuccessful) {
             response.body()!!.toDto()
         } else {
-            response.logErrorMessage("Error during quote.")
+            response.logErrorMessage("Error getting quotes.")
             null
         }
     }
@@ -40,7 +40,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
         return if (response.isSuccessful) {
             response.body()!!.toDto()
         } else {
-            response.logErrorMessage("Error during swap.")
+            response.logErrorMessage("Error getting quotes.")
             null
         }
     }
