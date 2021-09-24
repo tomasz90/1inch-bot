@@ -7,6 +7,7 @@ import com.oneinch.api.blockchain.tx.FakeTransaction
 import com.oneinch.repository.dao.FakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
 import org.springframework.stereotype.Component
+import java.math.BigInteger
 
 @Component
 open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val chain: Chain) {
@@ -15,16 +16,17 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
         fillWithFakeBalanceIfEmpty("USDC", 10000.0)
     }
 
-    fun save(TokenQuoteEntity: FakeTokenQuoteEntity): FakeTokenQuoteEntity {
-        return repository.save(TokenQuoteEntity)
+    fun save(TokenQuoteEntity: FakeTokenQuoteEntity) {
+        repository.save(TokenQuoteEntity)
     }
 
     fun saveTransaction(from: TokenQuote, to: TokenQuote, t: FakeTransaction) {
         TODO("Not yet implemented, include date")
     }
 
-    fun getBalance(erc20: Token): TokenQuote? {
-        return repository.findByAddress(erc20.address)?.toTokenQuote(chain)
+    // TODO: 25.09.2021 All to refactor....
+    fun getBalance(erc20: Token): TokenQuote {
+        return repository.findByAddress(erc20.address)?.toTokenQuote(chain) ?: TokenQuote(erc20, BigInteger.valueOf(0))
     }
 
     fun updateBalances(from: TokenQuote, to: TokenQuote) {
@@ -44,7 +46,7 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
         save(entity)
     }
 
-    private fun findByAddress(to: TokenQuote): FakeTokenQuoteEntity {
+    fun findByAddress(to: TokenQuote): FakeTokenQuoteEntity {
         return repository.findByAddress(to.token.address) ?: FakeTokenQuoteEntity(chain.id, to.token.symbol, to.token.address, 0.0)
     }
 

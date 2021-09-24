@@ -44,15 +44,14 @@ class Main(
     }
 
     private fun checkRatesForPair(pair: Pair<Token, Token>) {
-        when (val tokenQuote = balance.getERC20(pair.first)) {
-            null -> { }
-            else -> { swapIfMinimalBalance(tokenQuote, pair.second) }
-        }
+        val tokenQuote = balance.getERC20(pair.first)
+        swapIfFulfillConditions(tokenQuote, pair.second)
     }
 
-    private fun swapIfMinimalBalance(tokenQuote: TokenQuote, token: Token) {
+    private fun swapIfFulfillConditions(tokenQuote: TokenQuote, token: Token) {
         if (tokenQuote.calcReadable() > settings.minSwapQuote) {
-            runBlocking { swap.invoke(tokenQuote, token) }
+            if (balance.getAllBalanceReadable() / 2 > (balance.getERC20(token).calcReadable()))
+                runBlocking { swap.invoke(tokenQuote, token) }
         }
     }
 

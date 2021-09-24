@@ -21,16 +21,21 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
     }
 
-    override fun getERC20(erc20: Token): TokenQuote? {
+    override fun getERC20(erc20: Token): TokenQuote {
         // TODO: 13.09.2021 java.util.ConcurrentModificationException need fix
         var tokenQuote = repository.findByAddress(erc20.address)
         if (tokenQuote == null) {
             tokenQuote = getFromChain(erc20.address)
-            if (tokenQuote != null) {
-                repository.save(tokenQuote)
+            if (tokenQuote == null) {
+                tokenQuote = TokenQuote(erc20, BigInteger.valueOf(0))
             }
         }
+        repository.save(tokenQuote)
         return tokenQuote
+    }
+
+    override fun getAllBalanceReadable(): Double {
+        return repository.getAllBalanceReadable()
     }
 
     private fun getFromChain(address: String): TokenQuote? {

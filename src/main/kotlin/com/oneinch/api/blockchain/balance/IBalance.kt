@@ -5,6 +5,7 @@ import com.oneinch.`object`.TokenQuote
 
 interface IBalance {
 
-    fun getERC20(erc20: Token): TokenQuote?
+    fun getERC20(erc20: Token): TokenQuote
 
+    fun getAllBalanceReadable(): Double
 }
