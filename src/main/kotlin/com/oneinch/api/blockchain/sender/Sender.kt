@@ -34,6 +34,7 @@ class Sender(
             val txHash = send(tx, from, to)
             val txTimeS = getDuration(sendTxTimeStamp)
             delay(10000) // to be sure getting valid balance
+            // TODO: 24.09.2021 get sum of all balance after update all substract and send telegram message when profit
             balance.updateAll()
             val status = when (getBalance(from)) {
                 BigInteger("0") -> PASSED
