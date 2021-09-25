@@ -4,7 +4,7 @@ import java.math.BigInteger
 
 class TokenQuote(val token: Token, val origin: BigInteger) {
     // TODO: 25.09.2021 TEST IT PROPERLY
-    var usdValue: Double = 0.0
+    var usdValue: Double = -0.0
 
     init {
         usdValue = calcUSDValue()

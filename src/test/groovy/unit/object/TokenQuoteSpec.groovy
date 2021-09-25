@@ -1,7 +1,7 @@
 package unit.object
 
-
 import com.oneinch.loader.Properties
+import com.oneinch.object.Token
 import com.oneinch.object.TokenQuote
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -15,6 +15,14 @@ class TokenQuoteSpec extends BaseTest {
 
     @Autowired
     Properties properties
+
+    def "should calculate usd value properly"() {
+        given:
+          def token = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def tokenQuote = new TokenQuote(token, new BigInteger("1000000000000000000000"))
+        expect:
+          tokenQuote.usdValue == 1000.0D
+    }
 
     def "should calculate minimum return amount of different matic token"(String fromToken,
                                                                           String toToken,
@@ -92,7 +100,7 @@ class TokenQuoteSpec extends BaseTest {
 
     def "should convert origin to readable"(BigInteger origin, double readable) {
         given:
-          def tokens =  properties.chains.find { it.name == "matic" }.tokens
+          def tokens = properties.chains.find { it.name == "matic" }.tokens
           def token = tokens.find { it.symbol == symbol }
           def tokenQuote = new TokenQuote(token, origin)
         expect:
