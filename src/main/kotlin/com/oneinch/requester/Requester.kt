@@ -4,14 +4,13 @@ import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.sender.Sender
 import com.oneinch.api.blockchain.tx.Transaction
+import com.oneinch.api.blockchain.tx.TransactionCreator
 import com.oneinch.api.one_inch.api.data.SwapDto
-import com.oneinch.util.GasPriceProvider
-import com.oneinch.util.SlippageModifier
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class Requester(val sender: Sender, val slippageModifier: SlippageModifier, val gasPriceProvider: GasPriceProvider) :
+class Requester(val sender: Sender, val transactionCreator: TransactionCreator) :
     AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
@@ -41,11 +40,7 @@ class Requester(val sender: Sender, val slippageModifier: SlippageModifier, val 
     private fun createTx(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
         val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
         val tx = dto.tx
-        return Transaction.create(
-            settings,
-            slippageModifier,
-            gasPriceProvider,
-            tx.gasPrice,
+        return transactionCreator.create(
             tx.gas,
             tx.value,
             tx.to,
