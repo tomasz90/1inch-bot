@@ -20,7 +20,7 @@ import java.util.*
 @Component
 class Sender(
     val settings: Settings,
-    val rawTransactionManager: RawTransactionManager,
+    val manager: RawTransactionManager,
     val repository: RealRepositoryManager,
     val balance: Balance,
     val web3j: Web3j
@@ -49,9 +49,7 @@ class Sender(
     }
 
     private suspend fun send(tx: Transaction, from: TokenQuote, to: TokenQuote): String {
-        val txHash = rawTransactionManager
-            .sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value)
-            .transactionHash
+        val txHash = manager.sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value).transactionHash
         logSwapInfo(txHash, from, to)
         waitUntilTxDone(txHash)
         return txHash

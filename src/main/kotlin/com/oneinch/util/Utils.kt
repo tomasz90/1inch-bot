@@ -8,11 +8,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.util.*
 
-fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
-
 @Component
 class Utils(val settings: Settings, val limiter: RateLimiter) {
-
     fun logRatesInfo(dto: Dto, percent: Double) {
         getLogger().info(
             "${dto.from.token.symbol}: ${dto.from.usdValue.precision()}, " +
@@ -23,6 +20,8 @@ class Utils(val settings: Settings, val limiter: RateLimiter) {
 
 }
 
+fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
+
 fun Double.precision() = String.format("%.${2}f", this)
 
 fun logSwapInfo(txHash: String, from: TokenQuote, to: TokenQuote) {
@@ -30,7 +29,8 @@ fun logSwapInfo(txHash: String, from: TokenQuote, to: TokenQuote) {
         "SWAP: fromToken ${from.token.symbol}, fromAmount: ${from.usdValue.precision()}," +
                 "toToken: ${to.token.symbol}, toAmount: ${to.usdValue.precision()}"
     )
-    getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
+    getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------$")
+    getLogger().info(txHash)
 }
 
 fun getDuration(date: Date): Double {

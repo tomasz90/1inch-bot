@@ -18,7 +18,6 @@ class Requester(val sender: Sender, val transactionCreator: TransactionCreator) 
         val dto = oneInchClient.swap(from, to, settings.allowPartialFill, protocols)
         if (dto != null) {
             val realAdvantage = calculateAdvantage(dto)
-            utils.logRatesInfo(dto, realAdvantage)
             if (shouldSwap(realAdvantage)) {
                 val tx = createTx(dto, realAdvantage, requestTimestamp)
                 sender.sendTransaction(tx, from, dto.to)
