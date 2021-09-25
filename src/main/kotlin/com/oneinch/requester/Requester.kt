@@ -6,7 +6,7 @@ import com.oneinch.api.blockchain.sender.Sender
 import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.api.blockchain.tx.TransactionCreator
 import com.oneinch.api.one_inch.api.data.SwapDto
-import com.oneinch.config.Settings
+import com.oneinch.loaders.Settings
 import org.springframework.stereotype.Component
 import java.util.*
 

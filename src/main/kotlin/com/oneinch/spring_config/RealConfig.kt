@@ -3,8 +3,8 @@ package com.oneinch.spring_config
 import com.esaulpaugh.headlong.abi.Function
 import com.oneinch.`object`.Chain
 import com.oneinch.provider.ApiProvider
-import com.oneinch.config.AbiLoader
-import com.oneinch.config.Settings
+import com.oneinch.loaders.Abi
+import com.oneinch.loaders.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +29,7 @@ open class RealConfig {
     lateinit var repository: RealRepositoryManager
 
     @Autowired
-    lateinit var abiLoader: AbiLoader
+    lateinit var abi: Abi
 
     @Autowired
     lateinit var apiProvider: ApiProvider
@@ -51,7 +51,7 @@ open class RealConfig {
 
     @Bean
     open fun function(): Function {
-        val json = abiLoader.load()
+        val json = abi.load()
         return Function.fromJson(json.toString())
     }
 }

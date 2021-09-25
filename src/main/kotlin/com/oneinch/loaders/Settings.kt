@@ -1,6 +1,6 @@
-package com.oneinch.config
+package com.oneinch.loaders
 
-import com.oneinch.config.FileUtils.getYmlMapper
+import com.oneinch.util.FileUtils.getYmlMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 import java.nio.file.Files

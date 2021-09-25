@@ -1,6 +1,6 @@
 package com.oneinch
 
-import com.oneinch.config.SettingsLoader
+import com.oneinch.loaders.SettingsLoader
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner

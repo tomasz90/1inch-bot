@@ -7,7 +7,7 @@ import com.oneinch.api.one_inch.api.OneInchApi
 import com.oneinch.api.one_inch.api.data.QuoteDto
 import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.api.one_inch.api.data.toDto
-import com.oneinch.config.Settings
+import com.oneinch.loaders.Settings
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import retrofit2.Response

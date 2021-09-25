@@ -1,4 +1,4 @@
-package com.oneinch.config
+package com.oneinch.util
 
 import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.ObjectMapper

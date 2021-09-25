@@ -3,7 +3,7 @@ package com.oneinch.api.blockchain.sender
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.balance.Balance
 import com.oneinch.api.blockchain.tx.Transaction
-import com.oneinch.config.Settings
+import com.oneinch.loaders.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.Status.FAIL

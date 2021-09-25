@@ -1,6 +1,6 @@
 package com.oneinch.api.blockchain.tx
 
-import com.oneinch.config.Settings
+import com.oneinch.loaders.Settings
 import com.oneinch.provider.GasPriceProvider
 import com.oneinch.provider.SlippageProvider
 import org.springframework.stereotype.Component

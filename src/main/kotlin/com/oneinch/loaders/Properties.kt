@@ -1,8 +1,8 @@
-package com.oneinch.config
+package com.oneinch.loaders
 
 import com.oneinch.`object`.Chain
-import com.oneinch.config.FileUtils.getYmlMapper
-import com.oneinch.config.FileUtils.readFile
+import com.oneinch.util.FileUtils.getYmlMapper
+import com.oneinch.util.FileUtils.readFile
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Component

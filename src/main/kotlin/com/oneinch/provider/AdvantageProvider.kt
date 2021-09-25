@@ -1,6 +1,6 @@
 package com.oneinch.provider
 
-import com.oneinch.config.Settings
+import com.oneinch.loaders.Settings
 import com.oneinch.util.getLogger
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
