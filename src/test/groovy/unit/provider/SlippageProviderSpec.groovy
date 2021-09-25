@@ -6,15 +6,15 @@ import com.oneinch.provider.SlippageProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
-import unit.BaseTest
-import unit.TestConfig
+import unit.BaseSpec
+import unit.SpecConfig
 
 import java.nio.file.Files
 import java.nio.file.Paths
 
 @ContextConfiguration
-@Import(TestConfig.class)
-class SlippageProviderSpec extends BaseTest {
+@Import(SpecConfig.class)
+class SlippageProviderSpec extends BaseSpec {
 
     @Autowired
     SlippageProvider slippageProvider

@@ -1,9 +1,6 @@
 package com.oneinch.provider
 
 import com.oneinch.api.gas_station.GasStationClient
-import com.oneinch.loader.GasMode.fast
-import com.oneinch.loader.GasMode.fastest
-import com.oneinch.loader.GasMode.standard
 import com.oneinch.loader.Settings
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -19,23 +16,19 @@ class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Set
 
     val gasPrice: AtomicLong = AtomicLong(10_000_000_000) // default 10 gwei
     private val coroutine = CoroutineScope(CoroutineName("gasPriceProvider"))
+    private val TWO_SECONDS = 2000L
 
     init {
-        coroutine.launch { getGasPrice() }
+        coroutine.launch { setGasPrice() }
     }
 
-    private suspend fun getGasPrice() {
+    private suspend fun setGasPrice() {
         while (true) {
             val gweiPrice = gasStationClient.getPrice()
             if (gweiPrice != null) {
-                val price = when(settings.gasPriceMode) {
-                    fastest -> gweiPrice.fastest
-                    fast -> gweiPrice.fast
-                    standard -> gweiPrice.standard
-                }
-                gasPrice.set(price.setLimit().toWei())
+                gasPrice.set(gweiPrice.setLimit().toWei())
             }
-            delay(2000)
+            delay(TWO_SECONDS)
         }
     }
 

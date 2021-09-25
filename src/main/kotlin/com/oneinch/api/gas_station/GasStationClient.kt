@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component
 @Profile("realAccount")
 class GasStationClient(val gasStation: GasStationApi) {
 
-    fun getPrice(): GasResponse? {
+    fun getPrice(): Double? {
         val response = gasStation.getPrice().execute()
         return if (response.isSuccessful) {
-            response.body()
+            response.body()?.fastest
         } else {
             response.logErrorMessage("Error getting prices.")
             null

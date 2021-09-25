@@ -13,7 +13,7 @@ repositories {
 }
 
 configurations {
-    all*.exclude module : 'spring-boot-starter-logging'
+    all*.exclude module: 'spring-boot-starter-logging'
 }
 
 dependencies {
@@ -38,6 +38,8 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.12.RELEASE'
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
+    // https://mvnrepository.com/artifact/org.spockframework/spock-core
+    testImplementation("org.spockframework:spock-core:2.0-groovy-3.0")
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
 
 }

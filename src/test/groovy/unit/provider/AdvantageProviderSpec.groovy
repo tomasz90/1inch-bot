@@ -4,16 +4,16 @@ import com.oneinch.loader.Settings
 import com.oneinch.provider.AdvantageProvider
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
-import unit.BaseTest
-import unit.TestConfig
+import unit.BaseSpec
+import unit.SpecConfig
 
 import static java.time.Duration.ofSeconds
 import static java.time.Instant.now
 import static org.springframework.test.util.ReflectionTestUtils.setField
 
 @ContextConfiguration
-@Import(TestConfig.class)
-class AdvantageProviderSpec extends BaseTest {
+@Import(SpecConfig.class)
+class AdvantageProviderSpec extends BaseSpec {
 
     def settings = GroovyMock(Settings)
     def defaultAdvantage = 0.5D

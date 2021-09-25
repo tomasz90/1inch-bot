@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import
 
 @TestConfiguration
 @Import([AbiLoader.class, PropertiesLoader.class])
-abstract class TestConfig {
+abstract class SpecConfig {
 
     @Autowired
     JSONObject abi
