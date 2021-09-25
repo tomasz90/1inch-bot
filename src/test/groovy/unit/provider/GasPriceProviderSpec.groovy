@@ -1,30 +1,27 @@
 package unit.provider
 
-import com.oneinch.api.gas_station.GasStationClient
-import com.oneinch.loader.Settings
-import com.oneinch.provider.GasPriceProvider
+import com.oneinch.St
+import com.oneinch.Tes
+import org.powermock.api.mockito.PowerMockito
+import org.powermock.core.classloader.annotations.PrepareForTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 import unit.BaseSpec
 import unit.SpecConfig
 
-import static org.springframework.test.util.ReflectionTestUtils.setField
-
+@PrepareForTest([Tes.class])
 @ContextConfiguration
 @Import(SpecConfig.class)
 class GasPriceProviderSpec extends BaseSpec {
 
-    Settings settings = GroovyMock()
 
     def "should return gas price"() {
         given:
-          GasStationClient gasStationClient = GroovyMock() { getPrice() >> 20.0D }
-          setField(settings, "gasPriceLimit", 30)
-          def gasPriceProvider = new GasPriceProvider(gasStationClient, settings)
-
-
+          Tes tes = PowerMockito.mock(Tes)
+          PowerMockito.when(tes.foo()).thenReturn("20.0D")
+          def st = new St(tes)
         expect:
-          Thread.sleep(1000)
-          gasPriceProvider.gasPrice.get() == 20
+          st.fizz() == "20.D"
+
     }
 }
