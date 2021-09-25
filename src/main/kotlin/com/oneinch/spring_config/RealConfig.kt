@@ -2,7 +2,7 @@ package com.oneinch.spring_config
 
 import com.esaulpaugh.headlong.abi.Function
 import com.oneinch.`object`.Chain
-import com.oneinch.api.ApiProvider
+import com.oneinch.provider.ApiProvider
 import com.oneinch.config.AbiLoader
 import com.oneinch.config.Settings
 import com.oneinch.repository.RealRepositoryManager

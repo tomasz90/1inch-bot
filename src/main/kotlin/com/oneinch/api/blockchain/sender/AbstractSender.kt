@@ -1,7 +1,7 @@
 package com.oneinch.api.blockchain.sender
 
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.util.AdvantageProvider
+import com.oneinch.provider.AdvantageProvider
 import org.springframework.beans.factory.annotation.Autowired
 
 abstract class AbstractSender<T> {

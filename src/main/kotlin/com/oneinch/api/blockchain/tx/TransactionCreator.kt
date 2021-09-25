@@ -1,8 +1,8 @@
 package com.oneinch.api.blockchain.tx
 
 import com.oneinch.config.Settings
-import com.oneinch.util.GasPriceProvider
-import com.oneinch.util.SlippageModifier
+import com.oneinch.provider.GasPriceProvider
+import com.oneinch.provider.SlippageProvider
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 import java.util.*
@@ -10,7 +10,7 @@ import java.util.*
 @Component
 class TransactionCreator(
     val settings: Settings,
-    val slippageModifier: SlippageModifier,
+    val slippageProvider: SlippageProvider,
     val gasPriceProvider: GasPriceProvider
 ) {
 
@@ -37,6 +37,6 @@ class TransactionCreator(
     }
 
     private fun modifyData(data: String, minReturnAmount: BigInteger): String {
-        return slippageModifier.modify(data, minReturnAmount)
+        return slippageProvider.modify(data, minReturnAmount)
     }
 }

@@ -1,17 +1,16 @@
-package com.oneinch.util
+package com.oneinch.provider
 
 import com.esaulpaugh.headlong.abi.Function
 import com.esaulpaugh.headlong.abi.Tuple
 import com.esaulpaugh.headlong.util.FastHex
 import com.esaulpaugh.headlong.util.Strings
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 
 @Component
 @Profile("realAccount")
-class SlippageModifier(val function: Function) {
+class SlippageProvider(val function: Function) {
 
     fun modify(inputData: String, newMinReturnAmount: BigInteger): String {
         val origin = decode(function, inputData.substring(2))

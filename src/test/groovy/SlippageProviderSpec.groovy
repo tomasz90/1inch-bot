@@ -1,14 +1,14 @@
-import com.oneinch.util.SlippageModifier
+import com.oneinch.provider.SlippageProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 
 @ContextConfiguration
 @Import(TestConfig.class)
-class SlippageModifierSpec extends BaseTest {
+class SlippageProviderSpec extends BaseTest {
 
     @Autowired
-    SlippageModifier slippageModifier
+    SlippageProvider slippageModifier
 
     def "should modify minimum return amount"(String input, String modified, String minAmount) {
         given:

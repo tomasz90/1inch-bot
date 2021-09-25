@@ -3,7 +3,7 @@ import com.github.openjson.JSONObject
 import com.oneinch.config.AbiLoader
 import com.oneinch.config.Properties
 import com.oneinch.config.PropertiesLoader
-import com.oneinch.util.SlippageModifier
+import com.oneinch.provider.SlippageProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
@@ -31,7 +31,7 @@ abstract class TestConfig {
     }
 
     @Bean
-    SlippageModifier slippageModifier() {
-        return new SlippageModifier(function())
+    SlippageProvider slippageModifier() {
+        return new SlippageProvider(function())
     }
 }

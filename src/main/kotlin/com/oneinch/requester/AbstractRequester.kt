@@ -4,7 +4,7 @@ import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.one_inch.OneInchClient
 import com.oneinch.api.one_inch.api.data.Dto
-import com.oneinch.util.AdvantageProvider
+import com.oneinch.provider.AdvantageProvider
 import com.oneinch.util.Utils
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.atomic.AtomicBoolean

@@ -4,13 +4,11 @@ import com.oneinch.`object`.Chain
 import com.oneinch.config.PropertiesLoader
 import com.oneinch.config.ProtocolsLoader
 import com.oneinch.config.SettingsLoader
-import com.oneinch.api.ApiProvider
+import com.oneinch.provider.ApiProvider
 import com.oneinch.util.RateLimiter
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.reflect.full.declaredMemberProperties
 
 @Configuration
 open class Config {
