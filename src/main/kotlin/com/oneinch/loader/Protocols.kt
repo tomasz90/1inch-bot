@@ -5,13 +5,22 @@ import com.oneinch.util.FileUtils.readFile
 import org.springframework.context.annotation.Bean
 import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Component
+import java.nio.file.Files
+import java.nio.file.NoSuchFileException
+import java.nio.file.Paths
 
 @Component
 class ProtocolsLoader(val resourceLoader: ResourceLoader) {
 
     @Bean("allProtocols")
     fun load(): Protocols {
-        val bufferedReader = readFile(resourceLoader, "protocols.yml")
+        val fileName = "protocols.yml"
+        val bufferedReader =
+            try {
+                Files.newBufferedReader(Paths.get(fileName)) // protocols with easy access
+            } catch (e: NoSuchFileException) {
+                readFile(resourceLoader, "protocols.yml")
+            }
         return bufferedReader.use { getYmlMapper().readValue(it, Protocols::class.java) }
     }
 }
