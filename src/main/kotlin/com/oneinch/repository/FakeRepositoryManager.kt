@@ -15,10 +15,6 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
         fillWithFakeBalanceIfEmpty("USDC", 10000.0)
     }
 
-    fun save(TokenQuoteEntity: FakeTokenQuoteEntity): FakeTokenQuoteEntity {
-        return repository.save(TokenQuoteEntity)
-    }
-
     fun saveTransaction(from: TokenQuote, to: TokenQuote, t: FakeTransaction) {
         TODO("Not yet implemented, include date")
     }
@@ -45,7 +41,12 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
     }
 
     private fun findByAddress(to: TokenQuote): FakeTokenQuoteEntity {
-        return repository.findByAddress(to.token.address) ?: FakeTokenQuoteEntity(chain.id, to.token.symbol, to.token.address, 0.0)
+        return repository.findByAddress(to.token.address)
+            ?: FakeTokenQuoteEntity(chain.id, to.token.symbol, to.token.address, 0.0)
+    }
+
+    private fun save(TokenQuoteEntity: FakeTokenQuoteEntity) {
+        repository.save(TokenQuoteEntity)
     }
 
     private fun fillWithFakeBalanceIfEmpty(symbol: String, readable: Double) {
