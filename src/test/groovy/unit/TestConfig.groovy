@@ -1,8 +1,10 @@
+package unit
+
 import com.esaulpaugh.headlong.abi.Function
 import com.github.openjson.JSONObject
-import com.oneinch.config.AbiLoader
-import com.oneinch.config.Properties
-import com.oneinch.config.PropertiesLoader
+import com.oneinch.loader.AbiLoader
+import com.oneinch.loader.Properties
+import com.oneinch.loader.PropertiesLoader
 import com.oneinch.provider.SlippageProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.TestConfiguration
@@ -14,7 +16,7 @@ import org.springframework.context.annotation.Import
 abstract class TestConfig {
 
     @Autowired
-    AbiLoader abiLoader
+    JSONObject abi
 
     @Autowired
     PropertiesLoader propertiesLoader
@@ -26,12 +28,11 @@ abstract class TestConfig {
 
     @Bean
     Function function() {
-        JSONObject json = abiLoader.load()
-        return Function.fromJson(json.toString())
+        return Function.fromJson(abi.toString())
     }
 
     @Bean
-    SlippageProvider slippageModifier() {
+    SlippageProvider slippageProvider() {
         return new SlippageProvider(function())
     }
 }

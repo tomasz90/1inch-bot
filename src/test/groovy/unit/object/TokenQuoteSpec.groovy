@@ -1,8 +1,13 @@
-import com.oneinch.config.Properties
+package unit.object
+
+
+import com.oneinch.loader.Properties
 import com.oneinch.object.TokenQuote
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
+import unit.BaseTest
+import unit.TestConfig
 
 @ContextConfiguration
 @Import(TestConfig.class)
