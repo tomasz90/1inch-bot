@@ -11,12 +11,12 @@ class TokenQuote(val token: Token, val origin: BigInteger) {
     }
 
     fun calcMinReturnAmountOfDifferentToken(differentToken: Token): BigInteger {
-        val factor = differentToken.decimals.toBigDecimal().divide(token.decimals.toBigDecimal())
+        val factor = differentToken.decimals.divide(token.decimals)
         return origin.toBigDecimal().multiply(factor).toBigInteger()
     }
 
     private fun calcUSDValue(): Double {
-        val multiplication = token.decimals.toBigDecimal()
+        val multiplication = token.decimals
         return origin.toBigDecimal().divide(multiplication).toDouble()
     }
 }

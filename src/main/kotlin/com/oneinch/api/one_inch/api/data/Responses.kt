@@ -3,6 +3,7 @@ package com.oneinch.api.one_inch.api.data
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
+import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.math.pow
 
@@ -54,6 +55,6 @@ fun SwapResponse.toDto(): SwapDto {
     return SwapDto(from, to, tx)
 }
 
-private fun Int.toFullDecimals(): BigInteger {
-    return 10.0.pow(this).toBigDecimal().toBigInteger()
+private fun Int.toFullDecimals(): BigDecimal {
+    return 10.0.pow(this).toBigDecimal()
 }
