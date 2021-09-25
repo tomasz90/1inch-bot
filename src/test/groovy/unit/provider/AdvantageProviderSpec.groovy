@@ -16,28 +16,42 @@ import static org.springframework.test.util.ReflectionTestUtils.setField
 class AdvantageProviderSpec extends BaseTest {
 
     def settings = GroovyMock(Settings)
-
+    def defaultAdvantage = 0.5D
 
     def "should set advantage based on settings"() {
         given:
-          setField(settings, "minAdvantage", 0.5D)
+          setField(settings, "minAdvantage", defaultAdvantage)
+
           def advantageProvider = new AdvantageProvider(settings)
+          setField(advantageProvider, "HALF_HOUR", 1L)
+
         expect:
-          advantageProvider.advantage == 0.5D
+          advantageProvider.advantage == defaultAdvantage
     }
 
     def "should set advantage to 0.0 when no transaction in x hours"() {
         given:
-          def hours = 2
-          def crossedDeadline = now() - ofSeconds(5)
-          setField(settings, "minAdvantage", 0.5D)
-          setField(settings, "maxTimeNoTransaction", hours)
+          setField(settings, "minAdvantage", defaultAdvantage)
 
+          def crossedDeadline = now() - ofSeconds(5)
           def advantageProvider = new AdvantageProvider(settings)
           setField(advantageProvider, "HALF_HOUR", 1L)
           setField(advantageProvider, "deadline", crossedDeadline)
         expect:
-          Thread.sleep(10)
+          Thread.sleep(100)
           advantageProvider.advantage == 0.0D
+    }
+
+    def "should not set advantage to 0.0 when deadline not achived"() {
+        given:
+          setField(settings, "minAdvantage", 0.5D)
+
+          def crossedDeadline = now() + ofSeconds(5)
+          def advantageProvider = new AdvantageProvider(settings)
+          setField(advantageProvider, "HALF_HOUR", 1L)
+          setField(advantageProvider, "deadline", crossedDeadline)
+        expect:
+          Thread.sleep(100)
+          advantageProvider.advantage == defaultAdvantage
     }
 }
