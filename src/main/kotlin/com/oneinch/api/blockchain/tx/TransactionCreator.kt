@@ -1,13 +1,15 @@
 package com.oneinch.api.blockchain.tx
 
-import com.oneinch.loaders.Settings
+import com.oneinch.loader.Settings
 import com.oneinch.provider.GasPriceProvider
 import com.oneinch.provider.SlippageProvider
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 import java.util.*
 
 @Component
+@Profile("realAccount")
 class TransactionCreator(
     val settings: Settings,
     val slippageProvider: SlippageProvider,

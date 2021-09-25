@@ -3,8 +3,8 @@ package com.oneinch.spring_config
 import com.esaulpaugh.headlong.abi.Function
 import com.oneinch.`object`.Chain
 import com.oneinch.provider.ApiProvider
-import com.oneinch.loaders.Abi
-import com.oneinch.loaders.Settings
+import com.oneinch.loader.Abi
+import com.oneinch.loader.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,9 +1,9 @@
 package com.oneinch.spring_config
 
 import com.oneinch.`object`.Chain
-import com.oneinch.loaders.Properties
-import com.oneinch.loaders.Protocols
-import com.oneinch.loaders.Settings
+import com.oneinch.loader.Properties
+import com.oneinch.loader.Protocols
+import com.oneinch.loader.Settings
 import com.oneinch.provider.ApiProvider
 import com.oneinch.util.RateLimiter
 import org.springframework.beans.factory.annotation.Autowired

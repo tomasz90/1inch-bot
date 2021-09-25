@@ -1,6 +1,6 @@
 package com.oneinch.spring_config
 
-import com.oneinch.loaders.Settings
+import com.oneinch.loader.Settings
 import com.oneinch.api.blockchain.balance.FakeBalance
 import com.oneinch.api.blockchain.sender.FakeSender
 import com.oneinch.requester.FakeRequester

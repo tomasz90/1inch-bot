@@ -1,10 +1,10 @@
 package com.oneinch.provider
 
 import com.oneinch.api.gas_station.GasStationClient
-import com.oneinch.loaders.GasMode.fast
-import com.oneinch.loaders.GasMode.fastest
-import com.oneinch.loaders.GasMode.standard
-import com.oneinch.loaders.Settings
+import com.oneinch.loader.GasMode.fast
+import com.oneinch.loader.GasMode.fastest
+import com.oneinch.loader.GasMode.standard
+import com.oneinch.loader.Settings
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

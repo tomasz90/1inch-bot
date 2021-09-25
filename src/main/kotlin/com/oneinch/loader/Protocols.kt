@@ -1,4 +1,4 @@
-package com.oneinch.loaders
+package com.oneinch.loader
 
 import com.oneinch.util.FileUtils.getYmlMapper
 import com.oneinch.util.FileUtils.readFile

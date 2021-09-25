@@ -1,4 +1,4 @@
-package com.oneinch.loaders
+package com.oneinch.loader
 
 import com.github.openjson.JSONObject
 import com.github.openjson.JSONTokener

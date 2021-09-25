@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.openjson.JSONObject
 import com.oneinch.api.gas_station.GasStationApi
 import com.oneinch.api.one_inch.api.OneInchApi
-import com.oneinch.loaders.Properties
-import com.oneinch.loaders.Settings
+import com.oneinch.loader.Properties
+import com.oneinch.loader.Settings
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
