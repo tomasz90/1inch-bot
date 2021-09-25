@@ -15,8 +15,8 @@ class Utils(val settings: Settings, val limiter: RateLimiter) {
 
     fun logRatesInfo(dto: Dto, percent: Double) {
         getLogger().info(
-            "${dto.from.token.symbol}: ${dto.from.calcReadable().precision()}, " +
-                    "${dto.to.token.symbol}: ${dto.to.calcReadable().precision()},  advantage: ${percent.precision()}," +
+            "${dto.from.token.symbol}: ${dto.from.usdValue.precision()}, " +
+                    "${dto.to.token.symbol}: ${dto.to.usdValue.precision()},  advantage: ${percent.precision()}," +
                     "  demandAdvantage: ${settings.minAdvantage.precision()},  ${limiter.currentCalls} rps"
         )
     }
@@ -27,8 +27,8 @@ fun Double.precision() = String.format("%.${2}f", this)
 
 fun logSwapInfo(txHash: String, from: TokenQuote, to: TokenQuote) {
     getLogger().info(
-        "SWAP: fromToken ${from.token.symbol}, fromAmount: ${from.calcReadable().precision()}," +
-                "toToken: ${to.token.symbol}, toAmount: ${to.calcReadable().precision()}"
+        "SWAP: fromToken ${from.token.symbol}, fromAmount: ${from.usdValue.precision()}," +
+                "toToken: ${to.token.symbol}, toAmount: ${to.usdValue.precision()}"
     )
     getLogger().info("---------------  WAITING FOR TRANSACTION SUCCEED  ---------------\n$txHash")
 }

@@ -91,7 +91,7 @@ class TokenQuoteSpec extends BaseTest {
           def token = tokens.find { it.symbol == symbol }
           def tokenQuote = new TokenQuote(token, origin)
         expect:
-          tokenQuote.calcReadable() == readable
+          tokenQuote.usdValue == readable
         where:
           symbol | origin                    | readable
           "USDC" | 10000                     | 0.01

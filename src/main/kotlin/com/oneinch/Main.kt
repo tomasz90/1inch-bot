@@ -51,7 +51,7 @@ class Main(
     }
 
     private fun swapIfMinimalBalance(tokenQuote: TokenQuote, token: Token) {
-        if (tokenQuote.calcReadable() > settings.minSwapQuote) {
+        if (tokenQuote.usdValue > settings.minSwapQuote) {
             runBlocking { swap.invoke(tokenQuote, token) }
         }
     }

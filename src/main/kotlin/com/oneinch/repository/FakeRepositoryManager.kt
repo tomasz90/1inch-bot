@@ -34,13 +34,13 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
 
     private fun removeBalance(from: TokenQuote) {
         val entity = findByAddress(from)
-        entity.readable -= from.calcReadable()
+        entity.readable -= from.usdValue
         save(entity)
     }
 
     private fun addBalance(to: TokenQuote) {
         val entity = findByAddress(to)
-        entity.readable += to.calcReadable()
+        entity.readable += to.usdValue
         save(entity)
     }
 

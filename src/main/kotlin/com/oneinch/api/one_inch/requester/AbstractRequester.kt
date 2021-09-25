@@ -29,6 +29,6 @@ abstract class AbstractRequester {
     open suspend fun swap(from: TokenQuote, to: Token) {}
 
     fun calculateAdvantage(dto: Dto): Double {
-        return (dto.to.calcReadable() - dto.from.calcReadable()) / dto.from.calcReadable() * 100
+        return (dto.to.usdValue - dto.from.usdValue) / dto.from.usdValue * 100
     }
 }
