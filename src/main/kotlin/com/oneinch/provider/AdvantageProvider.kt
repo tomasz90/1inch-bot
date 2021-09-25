@@ -13,29 +13,29 @@ import java.time.Instant
 @Component
 class AdvantageProvider(val settings: Settings) {
 
-    var advantage = settings.minAdvantage
-    private val defaultAdvantage = settings.minAdvantage
-    private val coroutine = CoroutineScope(CoroutineName("lastTransactionTimer"))
+    var advantage = 0.0
+    private var defaultAdvantage = settings.minAdvantage
+    private lateinit var deadline: Instant
     private val HALF_HOUR = 1800000L
-    private var lastTransactionTimeStamp = Instant.now()
+    private val coroutine = CoroutineScope(CoroutineName("lastTransactionTimer"))
 
     init {
-        coroutine.launch { setToZeroWhenNoTransactionInLastHours(settings.maxTimeNoTransaction) }
+        resetToDefault()
+        coroutine.launch { setToZeroWhenNoTransactionInLastHours() }
     }
 
     fun resetToDefault() {
-        lastTransactionTimeStamp = Instant.now()
         advantage = defaultAdvantage
+        deadline = Instant.now() + ofHours(settings.maxTimeNoTransaction)
     }
 
-    private suspend fun setToZeroWhenNoTransactionInLastHours(hours: Long) {
+    private suspend fun setToZeroWhenNoTransactionInLastHours() {
         while (true) {
             delay(HALF_HOUR)
             val now = Instant.now()
-            val maxTimeNoTransaction = lastTransactionTimeStamp.plus(ofHours(hours))
-            if (now.isAfter(maxTimeNoTransaction) && advantage == defaultAdvantage) {
+            if (now.isAfter(deadline) && advantage == defaultAdvantage) {
                 advantage = 0.0
-                getLogger().info("No transaction in last $hours hours, changed advantage to: $advantage")
+                getLogger().info("No transaction in last ${settings.maxTimeNoTransaction} hours, changed advantage to: $advantage")
             }
         }
     }
