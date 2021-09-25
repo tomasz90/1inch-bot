@@ -1,4 +1,4 @@
-package com.oneinch.api.one_inch.requester
+package com.oneinch.requester
 
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
