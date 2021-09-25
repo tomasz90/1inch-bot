@@ -1,10 +1,18 @@
 package com.oneinch.config
 
 import com.oneinch.`object`.Chain
+import com.oneinch.config.FileUtils.getYmlMapper
+import com.oneinch.config.FileUtils.readFile
+import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ResourceLoader
+import org.springframework.stereotype.Component
 
-object PropertiesLoader : IResources<Properties> {
-    override fun load(): Properties {
-        val bufferedReader = readFile("properties.yml")
+@Component
+class PropertiesLoader(val resourceLoader: ResourceLoader) {
+
+    @Bean("properties")
+     fun load(): Properties {
+        val bufferedReader = readFile(resourceLoader, "properties.yml")
         return bufferedReader.use { getYmlMapper().readValue(it, Properties::class.java) }
     }
 }

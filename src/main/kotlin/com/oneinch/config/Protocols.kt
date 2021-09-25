@@ -1,8 +1,17 @@
 package com.oneinch.config
 
-object ProtocolsLoader : IResources<Protocols> {
-    override fun load(): Protocols {
-        val bufferedReader = readFile("protocols.yml")
+import com.oneinch.config.FileUtils.getYmlMapper
+import com.oneinch.config.FileUtils.readFile
+import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ResourceLoader
+import org.springframework.stereotype.Component
+
+@Component
+class ProtocolsLoader(val resourceLoader: ResourceLoader) {
+
+    @Bean("allProtocols")
+    fun load(): Protocols {
+        val bufferedReader = readFile(resourceLoader, "protocols.yml")
         return bufferedReader.use { getYmlMapper().readValue(it, Protocols::class.java) }
     }
 }
