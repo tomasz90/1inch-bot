@@ -1,8 +1,7 @@
-package com.oneinch.repository
+package com.oneinch.repository.crud
 
 import com.oneinch.`object`.TokenQuote
 import org.springframework.stereotype.Component
-import java.math.BigInteger
 
 @Component
 open class InMemoryRepository {

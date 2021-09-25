@@ -5,7 +5,9 @@ import com.oneinch.api.blockchain.balance.Balance
 import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.config.Settings
 import com.oneinch.repository.RealRepositoryManager
-import com.oneinch.repository.dao.Status.*
+import com.oneinch.repository.dao.Status
+import com.oneinch.repository.dao.Status.FAIL
+import com.oneinch.repository.dao.Status.PASSED
 import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
 import com.oneinch.util.logSwapInfo
@@ -24,7 +26,9 @@ class Sender(
     val repository: RealRepositoryManager,
     val balance: Balance,
     val web3j: Web3j
-) : ISender<Transaction> {
+) : AbstractSender<Transaction>() {
+
+    val ZERO = BigInteger.valueOf(0)
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
@@ -36,10 +40,11 @@ class Sender(
             delay(10000) // to be sure getting valid balance
             // TODO: 24.09.2021 get sum of all balance after update all substract and send telegram message when profit
             balance.updateAll()
-            val status = when (getBalance(from)) {
-                BigInteger("0") -> PASSED
-                from.origin -> FAIL
-                else -> PARTIALLY
+            val status: Status
+            when (getBalance(from)) {
+                from.origin -> status = FAIL
+                ZERO -> { status = PASSED; advantageProvider.resetToDefault() }
+                else -> { status = PASSED; advantageProvider.resetToDefault() }
             }
             toBalance = getBalance(to) - toBalance
             repository.saveTransaction(txHash, tx, requestTimeS, txTimeS, sendTxTimeStamp, from, to, toBalance, status)

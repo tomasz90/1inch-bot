@@ -1,4 +1,4 @@
-package com.oneinch.repository
+package com.oneinch.repository.crud
 
 import com.oneinch.repository.dao.RealTxEntity
 import org.springframework.data.repository.CrudRepository

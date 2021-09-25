@@ -1,4 +1,4 @@
-package com.oneinch.repository
+package com.oneinch.repository.crud
 
 import com.oneinch.repository.dao.TokenEntity
 import org.springframework.data.repository.CrudRepository

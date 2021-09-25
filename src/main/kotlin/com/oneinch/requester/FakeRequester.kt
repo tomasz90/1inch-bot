@@ -15,7 +15,7 @@ class FakeRequester(val sender: FakeSender) : AbstractRequester() {
         if(dto != null) {
             val tx = createTx(dto)
             val realAdvantage = calculateAdvantage(dto)
-            if (realAdvantage > settings.minAdvantage) sender.sendTransaction(tx, from, dto.to)
+            if (realAdvantage > advantageProvider.advantage) sender.sendTransaction(tx, from, dto.to)
         }
     }
 

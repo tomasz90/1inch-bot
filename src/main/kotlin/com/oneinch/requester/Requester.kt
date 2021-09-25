@@ -6,11 +6,12 @@ import com.oneinch.api.blockchain.sender.Sender
 import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.api.blockchain.tx.TransactionCreator
 import com.oneinch.api.one_inch.api.data.SwapDto
+import com.oneinch.config.Settings
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class Requester(val sender: Sender, val transactionCreator: TransactionCreator) :
+class Requester(val sender: Sender, val transactionCreator: TransactionCreator, val settings: Settings) :
     AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
@@ -27,7 +28,7 @@ class Requester(val sender: Sender, val transactionCreator: TransactionCreator) 
     }
 
     private fun shouldSwap(realAdvantage: Double): Boolean {
-        if (realAdvantage < settings.minAdvantage) {
+        if (realAdvantage < advantageProvider.advantage) {
             return false
         } else if (isSwapping.get()) {
             return false

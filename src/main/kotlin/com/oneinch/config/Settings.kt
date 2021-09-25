@@ -18,7 +18,8 @@ class Settings(
     val gasPriceMode: GasMode,
     val gasPriceLimit: Double,
     val maxRps: Int,
-    val timeout: Long
+    val timeout: Long,
+    val maxTimeNoTransaction: Long
 )
 
 enum class GasMode { standard, fast, fastest }

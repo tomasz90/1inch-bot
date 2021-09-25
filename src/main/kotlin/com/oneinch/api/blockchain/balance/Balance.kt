@@ -3,7 +3,7 @@ package com.oneinch.api.blockchain.balance
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.repository.InMemoryRepository
+import com.oneinch.repository.crud.InMemoryRepository
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import org.web3j.contracts.eip20.generated.ERC20.load

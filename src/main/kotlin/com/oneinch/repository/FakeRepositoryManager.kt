@@ -4,6 +4,7 @@ import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.tx.FakeTransaction
+import com.oneinch.repository.crud.IFakeBalanceRepository
 import com.oneinch.repository.dao.FakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
 import org.springframework.stereotype.Component

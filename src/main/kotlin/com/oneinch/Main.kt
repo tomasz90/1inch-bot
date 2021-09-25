@@ -4,8 +4,8 @@ import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.balance.IBalance
-import com.oneinch.requester.AbstractRequester
 import com.oneinch.config.Settings
+import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -36,9 +36,8 @@ class Main(
         }
     }
 
-    // TODO: 10.09.2021 add counter when too long time in one currency, time in one token
+
     // todo: different advantages for different tokens???
-    // todo remove import with asterix
     private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
         pairs.forEach { pair -> checkRatesForPair(pair) }
     }
