@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.openjson.JSONObject
 import com.oneinch.api.gas_station.GasStationApi
 import com.oneinch.api.one_inch.api.OneInchApi
+import com.oneinch.api.telegram.TelegramApi
 import com.oneinch.loader.Properties
 import com.oneinch.loader.Settings
 import okhttp3.Interceptor
@@ -45,6 +46,12 @@ class ApiProvider(val properties: Properties, val settings: Settings) {
         .addConverterFactory(jacksonConverter)
         .build()
         .create(GasStationApi::class.java)
+
+    fun createTelegram(): TelegramApi = Retrofit.Builder()
+        .client(httpClient)
+        .addConverterFactory(jacksonConverter)
+        .build()
+        .create(TelegramApi::class.java)
 }
 
 interface TimeoutInterceptor : Interceptor

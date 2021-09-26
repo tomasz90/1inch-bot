@@ -50,6 +50,9 @@ open class RealConfig {
     open fun gasStation() = apiProvider.createGasStation()
 
     @Bean
+    open fun telegram() = apiProvider.createTelegram()
+
+    @Bean
     open fun function(): Function {
         return Function.fromJson(abi.toString())
     }
