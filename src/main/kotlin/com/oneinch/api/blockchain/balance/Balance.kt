@@ -17,10 +17,6 @@ import java.math.BigInteger
 class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository: InMemoryRepository, val chain: Chain) :
     IBalance {
 
-    fun get(): BigInteger {
-        return web3j.ethGetBalance(myAddress, LATEST).send().balance
-    }
-
     override fun getERC20(erc20: Token): TokenQuote? {
         // TODO: 13.09.2021 java.util.ConcurrentModificationException need fix
         var tokenQuote = repository.findByAddress(erc20.address)
@@ -31,6 +27,16 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
             }
         }
         return tokenQuote
+    }
+
+    fun get(): BigInteger {
+        return web3j.ethGetBalance(myAddress, LATEST).send().balance
+    }
+
+    fun updateAll() {
+        chain.tokens
+            .mapNotNull { getFromChain(it.address) }
+            .forEach { repository.update(it) }
     }
 
     private fun getFromChain(address: String): TokenQuote? {
@@ -46,12 +52,6 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         getLogger().info("Getting balance from chain: $quote")
         val token = chain.tokens.first { address == it.address }
         return TokenQuote(token, quote)
-    }
-
-    fun updateAll() {
-        chain.tokens
-            .mapNotNull { getFromChain(it.address) }
-            .forEach { repository.update(it) }
     }
 }
 
