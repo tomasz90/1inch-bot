@@ -53,7 +53,33 @@ class GasPriceProviderSpec extends BaseSpec {
 
         then:
           gasStationProvider.getGasPrice().get() == 50000000000L
+    }
 
+    def "should return limit gas price, when client data exceeds it"() {
+        given:
+          when(gasStationClient.getPrice()).thenReturn(3000D)
+
+          def gasStationProvider = new GasPriceProvider(gasStationClient, settings)
+
+          setField(gasStationProvider, "gasPriceLimit", 1000D)
+          setField(gasStationProvider, "TWO_SECONDS", 2L)
+          Thread.sleep(200)
+        expect:
+          gasStationProvider.getGasPrice().get() == 1000000000000L
+
+    }
+
+    def "should return default gas price, when client returns null"() {
+        given:
+          when(gasStationClient.getPrice()).thenReturn(null)
+
+          def gasStationProvider = new GasPriceProvider(gasStationClient, settings)
+
+          setField(gasStationProvider, "gasPriceLimit", 1000D)
+          setField(gasStationProvider, "TWO_SECONDS", 2L)
+          Thread.sleep(200)
+        expect:
+          gasStationProvider.getGasPrice().get() == 10000000000L
 
     }
 }
