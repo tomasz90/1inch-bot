@@ -3,12 +3,14 @@ package com.oneinch.api.blockchain.sender
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.balance.Balance
 import com.oneinch.api.blockchain.tx.Transaction
+import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.Status.FAIL
 import com.oneinch.repository.dao.Status.PARTIALLY
 import com.oneinch.repository.dao.Status.PASSED
+import com.oneinch.repository.round
 import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
 import com.oneinch.util.logSwapInfo
@@ -26,7 +28,8 @@ class Sender(
     val manager: RawTransactionManager,
     val repository: RealRepositoryManager,
     val balance: Balance,
-    val web3j: Web3j
+    val web3j: Web3j,
+    val telegramClient: TelegramClient
 ) : AbstractSender<Transaction>() {
 
     private val ZERO = BigInteger.valueOf(0)
@@ -51,8 +54,10 @@ class Sender(
             }
             toBalance = getBalance(to) - toBalance
             repository.saveTransaction(txHash, tx, requestTime, txTime, sendTxTimeStamp, from, to, toBalance, status)
-            // TODO: 24.09.2021 get sum of all balance after update all substract and send telegram message when profit
             val profit = balanceAfter - balanceBefore
+            if (profit > 10) {
+                telegramClient.sendMessage(profit.round())
+            }
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }

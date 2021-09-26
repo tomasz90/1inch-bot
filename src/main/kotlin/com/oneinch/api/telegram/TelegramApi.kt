@@ -6,12 +6,13 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 const val token = "***REMOVED***"
+const val baseUrl = "https://api.telegram.org"
 
 interface TelegramApi {
 
-    @GET("https://api.telegram.org/bot$token/sendMessage")
+    @GET("/bot$token/sendMessage")
     fun sendMessage(
         @Query("text") text: String,
-        @Query("chatId") chatId: Long = -577856646L
+        @Query("chat_id") chatId: Long = -577856646L
     ): Call<JSONObject>
 }

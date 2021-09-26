@@ -5,8 +5,8 @@ import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.repository.crud.IRealTxRepository
 import com.oneinch.repository.crud.ITokenEntityRepository
-import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.RealTxEntity
+import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
