@@ -79,6 +79,7 @@ class RequesterSpec extends BaseSpec {
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
+          // not able to verify sendTransaction...
           verify(isSwapping).set(true)
           verify(isSwapping).set(false)
     }
@@ -93,6 +94,23 @@ class RequesterSpec extends BaseSpec {
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
           when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
+        when:
+          requester.swap(tokenQuote1, token2, continuation)
+        then:
+          verify(isSwapping, never()).set(true)
+          verify(isSwapping, never()).set(false)
+    }
+
+    def "should not swap tokens when is swapping"() {
+        given:
+          def isSwapping = mock(AtomicBoolean)
+          setField(requester, "isSwapping", isSwapping)
+          def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
+          def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
+          def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
+          def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
+          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
+          when(isSwapping.get()).thenReturn(true)
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:

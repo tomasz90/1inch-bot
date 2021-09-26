@@ -20,7 +20,7 @@ class Requester(val sender: Sender, val transactionCreator: TransactionCreator, 
         if (dto != null) {
             val realAdvantage = calculateAdvantage(dto)
             if (shouldSwap(realAdvantage)) {
-                val tx = createTx(dto, realAdvantage, requestTimestamp)
+                val tx = createTransaction(dto, realAdvantage, requestTimestamp)
                 sender.sendTransaction(tx, from, dto.to)
                 isSwapping.set(false)
             }
@@ -37,7 +37,7 @@ class Requester(val sender: Sender, val transactionCreator: TransactionCreator, 
         return true
     }
 
-    private fun createTx(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
+    private fun createTransaction(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
         val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
         val tx = dto.tx
         return transactionCreator.create(
