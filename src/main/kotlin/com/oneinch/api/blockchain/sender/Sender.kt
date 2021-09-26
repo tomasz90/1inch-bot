@@ -7,6 +7,7 @@ import com.oneinch.loader.Settings
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.Status.FAIL
+import com.oneinch.repository.dao.Status.PARTIALLY
 import com.oneinch.repository.dao.Status.PASSED
 import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
@@ -28,26 +29,27 @@ class Sender(
     val web3j: Web3j
 ) : AbstractSender<Transaction>() {
 
-    val ZERO = BigInteger.valueOf(0)
+    private val ZERO = BigInteger.valueOf(0)
+    private val TEN_SECONDS = 10000L
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
-            val requestTimeS = getDuration(tx.requestTimestamp)
+            val requestTime = getDuration(tx.requestTimestamp)
             val sendTxTimeStamp = Date()
             var toBalance = getBalance(to)
             val txHash = send(tx, from, to)
-            val txTimeS = getDuration(sendTxTimeStamp)
-            delay(10000) // to be sure getting valid balance
+            val txTime = getDuration(sendTxTimeStamp)
+            delay(TEN_SECONDS) // to be sure getting valid balance
             // TODO: 24.09.2021 get sum of all balance after update all substract and send telegram message when profit
             balance.updateAll()
             val status: Status
             when (getBalance(from)) {
                 from.origin -> status = FAIL
                 ZERO -> { status = PASSED; advantageProvider.resetToDefault() }
-                else -> { status = PASSED; advantageProvider.resetToDefault() }
+                else -> { status = PARTIALLY; advantageProvider.resetToDefault() }
             }
             toBalance = getBalance(to) - toBalance
-            repository.saveTransaction(txHash, tx, requestTimeS, txTimeS, sendTxTimeStamp, from, to, toBalance, status)
+            repository.saveTransaction(txHash, tx, requestTime, txTime, sendTxTimeStamp, from, to, toBalance, status)
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
