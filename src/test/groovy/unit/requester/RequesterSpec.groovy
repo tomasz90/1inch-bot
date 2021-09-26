@@ -35,8 +35,6 @@ import static org.springframework.test.util.ReflectionTestUtils.setField
 @Import(SpecConfig.class)
 class RequesterSpec extends BaseSpec {
 
-    //todo removed prepare for test from test classes
-
     @Shared
     @Autowired
     Properties properties

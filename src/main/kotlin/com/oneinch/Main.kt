@@ -24,7 +24,7 @@ class Main(
     limiter: RateLimiter
 ) {
 
-    private val pairs = createUniquePairs(chain.tokens)
+    private val pairs = createUniquePairs(chain.tokens, settings.excludedTokens)
     private val coroutine = CoroutineScope(CoroutineName("coroutine"))
     private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
 
@@ -35,7 +35,6 @@ class Main(
             }
         }
     }
-
 
     // todo: different advantages for different tokens???
     private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
@@ -59,10 +58,11 @@ class Main(
         coroutine.launch { requester.swap(tokenQuote, token) }
     }
 
-    private fun createUniquePairs(tokens: List<Token>): List<Pair<Token, Token>> {
+    private fun createUniquePairs(tokens: List<Token>, excluded: List<String>): List<Pair<Token, Token>> {
         return tokens.flatMap { token ->
             tokens.filter { diff -> diff != token }
-                .map { Pair(it, token) }
+                .filter { excl -> !excluded.contains(excl.symbol) }
+                .map { Pair(token, it) }
         }
     }
 }

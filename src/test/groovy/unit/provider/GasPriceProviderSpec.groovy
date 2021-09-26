@@ -3,7 +3,6 @@ package unit.provider
 import com.oneinch.api.gas_station.GasStationClient
 import com.oneinch.loader.Settings
 import com.oneinch.provider.GasPriceProvider
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 import unit.BaseSpec
@@ -13,7 +12,6 @@ import static org.powermock.api.mockito.PowerMockito.mock
 import static org.powermock.api.mockito.PowerMockito.when
 import static org.springframework.test.util.ReflectionTestUtils.setField
 
-@PrepareForTest([GasStationClient.class, Settings.class])
 @ContextConfiguration
 @Import(SpecConfig.class)
 class GasPriceProviderSpec extends BaseSpec {

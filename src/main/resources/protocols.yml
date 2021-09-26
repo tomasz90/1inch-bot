@@ -2,7 +2,7 @@ protocols:
   -
     chain: matic
     protocols:
-    #  - POLYGON_ONE_INCH_LIMIT_ORDER
+      - POLYGON_ONE_INCH_LIMIT_ORDER
       - POLYGON_APESWAP
       - IRONSWAP
       - POLYGON_JETSWAP

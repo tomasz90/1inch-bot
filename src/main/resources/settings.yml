@@ -3,9 +3,10 @@ chain: matic
 maxRps: 25
 minSwapQuote: 1.0
 minAdvantage: 0.3
-gasPriceMode: fast
 gasPriceLimit: 1000
 maxTimeNoTransaction: 8
+excludedTokens:
+  - NONE
 
 increasedGasLimit: 1.25
 defaultSlippage:  1.0
