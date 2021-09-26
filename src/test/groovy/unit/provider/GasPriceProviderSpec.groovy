@@ -29,7 +29,7 @@ class GasPriceProviderSpec extends BaseSpec {
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)
-          Thread.sleep(200)
+          sleep(200)
         expect:
           gasStationProvider.getGasPrice().get() == 30000000000L
 
@@ -43,13 +43,14 @@ class GasPriceProviderSpec extends BaseSpec {
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)
-          Thread.sleep(200)
+          sleep(200)
+
         expect:
           gasStationProvider.getGasPrice().get() == 30000000000L
 
         when:
           when(gasStationClient.getPrice()).thenReturn(50D)
-          Thread.sleep(200)
+          sleep(200)
 
         then:
           gasStationProvider.getGasPrice().get() == 50000000000L
@@ -63,7 +64,8 @@ class GasPriceProviderSpec extends BaseSpec {
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)
-          Thread.sleep(200)
+          sleep(200)
+
         expect:
           gasStationProvider.getGasPrice().get() == 1000000000000L
 
@@ -77,7 +79,8 @@ class GasPriceProviderSpec extends BaseSpec {
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)
-          Thread.sleep(200)
+          sleep(200)
+
         expect:
           gasStationProvider.getGasPrice().get() == 10000000000L
 

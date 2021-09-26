@@ -38,7 +38,7 @@ class AdvantageProviderSpec extends BaseSpec {
           setField(advantageProvider, "HALF_HOUR", 1L)
           setField(advantageProvider, "deadline", crossedDeadline)
         expect:
-          Thread.sleep(100)
+          sleep(100)
           advantageProvider.advantage == 0.0D
     }
 
@@ -51,7 +51,7 @@ class AdvantageProviderSpec extends BaseSpec {
           setField(advantageProvider, "HALF_HOUR", 1L)
           setField(advantageProvider, "deadline", crossedDeadline)
         expect:
-          Thread.sleep(100)
+          sleep(100)
           advantageProvider.advantage == defaultAdvantage
     }
 }
