@@ -15,7 +15,6 @@ import com.oneinch.requester.Requester
 import com.oneinch.util.Utils
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.CoroutineContext
-import org.powermock.reflect.Whitebox
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -43,26 +42,27 @@ class RequesterSpec extends BaseSpec {
     @Autowired
     Properties properties
 
-    static def sender = mock(Sender)
-    static def transactionCreator = mock(TransactionCreator)
-    static def settings = mock(Settings)
     static def oneInchClient = mock(OneInchClient)
     static def utils = mock(Utils)
     static def advantageProvider = mock(AdvantageProvider)
+    static def sender = mock(Sender)
+    static def transactionCreator = mock(TransactionCreator)
+    static def settings = mock(Settings)
+    static def requester = new Requester(sender, transactionCreator, settings)
+
     static Token token1
     static Token token2
     def tx = mock(Tx)
+
     def transaction = mock(Transaction)
 
-    static requester = new Requester(sender, transactionCreator, settings)
-
-    def setupTest(AtomicBoolean isSwapping) {
-        Whitebox.setInternalState(advantageProvider, "advantage", 0.2D)
+    def setupSpec() {
+        setField(advantageProvider, "advantage", 0.2D)
         setField(requester, "oneInchClient", oneInchClient)
         setField(requester, "protocols", "protocols")
         setField(requester, "utils", utils)
         setField(requester, "advantageProvider", advantageProvider)
-        setField(requester, "isSwapping", isSwapping)
+
 
         def tokens = properties.chains.find { it.name == "matic" }.tokens
         token1 = tokens.find { it.symbol == "USDC" }
@@ -72,7 +72,7 @@ class RequesterSpec extends BaseSpec {
     def "should swap tokens when all conditions are met"() {
         given:
           def isSwapping = mock(AtomicBoolean)
-          setupTest(isSwapping)
+          setField(requester, "isSwapping", isSwapping)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, tx)
@@ -83,13 +83,13 @@ class RequesterSpec extends BaseSpec {
         then:
           verify(isSwapping).set(true)
           verify(isSwapping).set(false)
-
     }
+
 
     def "should not swap tokens when advantage is too low"() {
         given:
           def isSwapping = mock(AtomicBoolean)
-          setupTest(isSwapping)
+          setField(requester, "isSwapping", isSwapping)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(999_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, tx)
@@ -100,6 +100,5 @@ class RequesterSpec extends BaseSpec {
         then:
           verify(isSwapping, never()).set(true)
           verify(isSwapping, never()).set(false)
-
     }
 }
