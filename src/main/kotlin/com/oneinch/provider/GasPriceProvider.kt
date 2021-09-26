@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicLong
 class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings) {
 
     val gasPrice: AtomicLong = AtomicLong(10_000_000_000) // default 10 gwei
+    private val gasPriceLimit = settings.gasPriceLimit
     private val coroutine = CoroutineScope(CoroutineName("gasPriceProvider"))
     private val TWO_SECONDS = 2000L
 
@@ -26,15 +27,15 @@ class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Set
         while (true) {
             val gweiPrice = gasStationClient.getPrice()
             if (gweiPrice != null) {
-                gasPrice.set(gweiPrice.setLimit().toWei())
+                val weiPrice = gweiPrice.setLimit().toWei()
+                gasPrice.set(weiPrice)
             }
             delay(TWO_SECONDS)
         }
     }
 
     private fun Double.setLimit(): Double {
-        val limit = settings.gasPriceLimit
-        return if(this < limit) this else limit
+        return if(this < gasPriceLimit) this else gasPriceLimit
     }
 
     private fun Double.toWei(): Long {
