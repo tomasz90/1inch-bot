@@ -37,11 +37,12 @@ class Sender(
             val requestTime = getDuration(tx.requestTimestamp)
             val sendTxTimeStamp = Date()
             var toBalance = getBalance(to)
+            val balanceBefore = balance.getUsdValue()
             val txHash = send(tx, from, to)
             val txTime = getDuration(sendTxTimeStamp)
             delay(TEN_SECONDS) // to be sure getting valid balance
-            // TODO: 24.09.2021 get sum of all balance after update all substract and send telegram message when profit
             balance.updateAll()
+            val balanceAfter = balance.getUsdValue()
             val status: Status
             when (getBalance(from)) {
                 from.origin -> status = FAIL
@@ -50,6 +51,8 @@ class Sender(
             }
             toBalance = getBalance(to) - toBalance
             repository.saveTransaction(txHash, tx, requestTime, txTime, sendTxTimeStamp, from, to, toBalance, status)
+            // TODO: 24.09.2021 get sum of all balance after update all substract and send telegram message when profit
+            val profit = balanceAfter - balanceBefore
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }

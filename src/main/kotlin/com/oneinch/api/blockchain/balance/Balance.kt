@@ -29,6 +29,10 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return tokenQuote
     }
 
+    fun getUsdValue(): Double {
+        return repository.getUsdValue()
+    }
+
     fun get(): BigInteger {
         return web3j.ethGetBalance(myAddress, LATEST).send().balance
     }

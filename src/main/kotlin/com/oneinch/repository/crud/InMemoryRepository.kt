@@ -24,4 +24,8 @@ open class InMemoryRepository {
         }
         allBalance.add(tokenQuote)
     }
+
+    fun getUsdValue(): Double {
+        return allBalance.sumOf { it.usdValue }
+    }
 }
