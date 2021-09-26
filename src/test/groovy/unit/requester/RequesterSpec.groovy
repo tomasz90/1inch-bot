@@ -49,7 +49,6 @@ class RequesterSpec extends BaseSpec {
     static def oneInchClient = mock(OneInchClient)
     static def utils = mock(Utils)
     static def advantageProvider = mock(AdvantageProvider)
-    static def isSwapping = mock(AtomicBoolean)
     static Token token1
     static Token token2
     def tx = mock(Tx)
@@ -57,7 +56,7 @@ class RequesterSpec extends BaseSpec {
 
     static requester = new Requester(sender, transactionCreator, settings)
 
-    def setup() {
+    def setupTest(AtomicBoolean isSwapping) {
         Whitebox.setInternalState(advantageProvider, "advantage", 0.2D)
         setField(requester, "oneInchClient", oneInchClient)
         setField(requester, "protocols", "protocols")
@@ -72,6 +71,8 @@ class RequesterSpec extends BaseSpec {
 
     def "should swap tokens when all conditions are met"() {
         given:
+          def isSwapping = mock(AtomicBoolean)
+          setupTest(isSwapping)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, tx)
@@ -87,6 +88,8 @@ class RequesterSpec extends BaseSpec {
 
     def "should not swap tokens when advantage is too low"() {
         given:
+          def isSwapping = mock(AtomicBoolean)
+          setupTest(isSwapping)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(999_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, tx)
