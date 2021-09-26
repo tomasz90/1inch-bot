@@ -1,7 +1,6 @@
 package unit.requester
 
 import com.oneinch.api.blockchain.sender.Sender
-import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.api.blockchain.tx.TransactionCreator
 import com.oneinch.api.one_inch.OneInchClient
 import com.oneinch.api.one_inch.api.data.SwapDto
@@ -43,8 +42,6 @@ class RequesterSpec extends BaseSpec {
     Properties properties
 
     static def oneInchClient = mock(OneInchClient)
-    static def utils = mock(Utils)
-    static def advantageProvider = mock(AdvantageProvider)
     static def sender = mock(Sender)
     static def transactionCreator = mock(TransactionCreator)
     static def settings = mock(Settings)
@@ -52,11 +49,12 @@ class RequesterSpec extends BaseSpec {
 
     static Token token1
     static Token token2
-    def tx = mock(Tx)
-
-    def transaction = mock(Transaction)
 
     def setupSpec() {
+
+        def utils = mock(Utils)
+        def advantageProvider = mock(AdvantageProvider)
+
         setField(advantageProvider, "advantage", 0.2D)
         setField(requester, "oneInchClient", oneInchClient)
         setField(requester, "protocols", "protocols")
@@ -75,9 +73,9 @@ class RequesterSpec extends BaseSpec {
           setField(requester, "isSwapping", isSwapping)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
-          def swapDto = new SwapDto(tokenQuote1, tokenQuote2, tx)
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
+          def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
+          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
@@ -92,9 +90,9 @@ class RequesterSpec extends BaseSpec {
           setField(requester, "isSwapping", isSwapping)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(999_000_000L))
-          def swapDto = new SwapDto(tokenQuote1, tokenQuote2, tx)
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
+          def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
+          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
