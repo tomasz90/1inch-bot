@@ -53,13 +53,11 @@ class RequesterSpec extends BaseSpec {
     static Token token1
     static Token token2
 
-    static def slippage = 1.0D
     def setupSpec() {
 
         def utils = mock(Utils)
         def advantageProvider = mock(FakeAdvantageProvider)
 
-        setField(settings, "defaultSlippage", 1.0D)
         setField(advantageProvider, "advantage", 0.2D)
         setField(requester, "oneInchClient", oneInchClient)
         setField(requester, "protocols", "protocols")
@@ -76,8 +74,6 @@ class RequesterSpec extends BaseSpec {
         given:
           def isSwapping = mock(AtomicBoolean)
           setField(requester, "isSwapping", isSwapping)
-          setField(settings, "defaultSlippage", slippage)
-
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
