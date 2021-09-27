@@ -26,6 +26,7 @@ import unit.SpecConfig
 
 import java.util.concurrent.atomic.AtomicBoolean
 
+import static org.mockito.ArgumentMatchers.any
 import static org.mockito.Mockito.never
 import static org.mockito.Mockito.verify
 import static org.powermock.api.mockito.PowerMockito.mock
@@ -52,6 +53,7 @@ class RequesterSpec extends BaseSpec {
     static Token token1
     static Token token2
 
+    static def slippage = 1.0D
     def setupSpec() {
 
         def utils = mock(Utils)
@@ -74,11 +76,13 @@ class RequesterSpec extends BaseSpec {
         given:
           def isSwapping = mock(AtomicBoolean)
           setField(requester, "isSwapping", isSwapping)
+          setField(settings, "defaultSlippage", slippage)
+
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols", 1.0D)).thenReturn(swapDto)
+          when(oneInchClient.swap(any(TokenQuote), any(Token), any(Boolean), any(String), any(Double))).thenReturn(swapDto)
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
@@ -96,7 +100,7 @@ class RequesterSpec extends BaseSpec {
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(999_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols", 1.0D)).thenReturn(swapDto)
+          when(oneInchClient.swap(any(TokenQuote), any(Token), any(Boolean), any(String), any(Double))).thenReturn(swapDto)
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
@@ -112,7 +116,7 @@ class RequesterSpec extends BaseSpec {
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols", 1.0D)).thenReturn(swapDto)
+          when(oneInchClient.swap(any(TokenQuote), any(Token), any(Boolean), any(String), any(Double))).thenReturn(swapDto)
           when(isSwapping.get()).thenReturn(true)
         when:
           requester.swap(tokenQuote1, token2, continuation)
