@@ -8,9 +8,20 @@ import org.springframework.stereotype.Component
 @Component
 class TelegramClient(val telegramApi: TelegramApi, val properties: Properties) {
 
-    fun sendMessage(amount: Double, gas: Double): JSONObject? {
-        val message = "Congratulations, you earned $amount$  \uD83D\uDCB8" +
-                "\nRemaining gas: $gas matic."
+    fun sendSwapMessage(amount: Double, gas: Double?) {
+        var message = "Congratulations, you earned $amount$  \uD83D\uDCB8"
+        if (gas != null) {
+            message += "\nRemaining gas: $gas matic."
+        }
+        sendMessage(message)
+    }
+
+    fun sendRefillGasBalanceMessage(gas: Double) {
+        val message = "Refilled gas balance. \nNew balance: $gas matic  \uD83D\uDCA7"
+        sendMessage(message)
+    }
+
+    private fun sendMessage(message: String): JSONObject? {
         val response = telegramApi.sendMessage(properties.telegramToken, message).execute()
         return if (response.isSuccessful) {
             response.body()

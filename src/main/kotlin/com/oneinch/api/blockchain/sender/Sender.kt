@@ -2,6 +2,7 @@ package com.oneinch.api.blockchain.sender
 
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.balance.Balance
+import com.oneinch.api.blockchain.tx.BasicTransaction
 import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
@@ -54,16 +55,26 @@ class Sender(
             }
             toBalance = getBalance(to) - toBalance
             repository.saveTransaction(txHash, tx, requestTime, txTime, sendTxTimeStamp, from, to, toBalance, status)
-            val profit = balanceAfter - balanceBefore
+            val profit = (balanceAfter - balanceBefore).round()
+            val coinValue = balance.getCoin()?.calcDoubleValue()?.round()
             if (profit > 10) {
-                telegramClient.sendMessage(profit.round())
+                telegramClient.sendSwapMessage(profit, coinValue)
             }
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
     }
 
-    private suspend fun send(tx: Transaction, from: TokenQuote, to: TokenQuote): String {
+    suspend fun sendBasicTransaction(tx: BasicTransaction, from: TokenQuote, to: TokenQuote) {
+        send(tx, from, to)
+        delay(TEN_SECONDS) // to be sure getting valid balance
+        val coinBalance = balance.getCoin()?.calcDoubleValue()
+        if (coinBalance != null) {
+            telegramClient.sendRefillGasBalanceMessage(coinBalance)
+        }
+    }
+
+    private suspend fun send(tx: BasicTransaction, from: TokenQuote, to: TokenQuote): String {
         val txHash = manager.sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value).transactionHash
         logSwapInfo(txHash, from, to)
         waitUntilTxDone(txHash)

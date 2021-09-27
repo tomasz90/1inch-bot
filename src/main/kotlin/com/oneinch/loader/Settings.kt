@@ -40,5 +40,6 @@ class Settings(
     val maxRps: Int,
     val timeout: Long,
     val maxTimeNoTransaction: Long,
-    val excludedTokens: List<String>
+    val excludedTokens: List<String>,
+    val minimalCoinBalance: Int
 )

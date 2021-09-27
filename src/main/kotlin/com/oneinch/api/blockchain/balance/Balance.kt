@@ -1,6 +1,7 @@
 package com.oneinch.api.blockchain.balance
 
 import com.oneinch.`object`.Chain
+import com.oneinch.`object`.CoinQuote
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.repository.crud.InMemoryRepository
@@ -18,7 +19,6 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
     IBalance {
 
     override fun getERC20(erc20: Token): TokenQuote? {
-        // TODO: 13.09.2021 java.util.ConcurrentModificationException need fix
         var tokenQuote = repository.findByAddress(erc20.address)
         if (tokenQuote == null) {
             tokenQuote = getFromChain(erc20.address)
@@ -33,8 +33,19 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return repository.getUsdValue()
     }
 
-    fun get(): BigInteger {
-        return web3j.ethGetBalance(myAddress, LATEST).send().balance
+    fun getCoin(): CoinQuote? {
+        val quote: BigInteger
+        try {
+            quote = web3j.ethGetBalance(myAddress, LATEST).send().balance
+        } catch (e: Exception) {
+            getLogger().info("Exception during getting balance: ${e.message}")
+            return null
+        }
+        return CoinQuote(chain.coin, quote)
+    }
+
+    fun getAnyNonZeroERC20() : TokenQuote {
+        return repository.getAnyNonZero()
     }
 
     fun updateAll() {

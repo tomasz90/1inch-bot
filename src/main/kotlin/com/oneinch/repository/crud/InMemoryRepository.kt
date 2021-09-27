@@ -1,10 +1,11 @@
 package com.oneinch.repository.crud
 
 import com.oneinch.`object`.TokenQuote
+import com.oneinch.loader.Settings
 import org.springframework.stereotype.Component
 
 @Component
-open class InMemoryRepository {
+open class InMemoryRepository(val settings: Settings) {
 
     private val allBalance = mutableListOf<TokenQuote>()
 
@@ -12,7 +13,7 @@ open class InMemoryRepository {
         allBalance.add(tokenQuote)
     }
 
-    @Synchronized  // TODO: 13.09.2021 if exception occur once again delete it
+    @Synchronized
     fun findByAddress(address: String): TokenQuote? {
         return allBalance.firstOrNull { it.token.address == address }
     }
@@ -27,5 +28,9 @@ open class InMemoryRepository {
 
     fun getUsdValue(): Double {
         return allBalance.sumOf { it.usdValue }
+    }
+
+    fun getAnyNonZero(): TokenQuote {
+        return allBalance.first { it.usdValue > settings.minimalCoinBalance }
     }
 }
