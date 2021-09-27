@@ -7,4 +7,6 @@ interface IBalance {
 
     fun getERC20(erc20: Token): TokenQuote?
 
+    fun getUsdValue(): Double
+
 }

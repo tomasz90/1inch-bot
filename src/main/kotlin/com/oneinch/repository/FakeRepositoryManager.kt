@@ -57,4 +57,8 @@ open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val cha
             save(entity)
         }
     }
+
+    fun getUsdValue(): Double {
+       return repository.findByChainId(chain.id).sumOf { it.readable }
+    }
 }
