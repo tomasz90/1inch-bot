@@ -44,8 +44,8 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return CoinQuote(chain.coin, quote)
     }
 
-    fun getAnyNonZeroERC20() : TokenQuote {
-        return repository.getAnyNonZero()
+    fun getAnyTokenWithBalance(amount: Int) : TokenQuote {
+        return repository.getAnyTokenWithBalance(amount)
     }
 
     fun updateAll() {

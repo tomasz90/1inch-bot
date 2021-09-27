@@ -1,11 +1,10 @@
 package com.oneinch.repository.crud
 
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.loader.Settings
 import org.springframework.stereotype.Component
 
 @Component
-open class InMemoryRepository(val settings: Settings) {
+open class InMemoryRepository {
 
     private val allBalance = mutableListOf<TokenQuote>()
 
@@ -30,7 +29,7 @@ open class InMemoryRepository(val settings: Settings) {
         return allBalance.sumOf { it.usdValue }
     }
 
-    fun getAnyNonZero(): TokenQuote {
-        return allBalance.first { it.usdValue > settings.minimalCoinBalance }
+    fun getAnyTokenWithBalance(amount: Int): TokenQuote {
+        return allBalance.first { it.usdValue > amount }
     }
 }

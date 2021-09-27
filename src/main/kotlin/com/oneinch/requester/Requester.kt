@@ -56,9 +56,9 @@ class Requester(
     }
 
     private fun pickTokenToSwap(amount: Int): TokenQuote {
-        val tokenQuote = balance.getAnyNonZeroERC20()
-        val swapQuote = tokenQuote.calcOrigin(amount)
-        return TokenQuote(tokenQuote.token, swapQuote)
+        val tokenQuote = balance.getAnyTokenWithBalance(amount)
+        val quote = tokenQuote.calcOrigin(amount)
+        return TokenQuote(tokenQuote.token, quote)
     }
 
     private fun shouldSwap(realAdvantage: Double): Boolean {
