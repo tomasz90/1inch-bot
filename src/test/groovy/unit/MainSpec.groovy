@@ -6,32 +6,49 @@ import com.oneinch.loader.Properties
 import com.oneinch.loader.Settings
 import com.oneinch.object.Chain
 import com.oneinch.object.Token
+import com.oneinch.object.TokenQuote
 import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlin.Pair
+import kotlinx.coroutines.BuildersKt
+import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
+import spock.lang.Shared
 
+import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.atomic.AtomicBoolean
 
+import static org.mockito.Mockito.never
 import static org.powermock.api.mockito.PowerMockito.mock
+import static org.powermock.api.mockito.PowerMockito.spy
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate
+import static org.powermock.api.mockito.PowerMockito.when
+import static org.springframework.test.util.ReflectionTestUtils.setField
 
 @ContextConfiguration
-@Import(SpecConfig.class)
+@EnableSharedInjection
+@Import([SpecConfig.class])
 class MainSpec extends BaseSpec {
 
     @Autowired
     Properties properties
 
-    def abstractRequester = mock(AbstractRequester)
-    def balance = mock(Balance)
-    def chain = mock(Chain)
-    def settings = mock(Settings)
-    def isSwapping = mock(AtomicBoolean)
-    def rateLimiter = mock(RateLimiter)
+    @Shared
+    @Autowired
+    Settings settings
 
-    def main = new Main(abstractRequester, balance, chain, settings, isSwapping, rateLimiter)
+    static def abstractRequester = mock(AbstractRequester)
+    static def balance = mock(Balance)
+    static def chain = mock(Chain)
+    static def isSwapping = mock(AtomicBoolean)
+    static def rateLimiter = mock(RateLimiter)
+    static def main
+
+    def setup() {
+        main = new Main(abstractRequester, balance, chain, settings, isSwapping, rateLimiter)
+    }
 
     def "should create unique pairs and excluding Dai as target"() {
         given:
@@ -86,5 +103,96 @@ class MainSpec extends BaseSpec {
 
           result.toString() == excludedDaiAndUST
 
+    }
+
+    def "Should not swap below minimal quote"() {
+        given:
+          def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def tokenQuote = new TokenQuote(token1, new BigInteger("90000000000000000000")) // 90 USD
+          def minimalSwapQuote = 100 // USD
+          setField(settings, "minSwapQuote", minimalSwapQuote)
+          def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          method.setAccessible(true)
+
+        when:
+          method.invoke(main, tokenQuote, token2)
+
+        then:
+          verifyPrivate(balance, never()).invoke("getERC20", token2)
+    }
+
+    def "Should not swap when too big share in all balance"() {
+        given:
+          def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def tokenQuote = new TokenQuote(token1, new BigInteger("150000000000000000000")) // 150 USD
+          def minimalSwapQuote = 100 // USD
+          setField(settings, "minSwapQuote", minimalSwapQuote)
+          setField(settings, "maximalTokenShare", 0.6D)// max 240 USD in share
+
+          def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def tokenQuote2 = new TokenQuote(token1, new BigInteger("250000000000000000000")) // 250 USD
+          when(balance.getERC20(token2)).thenReturn(tokenQuote2)
+          when(balance.getUsdValue()).thenReturn(400D)
+
+          main = spy(main)
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          method.setAccessible(true)
+
+        when:
+          method.invoke(main, tokenQuote, token2)
+
+        then:
+          verifyPrivate(balance).invoke("getERC20", token2)
+          0 * BuildersKt.runBlocking()
+    }
+
+    def "Should swap when destination tokenQuote is null - balance is 0"() {
+        given:
+          def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def tokenQuote = new TokenQuote(token1, new BigInteger("150000000000000000000")) // 150 USD
+          def minimalSwapQuote = 100 // USD
+          setField(settings, "minSwapQuote", minimalSwapQuote)
+          setField(settings, "maximalTokenShare", 0.6D)// max 240 USD in share
+
+          def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          when(balance.getERC20(token2)).thenReturn(null)
+          when(balance.getUsdValue()).thenReturn(400D)
+
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          method.setAccessible(true)
+        expect:
+          doThrowNullPointerException { method.invoke(main, tokenQuote, token2) }
+          verifyPrivate(balance).invoke("getERC20", token2)
+    }
+
+    def "Should not swap when not too big share in all balance"() {
+        given:
+          def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def tokenQuote = new TokenQuote(token1, new BigInteger("150000000000000000000")) // 150 USD
+          def minimalSwapQuote = 100 // USD
+          setField(settings, "minSwapQuote", minimalSwapQuote)
+          setField(settings, "maximalTokenShare", 0.6D)// max 240 USD in share
+
+          def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
+          def tokenQuote2 = new TokenQuote(token1, new BigInteger("100000000000000000000")) // 100 USD
+          when(balance.getERC20(token2)).thenReturn(tokenQuote2)
+          when(balance.getUsdValue()).thenReturn(400D)
+
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          method.setAccessible(true)
+        expect:
+          doThrowNullPointerException { method.invoke(main, tokenQuote, token2) }
+          verifyPrivate(balance).invoke("getERC20", token2)
+    }
+
+    static boolean doThrowNullPointerException(Closure closure) {
+        def thrown = false
+        try {
+            closure.run()
+        } catch (InvocationTargetException e) {
+            thrown = e.targetException instanceof NullPointerException
+        }
+        return thrown
     }
 }

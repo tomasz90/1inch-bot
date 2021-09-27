@@ -81,7 +81,7 @@ class RequesterSpec extends BaseSpec {
         then:
           verifyPrivate(requester).invoke("calculateAdvantage", swapDto)
           verify(isSwapping).set(true)
-          verifyPrivate(sender)invoke("sendTransaction", null, tokenQuote1, tokenQuote2, continuation)
+          verifyPrivate(sender).invoke("sendTransaction", null, tokenQuote1, tokenQuote2, continuation)
           verify(isSwapping).set(false)
 
     }
