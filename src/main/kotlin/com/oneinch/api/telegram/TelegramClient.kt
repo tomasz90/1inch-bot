@@ -3,9 +3,11 @@ package com.oneinch.api.telegram
 import com.github.openjson.JSONObject
 import com.oneinch.api.one_inch.logErrorMessage
 import com.oneinch.loader.Properties
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
+@Profile("realAccount")
 class TelegramClient(val telegramApi: TelegramApi, val properties: Properties) {
 
     fun sendSwapMessage(amount: Double, gas: Double?) {

@@ -3,14 +3,14 @@ package com.oneinch.util
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.one_inch.api.data.Dto
 import com.oneinch.loader.Settings
-import com.oneinch.provider.AdvantageProvider
+import com.oneinch.provider.advantage.IAdvantageProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.util.Date
+import java.util.*
 
 @Component
-class Utils(val settings: Settings, val limiter: RateLimiter, val advantageProvider: AdvantageProvider) {
+class Utils(val settings: Settings, val limiter: RateLimiter, val advantageProvider: IAdvantageProvider) {
     fun logRatesInfo(dto: Dto, percent: Double) {
         getLogger().info(
             "${dto.from.token.symbol}: ${dto.from.usdValue.precision()}, " +

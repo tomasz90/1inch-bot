@@ -6,6 +6,7 @@ import com.oneinch.api.blockchain.tx.BasicTransaction
 import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
+import com.oneinch.provider.advantage.AdvantageProvider
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.Status.FAIL
@@ -30,7 +31,8 @@ class Sender(
     val repository: RealRepositoryManager,
     val balance: Balance,
     val web3j: Web3j,
-    val telegramClient: TelegramClient
+    val telegramClient: TelegramClient,
+    val advantageProvider: AdvantageProvider
 ) : AbstractSender<Transaction>() {
 
     private val ZERO = BigInteger.valueOf(0)

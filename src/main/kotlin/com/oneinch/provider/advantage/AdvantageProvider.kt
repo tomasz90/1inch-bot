@@ -1,4 +1,4 @@
-package com.oneinch.provider
+package com.oneinch.provider.advantage
 
 import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
@@ -7,14 +7,16 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.Duration.ofHours
 import java.time.Instant
 
 @Component
-class AdvantageProvider(val settings: Settings, val telegramClient: TelegramClient) {
+@Profile("realAccount")
+class AdvantageProvider(val settings: Settings, val telegramClient: TelegramClient): IAdvantageProvider {
 
-    var advantage = 0.0
+    override var advantage = 0.0
     private var defaultAdvantage = settings.minAdvantage
     private lateinit var deadline: Instant
     private val HALF_HOUR = 1800000L
