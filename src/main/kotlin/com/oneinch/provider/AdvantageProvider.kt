@@ -1,5 +1,6 @@
 package com.oneinch.provider
 
+import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
 import com.oneinch.util.getLogger
 import kotlinx.coroutines.CoroutineName
@@ -11,7 +12,7 @@ import java.time.Duration.ofHours
 import java.time.Instant
 
 @Component
-class AdvantageProvider(val settings: Settings) {
+class AdvantageProvider(val settings: Settings, val telegramClient: TelegramClient) {
 
     var advantage = 0.0
     private var defaultAdvantage = settings.minAdvantage
@@ -36,6 +37,7 @@ class AdvantageProvider(val settings: Settings) {
             if (now.isAfter(deadline) && advantage == defaultAdvantage) {
                 advantage = 0.0
                 getLogger().info("No transaction in last ${settings.maxTimeNoTransaction} hours, changed advantage to: $advantage")
+                telegramClient.sendNoTransactionsMessage(settings.maxTimeNoTransaction)
             }
         }
     }

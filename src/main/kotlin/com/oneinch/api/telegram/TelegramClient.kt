@@ -21,6 +21,12 @@ class TelegramClient(val telegramApi: TelegramApi, val properties: Properties) {
         sendMessage(message)
     }
 
+    fun sendNoTransactionsMessage(hours: Long) {
+        var message = "No transaction in last $hours hours...  \uD83D\uDE1F"
+        message += "Changing advantage to 0.0."
+        sendMessage(message)
+    }
+
     private fun sendMessage(message: String): JSONObject? {
         val response = telegramApi.sendMessage(properties.telegramToken, message).execute()
         return if (response.isSuccessful) {
