@@ -6,6 +6,7 @@ minAdvantage: 0.3
 gasPriceLimit: 1000
 maxTimeNoTransaction: 8
 minimalCoinBalance: 20
+maximalTokenShare: 0.6
 excludedTokens:
   - NONE
 
