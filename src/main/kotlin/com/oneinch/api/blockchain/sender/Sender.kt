@@ -36,32 +36,20 @@ class Sender(
 ) : AbstractSender<Transaction>() {
 
     private val ZERO = BigInteger.valueOf(0)
-    private val TEN_SECONDS = 10000L
+    private val `20_SECONDS` = 20000L
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
-            val requestTime = getDuration(tx.requestTimestamp)
+            val toBalance = getBalance(to)
+            val allBalanceBefore = balance.getUsdValue()
             val sendTxTimeStamp = Date()
-            var toBalance = getBalance(to)
-            val balanceBefore = balance.getUsdValue()
             val txHash = send(tx, from, to)
             val txTime = getDuration(sendTxTimeStamp)
-            delay(TEN_SECONDS) // to be sure getting valid balance
+            delay(`20_SECONDS`) // to be sure getting valid balance
             balance.updateAll()
-            val balanceAfter = balance.getUsdValue()
-            val status: Status
-            when (getBalance(from)) {
-                from.origin -> status = FAIL
-                ZERO -> { status = PASSED; advantageProvider.resetToDefault() }
-                else -> { status = PARTIALLY; advantageProvider.resetToDefault() }
-            }
-            toBalance = getBalance(to) - toBalance
-            repository.saveTransaction(txHash, tx, requestTime, txTime, sendTxTimeStamp, from, to, toBalance, status)
-            val profit = (balanceAfter - balanceBefore).round()
-            val coinValue = balance.getCoin()?.doubleValue?.round()
-            if (profit > 10) {
-                telegramClient.sendSwapMessage(profit, coinValue)
-            }
+            sendTelegramWhenInProfit(balance.getUsdValue(), allBalanceBefore)
+            val status = getTransactionStatus(from)
+            repository.saveTransaction(txHash, tx, txTime, sendTxTimeStamp, from, to, getBalance(to) - toBalance, status)
         } catch (e: MessageDecodingException) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
@@ -69,10 +57,10 @@ class Sender(
 
     suspend fun sendBasicTransaction(tx: BasicTransaction, from: TokenQuote, to: TokenQuote) {
         send(tx, from, to)
-        delay(TEN_SECONDS) // to be sure getting valid balance
+        delay(`20_SECONDS`) // to be sure getting valid balance
         val coinBalance = balance.getCoin()?.doubleValue
         if (coinBalance != null) {
-            telegramClient.sendRefillGasBalanceMessage(coinBalance)
+            telegramClient.sendRefillGasBalanceMessage(coinBalance.round())
         }
     }
 
@@ -87,6 +75,24 @@ class Sender(
         val result = { -> web3j.ethGetTransactionReceipt(txHash).send().result }
         while (result.invoke() == null) {
             delay(500)
+        }
+    }
+
+    private fun getTransactionStatus(from: TokenQuote): Status {
+        val status: Status
+        when (getBalance(from)) {
+            from.origin -> status = FAIL
+            ZERO -> { status = PASSED; advantageProvider.resetToDefault() }
+            else -> { status = PARTIALLY; advantageProvider.resetToDefault() }
+        }
+        return status
+    }
+
+    private fun sendTelegramWhenInProfit(allBalanceAfter: Double, allBalanceBefore: Double) {
+        val profit = (allBalanceAfter - allBalanceBefore).round()
+        val coinValue = balance.getCoin()?.doubleValue?.round()
+        if (profit > 10) {
+            telegramClient.sendSwapMessage(profit, coinValue)
         }
     }
 

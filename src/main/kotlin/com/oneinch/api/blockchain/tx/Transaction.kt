@@ -1,7 +1,6 @@
 package com.oneinch.api.blockchain.tx
 
 import java.math.BigInteger
-import java.util.*
 
 open class BasicTransaction(
     var gasPrice: BigInteger,
@@ -19,7 +18,7 @@ class Transaction(
     data: String,
     val minReturnAmount: BigInteger,
     val advantage: Double,
-    val requestTimestamp: Date
+    val requestDuration: Double
 ) : BasicTransaction(
     gasPrice,
     gasLimit,

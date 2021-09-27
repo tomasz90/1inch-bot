@@ -9,6 +9,8 @@ import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.api.blockchain.tx.TransactionCreator
 import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.loader.Settings
+import com.oneinch.util.getDuration
+import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 import java.util.*
@@ -26,9 +28,10 @@ class Requester(
         val slippage = settings.defaultSlippage
         val dto = oneInchClient.swap(from, to, settings.allowPartialFill, protocols, slippage)
         if (dto != null) {
+            val requestDuration = getDuration(requestTimestamp)
             val realAdvantage = calculateAdvantage(dto)
             if (shouldSwap(realAdvantage)) {
-                val tx = createTransaction(dto, realAdvantage, requestTimestamp)
+                val tx = createTransaction(dto, realAdvantage, requestDuration)
                 sender.sendTransaction(tx, from, dto.to)
                 refillCoinBalanceIfNeeded()
                 isSwapping.set(false)
@@ -41,6 +44,7 @@ class Requester(
         if (coinQuote != null) {
             val minimalCoinBalance = settings.minimalCoinBalance
             if (coinQuote.doubleValue < minimalCoinBalance) {
+                getLogger().info("Refilling gas balance.")
                 val tokenQuote = pickTokenToSwap(minimalCoinBalance)
                 val coinDto = oneInchClient.swap(tokenQuote, coinQuote.coin, false, protocols, 5.0)
                 if (coinDto != null) {
@@ -67,8 +71,8 @@ class Requester(
         return true
     }
 
-    private fun createTransaction(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
-        return transactionCreator.create(dto, advantage, requestTimestamp)
+    private fun createTransaction(dto: SwapDto, advantage: Double, requestDuration: Double): Transaction {
+        return transactionCreator.create(dto, advantage, requestDuration)
     }
 
     private fun createBasicTransaction(dto: SwapDto): BasicTransaction {

@@ -7,7 +7,6 @@ import com.oneinch.provider.SlippageProvider
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.math.BigInteger
-import java.util.*
 
 @Component
 @Profile("realAccount")
@@ -17,7 +16,7 @@ class TransactionCreator(
     val gasPriceProvider: GasPriceProvider
 ) {
 
-    fun create(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
+    fun create(dto: SwapDto, advantage: Double, requestDuration: Double): Transaction {
         val tx = dto.tx
         val newGasPrice = increaseGasPrice()
         val newGasLimit = increaseGasLimit(tx.gas)
@@ -25,7 +24,7 @@ class TransactionCreator(
         val address = tx.to
         val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
         val newData = modifyData(tx.data, minReturnAmount)
-        return Transaction(newGasPrice, newGasLimit, value, address, newData, minReturnAmount, advantage, requestTimestamp)
+        return Transaction(newGasPrice, newGasLimit, value, address, newData, minReturnAmount, advantage, requestDuration)
     }
 
     fun createBasic(dto: SwapDto):BasicTransaction {

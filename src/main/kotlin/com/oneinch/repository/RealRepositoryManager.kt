@@ -32,7 +32,6 @@ class RealRepositoryManager(
     fun saveTransaction(
         txHash: String?,
         tx: Transaction,
-        requestTimeS: Double,
         txTimeS: Double,
         sendTxTimeStamp: Date,
         from: TokenQuote,
@@ -46,7 +45,7 @@ class RealRepositoryManager(
         }
         val rtx = RealTxEntity(
             sendTxTime = sendTxTimeStamp,
-            requestTimeS = requestTimeS,
+            requestTimeS = tx.requestDuration,
             txTimeS = txTimeS,
             chainId = chain.id,
             hash = txHash,
