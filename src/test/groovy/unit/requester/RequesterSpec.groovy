@@ -27,10 +27,8 @@ import unit.SpecConfig
 import java.util.concurrent.atomic.AtomicBoolean
 
 import static org.mockito.ArgumentMatchers.any
-import static org.mockito.Mockito.never
-import static org.mockito.Mockito.verify
-import static org.powermock.api.mockito.PowerMockito.mock
-import static org.powermock.api.mockito.PowerMockito.when
+import static org.mockito.Mockito.*
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate
 import static org.springframework.test.util.ReflectionTestUtils.setField
 
 @ContextConfiguration
@@ -74,6 +72,7 @@ class RequesterSpec extends BaseSpec {
         given:
           def isSwapping = mock(AtomicBoolean)
           setField(requester, "isSwapping", isSwapping)
+          def requester = spy(requester)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
@@ -82,9 +81,11 @@ class RequesterSpec extends BaseSpec {
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
-          // not able to verify sendTransaction...
+          verifyPrivate(requester).invoke("calculateAdvantage", swapDto)
           verify(isSwapping).set(true)
+          verifyPrivate(sender)invoke("sendTransaction", null, tokenQuote1, tokenQuote2, continuation)
           verify(isSwapping).set(false)
+
     }
 
 
@@ -92,6 +93,7 @@ class RequesterSpec extends BaseSpec {
         given:
           def isSwapping = mock(AtomicBoolean)
           setField(requester, "isSwapping", isSwapping)
+          def requester = spy(requester)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(999_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
@@ -100,6 +102,7 @@ class RequesterSpec extends BaseSpec {
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
+          verifyPrivate(requester).invoke("calculateAdvantage", swapDto)
           verify(isSwapping, never()).set(true)
           verify(isSwapping, never()).set(false)
     }
@@ -108,6 +111,7 @@ class RequesterSpec extends BaseSpec {
         given:
           def isSwapping = mock(AtomicBoolean)
           setField(requester, "isSwapping", isSwapping)
+          def requester = spy(requester)
           def tokenQuote1 = new TokenQuote(token1, BigInteger.valueOf(1_000_000_000L))
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
@@ -117,6 +121,7 @@ class RequesterSpec extends BaseSpec {
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
+          verifyPrivate(requester).invoke("calculateAdvantage", swapDto)
           verify(isSwapping, never()).set(true)
           verify(isSwapping, never()).set(false)
     }

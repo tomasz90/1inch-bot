@@ -33,21 +33,25 @@ class Requester(
             if (shouldSwap(realAdvantage)) {
                 val tx = createTransaction(dto, realAdvantage, requestTimestamp)
                 sender.sendTransaction(tx, from, dto.to)
-                val coinQuote = balance.getCoin()
-                if (coinQuote != null) {
-                    val minimalCoinBalance = settings.minimalCoinBalance
-                    if (coinQuote.doubleValue < minimalCoinBalance) {
-                        val tokenQuote = balance.getAnyNonZeroERC20()
-                        val swapQuote = tokenQuote.calcOrigin(minimalCoinBalance)
-                        val swapTokenQuote = TokenQuote(tokenQuote.token, swapQuote)
-                        val coinDto = oneInchClient.swap(swapTokenQuote, chain.coin, false, protocols, 5.0)
-                        if (coinDto != null) {
-                            val basicTransaction = createBasicTransaction(coinDto)
-                            sender.sendBasicTransaction(basicTransaction, swapTokenQuote, coinDto.to)
-                        }
-                    }
-                }
+                refillCoinBalanceIfNeeded()
                 isSwapping.set(false)
+            }
+        }
+    }
+
+    private suspend fun refillCoinBalanceIfNeeded() {
+        val coinQuote = balance.getCoin()
+        if (coinQuote != null) {
+            val minimalCoinBalance = settings.minimalCoinBalance
+            if (coinQuote.doubleValue < minimalCoinBalance) {
+                val tokenQuote = balance.getAnyNonZeroERC20()
+                val swapQuote = tokenQuote.calcOrigin(minimalCoinBalance)
+                val swapTokenQuote = TokenQuote(tokenQuote.token, swapQuote)
+                val coinDto = oneInchClient.swap(swapTokenQuote, chain.coin, false, protocols, 5.0)
+                if (coinDto != null) {
+                    val basicTransaction = createBasicTransaction(coinDto)
+                    sender.sendBasicTransaction(basicTransaction, swapTokenQuote, coinDto.to)
+                }
             }
         }
     }
