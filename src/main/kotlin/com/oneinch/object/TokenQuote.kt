@@ -4,6 +4,12 @@ import java.math.BigInteger
 
 open class CoinQuote(open val token: Coin, open val origin: BigInteger) {
 
+    var doubleValue: Double = -0.0
+
+    init {
+        doubleValue = calcDoubleValue()
+    }
+
     internal fun calcDoubleValue(): Double {
         val multiplication = token.decimals
         return origin.toBigDecimal().divide(multiplication).toDouble()

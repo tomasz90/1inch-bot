@@ -68,7 +68,7 @@ class Sender(
     suspend fun sendBasicTransaction(tx: BasicTransaction, from: TokenQuote, to: TokenQuote) {
         send(tx, from, to)
         delay(TEN_SECONDS) // to be sure getting valid balance
-        val coinBalance = balance.getCoin()?.calcDoubleValue()
+        val coinBalance = balance.getCoin()?.doubleValue
         if (coinBalance != null) {
             telegramClient.sendRefillGasBalanceMessage(coinBalance)
         }
