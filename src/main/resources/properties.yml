@@ -1,5 +1,8 @@
 oneInchUrl: https://api.1inch.exchange/
 gasStationUrl: https://gasstation-mainnet.matic.network
+telegramUrl: https://api.telegram.org
+telegramToken: ***REMOVED***
+
 chains:
   -
     name: bsc
