@@ -1,8 +1,6 @@
 package com.oneinch.api.one_inch
 
 import com.oneinch.`object`.Chain
-import com.oneinch.`object`.Coin
-import com.oneinch.`object`.CoinQuote
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.one_inch.api.OneInchApi
@@ -27,7 +25,7 @@ class OneInchClient(val myAddress: String, val oneInch: OneInchApi, val settings
         }
     }
 
-    fun swap(from: CoinQuote, to: Coin, allowPartialFill: Boolean, protocols: String, slippage: Double): SwapDto? {
+    fun swap(from: TokenQuote, to: Token, allowPartialFill: Boolean, protocols: String, slippage: Double): SwapDto? {
         val response =
             oneInch.swap(
                 chain.id,

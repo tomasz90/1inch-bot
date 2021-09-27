@@ -2,30 +2,30 @@ package com.oneinch.`object`
 
 import java.math.BigInteger
 
-open class CoinQuote(open val token: Coin, open val origin: BigInteger) {
+class CoinQuote(val coin: Token, origin: BigInteger) {
 
     var doubleValue: Double = -0.0
 
     init {
-        doubleValue = calcDoubleValue()
-    }
-
-    internal fun calcDoubleValue(): Double {
-        val multiplication = token.decimals
-        return origin.toBigDecimal().divide(multiplication).toDouble()
+        doubleValue = calcDoubleValue(coin, origin)
     }
 }
 
-class TokenQuote(override val token: Token, override val origin: BigInteger): CoinQuote(token, origin) {
+class TokenQuote(val token: Token, val origin: BigInteger) {
 
     var usdValue: Double = -0.0
 
     init {
-        usdValue = calcDoubleValue()
+        usdValue = calcDoubleValue(token, origin)
     }
 
     fun calcMinReturnAmountOfDifferentToken(differentToken: Token): BigInteger {
         val factor = differentToken.decimals.divide(token.decimals)
         return origin.toBigDecimal().multiply(factor).toBigInteger()
     }
+}
+
+private fun calcDoubleValue(token: Token, origin: BigInteger): Double {
+    val multiplication = token.decimals
+    return origin.toBigDecimal().divide(multiplication).toDouble()
 }

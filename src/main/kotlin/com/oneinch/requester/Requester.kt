@@ -35,7 +35,7 @@ class Requester(
                 val coinQuote = balance.getCoin()
                 if (coinQuote != null) {
                     val minimalCoinBalance = settings.minimalCoinBalance
-                    if (coinQuote.calcDoubleValue() < minimalCoinBalance) {
+                    if (coinQuote.doubleValue < minimalCoinBalance) {
                         val tokenQuote = balance.getAnyNonZeroERC20()
                         val swapQuote = tokenQuote.calcOrigin(minimalCoinBalance)
                         val swapTokenQuote = TokenQuote(tokenQuote.token, swapQuote)

@@ -1,5 +1,6 @@
 package unit.requester
 
+import com.oneinch.api.blockchain.balance.Balance
 import com.oneinch.api.blockchain.sender.Sender
 import com.oneinch.api.blockchain.tx.TransactionCreator
 import com.oneinch.api.one_inch.OneInchClient
@@ -7,9 +8,10 @@ import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.api.one_inch.api.data.Tx
 import com.oneinch.loader.Properties
 import com.oneinch.loader.Settings
+import com.oneinch.object.Chain
 import com.oneinch.object.Token
 import com.oneinch.object.TokenQuote
-import com.oneinch.provider.AdvantageProvider
+import com.oneinch.provider.advantage.FakeAdvantageProvider
 import com.oneinch.requester.Requester
 import com.oneinch.util.Utils
 import kotlin.coroutines.Continuation
@@ -43,7 +45,9 @@ class RequesterSpec extends BaseSpec {
     static def sender = mock(Sender)
     static def transactionCreator = mock(TransactionCreator)
     static def settings = mock(Settings)
-    static def requester = new Requester(sender, transactionCreator, settings)
+    static def chain = mock(Chain)
+    static def balance = mock(Balance)
+    static def requester = new Requester(sender, transactionCreator, settings, chain, balance)
 
     static Token token1
     static Token token2
@@ -51,8 +55,9 @@ class RequesterSpec extends BaseSpec {
     def setupSpec() {
 
         def utils = mock(Utils)
-        def advantageProvider = mock(AdvantageProvider)
+        def advantageProvider = mock(FakeAdvantageProvider)
 
+        setField(settings, "defaultSlippage", 1.0D)
         setField(advantageProvider, "advantage", 0.2D)
         setField(requester, "oneInchClient", oneInchClient)
         setField(requester, "protocols", "protocols")
@@ -73,7 +78,7 @@ class RequesterSpec extends BaseSpec {
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
+          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols", 1.0D)).thenReturn(swapDto)
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
@@ -91,7 +96,7 @@ class RequesterSpec extends BaseSpec {
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(999_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
+          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols", 1.0D)).thenReturn(swapDto)
         when:
           requester.swap(tokenQuote1, token2, continuation)
         then:
@@ -107,7 +112,7 @@ class RequesterSpec extends BaseSpec {
           def tokenQuote2 = new TokenQuote(token2, BigInteger.valueOf(1_020_000_000L))
           def swapDto = new SwapDto(tokenQuote1, tokenQuote2, mock(Tx))
           def continuation = Mock(Continuation) { getContext() >> Mock(CoroutineContext) }
-          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols")).thenReturn(swapDto)
+          when(oneInchClient.swap(tokenQuote1, token2, false, "protocols", 1.0D)).thenReturn(swapDto)
           when(isSwapping.get()).thenReturn(true)
         when:
           requester.swap(tokenQuote1, token2, continuation)

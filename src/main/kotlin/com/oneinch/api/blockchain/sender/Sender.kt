@@ -58,7 +58,7 @@ class Sender(
             toBalance = getBalance(to) - toBalance
             repository.saveTransaction(txHash, tx, requestTime, txTime, sendTxTimeStamp, from, to, toBalance, status)
             val profit = (balanceAfter - balanceBefore).round()
-            val coinValue = balance.getCoin()?.calcDoubleValue()?.round()
+            val coinValue = balance.getCoin()?.doubleValue?.round()
             if (profit > 10) {
                 telegramClient.sendSwapMessage(profit, coinValue)
             }

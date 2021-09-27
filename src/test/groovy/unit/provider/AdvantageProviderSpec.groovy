@@ -1,7 +1,8 @@
 package unit.provider
 
+import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
-import com.oneinch.provider.AdvantageProvider
+import com.oneinch.provider.advantage.AdvantageProvider
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 import unit.BaseSpec
@@ -16,13 +17,14 @@ import static org.springframework.test.util.ReflectionTestUtils.setField
 class AdvantageProviderSpec extends BaseSpec {
 
     def settings = GroovyMock(Settings)
+    def telegram = GroovyMock(TelegramClient)
     def defaultAdvantage = 0.5D
 
     def "should set advantage based on settings"() {
         given:
           setField(settings, "minAdvantage", defaultAdvantage)
 
-          def advantageProvider = new AdvantageProvider(settings)
+          def advantageProvider = new AdvantageProvider(settings, telegram)
           setField(advantageProvider, "HALF_HOUR", 1L)
 
         expect:
@@ -34,7 +36,7 @@ class AdvantageProviderSpec extends BaseSpec {
           setField(settings, "minAdvantage", defaultAdvantage)
 
           def crossedDeadline = now() - ofSeconds(5)
-          def advantageProvider = new AdvantageProvider(settings)
+          def advantageProvider = new AdvantageProvider(settings, telegram)
           setField(advantageProvider, "HALF_HOUR", 1L)
           setField(advantageProvider, "deadline", crossedDeadline)
         expect:
@@ -47,7 +49,7 @@ class AdvantageProviderSpec extends BaseSpec {
           setField(settings, "minAdvantage", 0.5D)
 
           def crossedDeadline = now() + ofSeconds(5)
-          def advantageProvider = new AdvantageProvider(settings)
+          def advantageProvider = new AdvantageProvider(settings, telegram)
           setField(advantageProvider, "HALF_HOUR", 1L)
           setField(advantageProvider, "deadline", crossedDeadline)
         expect:
