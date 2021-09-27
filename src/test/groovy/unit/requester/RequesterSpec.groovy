@@ -8,7 +8,6 @@ import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.api.one_inch.api.data.Tx
 import com.oneinch.loader.Properties
 import com.oneinch.loader.Settings
-import com.oneinch.object.Chain
 import com.oneinch.object.Token
 import com.oneinch.object.TokenQuote
 import com.oneinch.provider.advantage.FakeAdvantageProvider
@@ -44,9 +43,8 @@ class RequesterSpec extends BaseSpec {
     static def sender = mock(Sender)
     static def transactionCreator = mock(TransactionCreator)
     static def settings = mock(Settings)
-    static def chain = mock(Chain)
     static def balance = mock(Balance)
-    static def requester = new Requester(sender, transactionCreator, settings, chain, balance)
+    static def requester = new Requester(sender, transactionCreator, settings, balance)
 
     static Token token1
     static Token token2

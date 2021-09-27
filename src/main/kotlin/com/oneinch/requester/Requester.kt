@@ -1,6 +1,5 @@
 package com.oneinch.requester
 
-import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.balance.Balance
@@ -19,10 +18,8 @@ class Requester(
     val sender: Sender,
     val transactionCreator: TransactionCreator,
     val settings: Settings,
-    val chain: Chain,
     val balance: Balance
-) :
-    AbstractRequester() {
+) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
         val requestTimestamp = Date()
@@ -44,16 +41,20 @@ class Requester(
         if (coinQuote != null) {
             val minimalCoinBalance = settings.minimalCoinBalance
             if (coinQuote.doubleValue < minimalCoinBalance) {
-                val tokenQuote = balance.getAnyNonZeroERC20()
-                val swapQuote = tokenQuote.calcOrigin(minimalCoinBalance)
-                val swapTokenQuote = TokenQuote(tokenQuote.token, swapQuote)
-                val coinDto = oneInchClient.swap(swapTokenQuote, chain.coin, false, protocols, 5.0)
+                val tokenQuote = pickTokenToSwap(minimalCoinBalance)
+                val coinDto = oneInchClient.swap(tokenQuote, coinQuote.coin, false, protocols, 5.0)
                 if (coinDto != null) {
                     val basicTransaction = createBasicTransaction(coinDto)
-                    sender.sendBasicTransaction(basicTransaction, swapTokenQuote, coinDto.to)
+                    sender.sendBasicTransaction(basicTransaction, tokenQuote, coinDto.to)
                 }
             }
         }
+    }
+
+    private fun pickTokenToSwap(amount: Int): TokenQuote {
+        val tokenQuote = balance.getAnyNonZeroERC20()
+        val swapQuote = tokenQuote.calcOrigin(amount)
+        return TokenQuote(tokenQuote.token, swapQuote)
     }
 
     private fun shouldSwap(realAdvantage: Double): Boolean {
@@ -67,27 +68,11 @@ class Requester(
     }
 
     private fun createTransaction(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
-        val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
-        val tx = dto.tx
-        return transactionCreator.create(
-            tx.gas,
-            tx.value,
-            tx.to,
-            tx.data,
-            minReturnAmount,
-            advantage,
-            requestTimestamp
-        )
+        return transactionCreator.create(dto, advantage, requestTimestamp)
     }
 
     private fun createBasicTransaction(dto: SwapDto): BasicTransaction {
-        val tx = dto.tx
-        return BasicTransaction(
-            tx.gasPrice,
-            tx.gas,
-            tx.value,
-            tx.to,
-            tx.data)
+        return transactionCreator.createBasic(dto)
     }
 
     private fun TokenQuote.calcOrigin(quote: Int): BigInteger {

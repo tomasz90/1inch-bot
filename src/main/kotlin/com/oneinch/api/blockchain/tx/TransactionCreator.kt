@@ -1,5 +1,6 @@
 package com.oneinch.api.blockchain.tx
 
+import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.loader.Settings
 import com.oneinch.provider.GasPriceProvider
 import com.oneinch.provider.SlippageProvider
@@ -16,18 +17,21 @@ class TransactionCreator(
     val gasPriceProvider: GasPriceProvider
 ) {
 
-    fun create(gasLimit: BigInteger,
-               value: BigInteger,
-               address: String,
-               data: String,
-               minReturnAmount: BigInteger,
-               advantage: Double,
-               requestTimestamp: Date
-    ): Transaction {
-        val newGasLimit = increaseGasLimit(gasLimit)
+    fun create(dto: SwapDto, advantage: Double, requestTimestamp: Date): Transaction {
+        val tx = dto.tx
         val newGasPrice = increaseGasPrice()
-        val newData = modifyData(data, minReturnAmount)
+        val newGasLimit = increaseGasLimit(tx.gas)
+        val value = tx.value
+        val address = tx.to
+        val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
+        val newData = modifyData(tx.data, minReturnAmount)
         return Transaction(newGasPrice, newGasLimit, value, address, newData, minReturnAmount, advantage, requestTimestamp)
+    }
+
+    fun createBasic(dto: SwapDto):BasicTransaction {
+        val tx = dto.tx
+        val newGasPrice = increaseGasPrice()
+        return BasicTransaction(newGasPrice, tx.gas, tx.value, tx.to, tx.data)
     }
 
     private fun increaseGasLimit(gasLimit: BigInteger): BigInteger {
