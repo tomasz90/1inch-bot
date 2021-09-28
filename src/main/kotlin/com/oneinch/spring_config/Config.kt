@@ -25,12 +25,6 @@ open class Config {
     lateinit var allProtocols: Protocols
 
     @Bean
-    open fun scope() = CoroutineScope(CoroutineName("coroutine"))
-
-    @Bean
-    open fun apiProvider() = ApiProvider(properties, settings)
-
-    @Bean
     open fun chain(): Chain {
         val name = settings.chain
         return properties.chains.first { it.name == name }
@@ -41,6 +35,12 @@ open class Config {
         val name = settings.chain
         return allProtocols.protocols.first { it.chain == name }.asString()
     }
+
+    @Bean
+    open fun scope() = CoroutineScope(CoroutineName("coroutine"))
+
+    @Bean
+    open fun apiProvider() = ApiProvider(properties, settings)
 
     @Bean
     open fun oneInch() = apiProvider().createOneInch()

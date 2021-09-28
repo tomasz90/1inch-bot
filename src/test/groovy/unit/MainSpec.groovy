@@ -11,6 +11,7 @@ import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlin.Pair
 import kotlinx.coroutines.BuildersKt
+import kotlinx.coroutines.CoroutineScope
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -39,6 +40,7 @@ class MainSpec extends BaseSpec {
     @Autowired
     Settings settings
 
+    static def scope = mock(CoroutineScope)
     static def abstractRequester = mock(AbstractRequester)
     static def balance = mock(Balance)
     static def chain = mock(Chain)
@@ -47,7 +49,7 @@ class MainSpec extends BaseSpec {
     static def main
 
     def setup() {
-        main = new Main(abstractRequester, balance, chain, settings, isSwapping, rateLimiter)
+        main = new Main(scope, abstractRequester, balance, chain, settings, isSwapping, rateLimiter)
     }
 
     def "should create unique pairs and excluding Dai as target"() {
