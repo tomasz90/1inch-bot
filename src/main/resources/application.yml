@@ -12,5 +12,7 @@ spring:
           auto: update
   datasource:
     url: jdbc:h2:file:./resources/database
+    username: 'sa'
+    password: ''
   main:
     allow-bean-definition-overriding: 'true'
