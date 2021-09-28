@@ -2,6 +2,7 @@ package com.oneinch
 
 import com.oneinch.loader.SettingsLoader
 import com.oneinch.wallet.Wallet
+import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.CommandLineRunner

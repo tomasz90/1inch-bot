@@ -9,6 +9,7 @@ import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
 class Main(
+    val mainCoroutine: CoroutineScope,
     val requester: AbstractRequester,
     val balance: IBalance,
     val chain: Chain,
@@ -25,16 +27,17 @@ class Main(
 ) {
 
     private val pairs = createUniquePairs(chain.tokens, settings.excludedTokens)
-    private val mainCoroutine = CoroutineScope(CoroutineName("mainCoroutine"))
     private val swapCoroutine = CoroutineScope(CoroutineName("swapCoroutine"))
 
     private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
 
     fun run() {
         mainCoroutine.launch {
-            while (true) {
-                if (!isSwapping.get()) {
-                    checkRatesForEveryPair(pairs)
+            if (mainCoroutine.isActive) {
+                while (true) {
+                    if (!isSwapping.get()) {
+                        checkRatesForEveryPair(pairs)
+                    }
                 }
             }
         }

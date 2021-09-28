@@ -6,6 +6,8 @@ import com.oneinch.loader.Protocols
 import com.oneinch.loader.Settings
 import com.oneinch.provider.ApiProvider
 import com.oneinch.util.RateLimiter
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,6 +24,9 @@ open class Config {
 
     @Autowired
     lateinit var allProtocols: Protocols
+
+    @Bean
+    open fun mainCoroutine() = CoroutineScope(CoroutineName("mainCoroutine"))
 
     @Bean
     open fun apiProvider() = ApiProvider(properties, settings)
