@@ -15,17 +15,18 @@ import org.springframework.core.env.StandardEnvironment
 @SpringBootApplication
 open class App : CommandLineRunner {
 
-    @Autowired
-    lateinit var main: Main
+//    @Autowired
+//    lateinit var main: Main
 
     companion object {
         var context: ConfigurableApplicationContext? = null
 
+        @JvmStatic
         fun restart() {
-            val args = context?.getBean(ApplicationArguments::class.java)
+            val args = context!!.getBean(ApplicationArguments::class.java)
             val thread = Thread {
-                context?.close()
-                context = SpringApplication.run(App::class.java, *args?.sourceArgs)
+                context!!.close()
+                context = setActiveProfile().run(*args.sourceArgs)
             }
             thread.isDaemon = false
             thread.start()
@@ -33,13 +34,13 @@ open class App : CommandLineRunner {
     }
 
     override fun run(vararg args: String?) {
-        main.run()
+       // main.run()
     }
 }
 
 fun main(args: Array<String>) {
     val application = setActiveProfile()
-    application.run(*args)
+    App.context = application.run(*args)
 }
 
 private fun setActiveProfile(): SpringApplication {
