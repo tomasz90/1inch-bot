@@ -3,7 +3,9 @@ package unit.provider
 import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
 import com.oneinch.provider.advantage.AdvantageProvider
-import kotlinx.coroutines.CoroutineScope
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.internal.ContextScope
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 import unit.BaseSpec
@@ -17,7 +19,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField
 @Import(SpecConfig.class)
 class AdvantageProviderSpec extends BaseSpec {
 
-    def scope = GroovyMock(CoroutineScope)
+    def scope = new ContextScope(new CoroutineName("test") as CoroutineContext)
     def settings = GroovyMock(Settings)
     def telegram = GroovyMock(TelegramClient)
     def defaultAdvantage = 0.5D

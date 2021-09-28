@@ -10,8 +10,10 @@ import com.oneinch.object.TokenQuote
 import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlin.Pair
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.BuildersKt
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.internal.ContextScope
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -40,7 +42,7 @@ class MainSpec extends BaseSpec {
     @Autowired
     Settings settings
 
-    static def scope = mock(CoroutineScope)
+    static def scope = new ContextScope(new CoroutineName("test") as CoroutineContext)
     static def abstractRequester = mock(AbstractRequester)
     static def balance = mock(Balance)
     static def chain = mock(Chain)
