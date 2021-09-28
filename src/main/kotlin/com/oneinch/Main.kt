@@ -25,13 +25,17 @@ class Main(
 ) {
 
     private val pairs = createUniquePairs(chain.tokens, settings.excludedTokens)
-    private val coroutine = CoroutineScope(CoroutineName("coroutine"))
+    private val mainCoroutine = CoroutineScope(CoroutineName("mainCoroutine"))
+    private val swapCoroutine = CoroutineScope(CoroutineName("swapCoroutine"))
+
     private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
 
     fun run() {
-        while (true) {
-            if (!isSwapping.get()) {
-                checkRatesForEveryPair(pairs)
+        mainCoroutine.launch {
+            while (true) {
+                if (!isSwapping.get()) {
+                    checkRatesForEveryPair(pairs)
+                }
             }
         }
     }
@@ -59,7 +63,7 @@ class Main(
     }
 
     private suspend fun swap(tokenQuote: TokenQuote, token: Token) {
-        coroutine.launch { requester.swap(tokenQuote, token) }
+        swapCoroutine.launch { requester.swap(tokenQuote, token) }
     }
 
     private fun createUniquePairs(tokens: List<Token>, excluded: List<String>): List<Pair<Token, Token>> {

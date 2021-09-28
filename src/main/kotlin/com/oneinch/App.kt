@@ -7,7 +7,6 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.env.StandardEnvironment
@@ -15,18 +14,18 @@ import org.springframework.core.env.StandardEnvironment
 @SpringBootApplication
 open class App : CommandLineRunner {
 
-//    @Autowired
-//    lateinit var main: Main
+    @Autowired
+    lateinit var main: Main
 
     companion object {
-        var context: ConfigurableApplicationContext? = null
+        lateinit var context: ConfigurableApplicationContext
 
         @JvmStatic
         fun restart() {
-            val args = context!!.getBean(ApplicationArguments::class.java)
+            val args = context.getBean(ApplicationArguments::class.java)
             val thread = Thread {
-                context!!.close()
-                context = setActiveProfile().run(*args.sourceArgs)
+                context.close()
+                context = setEnvironment().run(*args.sourceArgs)
             }
             thread.isDaemon = false
             thread.start()
@@ -34,16 +33,16 @@ open class App : CommandLineRunner {
     }
 
     override fun run(vararg args: String?) {
-       // main.run()
+       main.run()
     }
 }
 
 fun main(args: Array<String>) {
-    val application = setActiveProfile()
+    val application = setEnvironment()
     App.context = application.run(*args)
 }
 
-private fun setActiveProfile(): SpringApplication {
+private fun setEnvironment(): SpringApplication {
     val profile = SettingsLoader.load().account
     if (profile == "realAccount") {
         Wallet.assignPassword()
