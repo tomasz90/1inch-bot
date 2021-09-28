@@ -38,11 +38,11 @@ open class App : CommandLineRunner {
 }
 
 fun main(args: Array<String>) {
-    setActiveProfile(args)
-    App.context = runApplication<App>(*args)
+    val application = setActiveProfile()
+    application.run(*args)
 }
 
-private fun setActiveProfile(args: Array<String>) {
+private fun setActiveProfile(): SpringApplication {
     val profile = SettingsLoader.load().account
     if (profile == "realAccount") {
         Wallet.assignPassword()
@@ -51,5 +51,5 @@ private fun setActiveProfile(args: Array<String>) {
     environment.setActiveProfiles(profile)
     val application = SpringApplication(App::class.java)
     application.setEnvironment(environment)
-    application.run(*args)
+    return application
 }

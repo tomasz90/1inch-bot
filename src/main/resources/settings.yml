@@ -1,6 +1,6 @@
 account: fakeAccount
 chain: matic
-maxRps: 25
+maxRps: 1
 minSwapQuote: 1.0
 minAdvantage: 0.3
 gasPriceLimit: 1000
