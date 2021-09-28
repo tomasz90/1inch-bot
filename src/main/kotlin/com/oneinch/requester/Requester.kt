@@ -42,10 +42,9 @@ class Requester(
     private suspend fun refillCoinBalanceIfNeeded() {
         val coinQuote = balance.getCoin()
         if (coinQuote != null) {
-            val minimalCoinBalance = settings.minimalCoinBalance
-            if (coinQuote.doubleValue < minimalCoinBalance) {
+            if (coinQuote.doubleValue < settings.minimalCoinBalance) {
                 getLogger().info("Refilling gas balance.")
-                val tokenQuote = pickTokenToSwap(minimalCoinBalance)
+                val tokenQuote = pickTokenToSwap(settings.refillCoinQuote)
                 val coinDto = oneInchClient.swap(tokenQuote, coinQuote.coin, false, protocols, 5.0)
                 if (coinDto != null) {
                     val basicTransaction = createBasicTransaction(coinDto)
