@@ -3,7 +3,6 @@ package com.oneinch.provider.advantage
 import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
 import com.oneinch.util.getLogger
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,13 +13,14 @@ import java.time.Instant
 
 @Component
 @Profile("realAccount")
-class AdvantageProvider(val settings: Settings, val telegramClient: TelegramClient): IAdvantageProvider {
+class AdvantageProvider(val settings: Settings, val telegramClient: TelegramClient, scope: CoroutineScope) :
+    IAdvantageProvider {
 
     override var advantage = 0.0
     private var defaultAdvantage = settings.minAdvantage
     private lateinit var deadline: Instant
     private val HALF_HOUR = 1800000L
-    private val coroutine = CoroutineScope(CoroutineName("lastTransactionTimer"))
+    private val coroutine = CoroutineScope(scope.coroutineContext)
 
     init {
         resetToDefault()

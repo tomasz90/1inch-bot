@@ -7,7 +7,6 @@ import com.oneinch.api.blockchain.balance.IBalance
 import com.oneinch.loader.Settings
 import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -17,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
 class Main(
-    val mainCoroutine: CoroutineScope,
+    val scope: CoroutineScope,
     val requester: AbstractRequester,
     val balance: IBalance,
     val chain: Chain,
@@ -27,13 +26,13 @@ class Main(
 ) {
 
     private val pairs = createUniquePairs(chain.tokens, settings.excludedTokens)
-    private val swapCoroutine = CoroutineScope(CoroutineName("swapCoroutine"))
+    private val swapCoroutine = CoroutineScope(scope.coroutineContext)
 
     private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
 
     fun run() {
-        mainCoroutine.launch {
-            if (mainCoroutine.isActive) {
+        scope.launch {
+            if (scope.isActive) {
                 while (true) {
                     if (!isSwapping.get()) {
                         checkRatesForEveryPair(pairs)

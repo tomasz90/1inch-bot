@@ -1,17 +1,20 @@
 package com.oneinch.util
 
+import com.oneinch.loader.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicInteger
 
-class RateLimiter(private val maxRps: Int, mainCoroutine: CoroutineScope) {
+@Component
+class RateLimiter(val settings: Settings, scope: CoroutineScope) {
 
     var currentCalls = 0
 
     @Volatile
     private var callsDone = AtomicInteger(0)
-    private val coroutine = CoroutineScope(mainCoroutine.coroutineContext)
+    private val coroutine = CoroutineScope(scope.coroutineContext)
 
     init {
         coroutine.launch { resetCalls() }
@@ -30,7 +33,7 @@ class RateLimiter(private val maxRps: Int, mainCoroutine: CoroutineScope) {
 
     private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
         while (true) {
-            if (callsDone.get() < maxRps) {
+            if (callsDone.get() < settings.maxRps) {
                 callsDone.incrementAndGet()
                 function(t, s)
                 break
