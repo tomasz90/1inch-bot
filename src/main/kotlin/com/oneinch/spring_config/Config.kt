@@ -55,5 +55,5 @@ open class Config {
     }
 
     @Bean
-    open fun limiter() = RateLimiter(settings.maxRps)
+    open fun limiter() = RateLimiter(settings.maxRps, mainCoroutine())
 }

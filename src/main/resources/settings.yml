@@ -1,15 +1,15 @@
 account: realAccount
 chain: matic
 maxRps: 1
-minSwapQuote: 1.0
-minAdvantage: 0.3
+minSwapQuote: 20
+minAdvantage: 2.5
 gasPriceLimit: 1000
 maxTimeNoTransaction: 8
 minimalCoinBalance: 10
 refillCoinQuote: 50
 maximalTokenShare: 0.6
 excludedTokens:
-  - NONE
+  - UST
 
 increasedGasLimit: 1.25
 defaultSlippage:  1.0

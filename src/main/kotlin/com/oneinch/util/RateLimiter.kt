@@ -1,18 +1,17 @@
 package com.oneinch.util
 
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
 
-class RateLimiter(private val maxRps: Int) {
+class RateLimiter(private val maxRps: Int, mainCoroutine: CoroutineScope) {
 
     var currentCalls = 0
 
     @Volatile
     private var callsDone = AtomicInteger(0)
-    private val coroutine = CoroutineScope(CoroutineName("timer"))
+    private val coroutine = CoroutineScope(mainCoroutine.coroutineContext)
 
     init {
         coroutine.launch { resetCalls() }
