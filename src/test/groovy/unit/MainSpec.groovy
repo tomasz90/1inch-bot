@@ -11,6 +11,7 @@ import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlin.Pair
 import kotlin.coroutines.CoroutineContext
+import kotlin.jvm.functions.Function3
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.internal.ContextScope
 import org.spockframework.spring.EnableSharedInjection
@@ -22,6 +23,7 @@ import spock.lang.Shared
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.atomic.AtomicBoolean
 
+import static org.mockito.Mockito.any
 import static org.mockito.Mockito.never
 import static org.powermock.api.mockito.PowerMockito.mock
 import static org.powermock.api.mockito.PowerMockito.spy
@@ -47,7 +49,7 @@ class MainSpec extends BaseSpec {
     static def chain = mock(Chain)
     static def isSwapping = mock(AtomicBoolean)
     static def rateLimiter = mock(RateLimiter)
-    static def main
+    static Main main
 
     def setup() {
         main = new Main(scope, abstractRequester, balance, chain, settings, isSwapping, rateLimiter)
@@ -147,7 +149,6 @@ class MainSpec extends BaseSpec {
 
         then:
           verifyPrivate(balance).invoke("getERC20", token2)
-
     }
 
     def "Should swap when destination tokenQuote is null - balance is 0"() {
@@ -169,24 +170,25 @@ class MainSpec extends BaseSpec {
           verifyPrivate(balance).invoke("getERC20", token2)
     }
 
-    def "Should swap when not too big share in all balance"() {
+    def "should swap"() {
         given:
           def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
           def tokenQuote = new TokenQuote(token1, new BigInteger("150000000000000000000")) // 150 USD
-          def minimalSwapQuote = 100 // USD
-          setField(settings, "minSwapQuote", minimalSwapQuote)
-          setField(settings, "maximalTokenShare", 0.6D)// max 240 USD in share
+          def maxShare = 600
 
           def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
-          def tokenQuote2 = new TokenQuote(token1, new BigInteger("100000000000000000000")) // 100 USD
-          when(balance.getERC20(token2)).thenReturn(tokenQuote2)
-          when(balance.getUsdValue()).thenReturn(400D)
+          def tokenShare2 = 100.0D
 
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapOnlyToMaximalShare")
           method.setAccessible(true)
-        expect:
-          verifyInvokedSwapOnlyToMaximalShare { method.invoke(main, tokenQuote, token2) }
-          verifyPrivate(balance).invoke("getERC20", token2)
+          //kotlin.jvm.functions.Function3
+
+          def swap = mock(Function3)
+          setField(main, "swap", swap)
+        when:
+          method.invoke(main, tokenQuote, token2, tokenShare2, maxShare)
+        then:
+          verifyPrivate(swap).invoke("invoke", any(), any(), any())
     }
 
     static boolean verifyInvokedSwapOnlyToMaximalShare(Closure closure) {
