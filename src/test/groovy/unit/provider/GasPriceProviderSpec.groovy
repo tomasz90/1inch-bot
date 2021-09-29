@@ -3,6 +3,9 @@ package unit.provider
 import com.oneinch.api.gas_station.GasStationClient
 import com.oneinch.loader.Settings
 import com.oneinch.provider.GasPriceProvider
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.internal.ContextScope
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 import unit.BaseSpec
@@ -16,6 +19,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField
 @Import(SpecConfig.class)
 class GasPriceProviderSpec extends BaseSpec {
 
+    def scope = new ContextScope(new CoroutineName("test") as CoroutineContext)
     def settings = mock(Settings)
     def gasStationClient = mock(GasStationClient)
 
@@ -23,7 +27,7 @@ class GasPriceProviderSpec extends BaseSpec {
         given:
           when(gasStationClient.getPrice()).thenReturn(30D)
 
-          def gasStationProvider = new GasPriceProvider(gasStationClient, settings)
+          def gasStationProvider = new GasPriceProvider(gasStationClient, settings, scope)
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)
@@ -37,7 +41,7 @@ class GasPriceProviderSpec extends BaseSpec {
         given:
           when(gasStationClient.getPrice()).thenReturn(30D)
 
-          def gasStationProvider = new GasPriceProvider(gasStationClient, settings)
+          def gasStationProvider = new GasPriceProvider(gasStationClient, settings, scope)
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)
@@ -58,7 +62,7 @@ class GasPriceProviderSpec extends BaseSpec {
         given:
           when(gasStationClient.getPrice()).thenReturn(3000D)
 
-          def gasStationProvider = new GasPriceProvider(gasStationClient, settings)
+          def gasStationProvider = new GasPriceProvider(gasStationClient, settings, scope)
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)
@@ -73,7 +77,7 @@ class GasPriceProviderSpec extends BaseSpec {
         given:
           when(gasStationClient.getPrice()).thenReturn(null)
 
-          def gasStationProvider = new GasPriceProvider(gasStationClient, settings)
+          def gasStationProvider = new GasPriceProvider(gasStationClient, settings, scope)
 
           setField(gasStationProvider, "gasPriceLimit", 1000D)
           setField(gasStationProvider, "TWO_SECONDS", 2L)

@@ -5,7 +5,8 @@ import com.oneinch.loader.Properties
 import com.oneinch.loader.Protocols
 import com.oneinch.loader.Settings
 import com.oneinch.provider.ApiProvider
-import com.oneinch.util.RateLimiter
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,9 +25,6 @@ open class Config {
     lateinit var allProtocols: Protocols
 
     @Bean
-    open fun apiProvider() = ApiProvider(properties, settings)
-
-    @Bean
     open fun chain(): Chain {
         val name = settings.chain
         return properties.chains.first { it.name == name }
@@ -39,6 +37,12 @@ open class Config {
     }
 
     @Bean
+    open fun scope() = CoroutineScope(CoroutineName("coroutine"))
+
+    @Bean
+    open fun apiProvider() = ApiProvider(properties, settings)
+
+    @Bean
     open fun oneInch() = apiProvider().createOneInch()
 
     @Bean
@@ -48,7 +52,4 @@ open class Config {
     open fun setNotSwapping() {
         isSwapping().set(false) // set for startup only
     }
-
-    @Bean
-    open fun limiter() = RateLimiter(settings.maxRps)
 }

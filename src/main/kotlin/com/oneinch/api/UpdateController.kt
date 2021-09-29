@@ -1,17 +1,27 @@
 package com.oneinch.api
 
+import com.oneinch.App
 import com.oneinch.api.blockchain.balance.Balance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import org.springframework.context.annotation.Profile
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Profile("realAccount")
-class UpdateController(val balance: Balance) {
+class UpdateController(val balance: Balance, val scope: CoroutineScope) {
 
     @GetMapping("/updateBalance")
     fun updateBalance(): String {
         balance.updateAll()
         return "Updating balance..."
+    }
+
+    @GetMapping("/restart")
+    fun restartApp(): String {
+        scope.cancel()
+        App.restart()
+        return "Restarting app..."
     }
 }

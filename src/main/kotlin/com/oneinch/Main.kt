@@ -7,8 +7,8 @@ import com.oneinch.api.blockchain.balance.IBalance
 import com.oneinch.loader.Settings
 import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
 class Main(
+    val scope: CoroutineScope,
     val requester: AbstractRequester,
     val balance: IBalance,
     val chain: Chain,
@@ -25,13 +26,18 @@ class Main(
 ) {
 
     private val pairs = createUniquePairs(chain.tokens, settings.excludedTokens)
-    private val coroutine = CoroutineScope(CoroutineName("coroutine"))
+    private val swapCoroutine = CoroutineScope(scope.coroutineContext)
+
     private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
 
     fun run() {
-        while (true) {
-            if (!isSwapping.get()) {
-                checkRatesForEveryPair(pairs)
+        scope.launch {
+            if (scope.isActive) {
+                while (true) {
+                    if (!isSwapping.get()) {
+                        checkRatesForEveryPair(pairs)
+                    }
+                }
             }
         }
     }
@@ -59,7 +65,7 @@ class Main(
     }
 
     private suspend fun swap(tokenQuote: TokenQuote, token: Token) {
-        coroutine.launch { requester.swap(tokenQuote, token) }
+        swapCoroutine.launch { requester.swap(tokenQuote, token) }
     }
 
     private fun createUniquePairs(tokens: List<Token>, excluded: List<String>): List<Pair<Token, Token>> {

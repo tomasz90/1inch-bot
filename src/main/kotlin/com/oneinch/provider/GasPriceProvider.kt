@@ -2,7 +2,6 @@ package com.oneinch.provider
 
 import com.oneinch.api.gas_station.GasStationClient
 import com.oneinch.loader.Settings
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -12,11 +11,11 @@ import java.util.concurrent.atomic.AtomicLong
 
 @Component
 @Profile("realAccount")
-class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings) {
+class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings, scope: CoroutineScope) {
 
     val gasPrice: AtomicLong = AtomicLong(10_000_000_000) // default 10 gwei
     private val gasPriceLimit = settings.gasPriceLimit
-    private val coroutine = CoroutineScope(CoroutineName("gasPriceProvider"))
+    private val coroutine = CoroutineScope(scope.coroutineContext)
     private val TWO_SECONDS = 2000L
 
     init {
@@ -35,7 +34,7 @@ class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Set
     }
 
     private fun Double.setLimit(): Double {
-        return if(this < gasPriceLimit) this else gasPriceLimit
+        return if (this < gasPriceLimit) this else gasPriceLimit
     }
 
     private fun Double.toWei(): Long {
