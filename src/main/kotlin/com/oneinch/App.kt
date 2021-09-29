@@ -43,13 +43,13 @@ open class App : CommandLineRunner {
 
 fun main(args: Array<String>) {
     val profile = SettingsLoader.load().account
+    readPasswordIfRealProfile(profile)
     val application = setEnvironment(profile)
     App.profile = profile
     App.context = application.run(*args)
 }
 
 private fun setEnvironment(profile: String): SpringApplication {
-    readPasswordIfRealProfile(profile)
     val environment: ConfigurableEnvironment = StandardEnvironment()
     environment.setActiveProfiles(profile)
     val application = SpringApplication(App::class.java)

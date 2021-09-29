@@ -37,7 +37,6 @@ import static org.springframework.test.util.ReflectionTestUtils.setField
 class MainSpec extends BaseSpec {
 
     def USD_90 = new BigInteger("90000000000000000000")
-    def USD_100 = new BigInteger("100000000000000000000")
     def USD_300 = new BigInteger("300000000000000000000")
     def USD_700 = new BigInteger("700000000000000000000")
 
@@ -96,7 +95,7 @@ class MainSpec extends BaseSpec {
 
         then:
           def excludedDai =
-                  "DAI UST" +
+                          "DAI UST" +
                           "DAI USDC" +
                           "DAI USDT" +
                           "UST USDC" +
@@ -110,7 +109,6 @@ class MainSpec extends BaseSpec {
 
     }
 
-
     def "should create unique pairs and excluding Dai and UST as target"() {
         given:
           def tokens = properties.chains.find { it.name == "matic" }.tokens
@@ -121,7 +119,7 @@ class MainSpec extends BaseSpec {
 
         then:
           def excludedDaiAndUST =
-                  "DAI USDC" +
+                          "DAI USDC" +
                           "DAI USDT" +
                           "UST USDC" +
                           "UST USDT" +
@@ -182,6 +180,19 @@ class MainSpec extends BaseSpec {
 
         then:
           result.usdValue == tokenQuote.usdValue
+    }
+
+    def "should swap all TokenQuote balance, when tokenShare is small and sum will not exceeds max share value"() {
+        given:
+          def tokenQuote = new TokenQuote(token, USD_300)
+          def tokenShare = 150.0D
+          def maxShare = 600.0D
+
+        when:
+          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
+
+        then:
+          result.usdValue == 300.0D
     }
 
     def "should swap part of TokenQuote balance matching max, when tokenShare is null and TokenQuote exceeds max share value"() {
