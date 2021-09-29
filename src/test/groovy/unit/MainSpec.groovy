@@ -13,9 +13,6 @@ import kotlin.Pair
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.internal.ContextScope
-import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -172,7 +169,7 @@ class MainSpec extends BaseSpec {
           verifyPrivate(balance).invoke("getERC20", token2)
     }
 
-    def "Should not swap when not too big share in all balance"() {
+    def "Should swap when not too big share in all balance"() {
         given:
           def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
           def tokenQuote = new TokenQuote(token1, new BigInteger("150000000000000000000")) // 150 USD
