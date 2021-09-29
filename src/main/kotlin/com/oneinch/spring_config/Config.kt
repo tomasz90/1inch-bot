@@ -40,9 +40,4 @@ open class Config {
 
     @Bean
     open fun isSwapping() = AtomicBoolean()
-
-    @Bean
-    open fun setNotSwapping() {
-        isSwapping().set(false) // set for startup only
-    }
 }

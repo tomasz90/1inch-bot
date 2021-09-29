@@ -7,9 +7,11 @@ import com.oneinch.api.blockchain.tx.FakeTransaction
 import com.oneinch.repository.crud.IFakeBalanceRepository
 import com.oneinch.repository.dao.FakeTokenQuoteEntity
 import com.oneinch.repository.dao.toTokenQuote
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
+@Profile("fakeAccount")
 open class FakeRepositoryManager(val repository: IFakeBalanceRepository, val chain: Chain) {
 
     init {

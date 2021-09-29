@@ -3,8 +3,6 @@ package com.oneinch.spring_config
 import com.esaulpaugh.headlong.abi.Function
 import com.github.openjson.JSONObject
 import com.oneinch.`object`.Chain
-import com.oneinch.loader.Settings
-import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -19,13 +17,7 @@ import org.web3j.tx.RawTransactionManager
 open class RealConfig {
 
     @Autowired
-    lateinit var settings: Settings
-
-    @Autowired
     lateinit var chain: Chain
-
-    @Autowired
-    lateinit var repository: RealRepositoryManager
 
     @Autowired
     lateinit var abi: JSONObject

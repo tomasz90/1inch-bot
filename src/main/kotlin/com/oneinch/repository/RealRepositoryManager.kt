@@ -9,11 +9,13 @@ import com.oneinch.repository.dao.RealTxEntity
 import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.TokenEntity
 import com.oneinch.util.getLogger
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 import java.util.*
 
 @Component
+@Profile("realAccount")
 class RealRepositoryManager(
     val iTokenEntityRepository: ITokenEntityRepository,
     val iRealTxRepository: IRealTxRepository,

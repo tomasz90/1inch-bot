@@ -1,4 +1,4 @@
-account: realAccount
+account: fakeAccount
 chain: matic
 maxRps: 1
 minSwapQuote: 20

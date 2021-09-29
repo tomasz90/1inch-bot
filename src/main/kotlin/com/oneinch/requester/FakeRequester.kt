@@ -5,9 +5,11 @@ import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.blockchain.sender.FakeSender
 import com.oneinch.api.blockchain.tx.FakeTransaction
 import com.oneinch.api.one_inch.api.data.QuoteDto
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
+@Profile("fakeAccount")
 class FakeRequester(val sender: FakeSender) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {

@@ -11,10 +11,12 @@ import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.loader.Settings
 import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
+@Profile("realAccount")
 class Requester(
     val sender: Sender,
     val transactionCreator: TransactionCreator,
