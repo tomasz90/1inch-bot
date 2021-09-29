@@ -12,7 +12,6 @@ import com.oneinch.loader.Settings
 import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
-import java.math.BigInteger
 import java.util.*
 
 @Component
@@ -54,7 +53,7 @@ class Requester(
         }
     }
 
-    private fun pickTokenToSwap(amount: Int): TokenQuote {
+    private fun pickTokenToSwap(amount: Double): TokenQuote {
         val tokenQuote = balance.getAnyTokenWithBalance(amount)
         val quote = tokenQuote.calcOrigin(amount)
         return TokenQuote(tokenQuote.token, quote)
@@ -76,11 +75,6 @@ class Requester(
 
     private fun createBasicTransaction(dto: SwapDto): BasicTransaction {
         return transactionCreator.createBasic(dto)
-    }
-
-    private fun TokenQuote.calcOrigin(quote: Int): BigInteger {
-        val decimals = this.token.decimals
-        return (quote.toBigDecimal() * decimals).toBigInteger()
     }
 }
 

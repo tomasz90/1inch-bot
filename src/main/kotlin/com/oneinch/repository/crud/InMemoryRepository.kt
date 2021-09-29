@@ -29,7 +29,7 @@ open class InMemoryRepository {
         return allBalance.sumOf { it.usdValue }
     }
 
-    fun getAnyTokenWithBalance(amount: Int): TokenQuote {
+    fun getAnyTokenWithBalance(amount: Double): TokenQuote {
         return allBalance.first { it.usdValue > amount }
     }
 }

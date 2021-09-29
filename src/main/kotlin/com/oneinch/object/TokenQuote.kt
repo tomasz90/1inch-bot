@@ -23,6 +23,11 @@ class TokenQuote(val token: Token, val origin: BigInteger) {
         val factor = differentToken.decimals.divide(token.decimals)
         return origin.toBigDecimal().multiply(factor).toBigInteger()
     }
+
+    fun calcOrigin(quote: Double): BigInteger {
+        val decimals = this.token.decimals
+        return (quote.toBigDecimal() * decimals).toBigInteger()
+    }
 }
 
 private fun calcDoubleValue(token: Token, origin: BigInteger): Double {

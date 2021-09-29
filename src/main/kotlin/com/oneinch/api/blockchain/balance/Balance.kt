@@ -44,7 +44,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return CoinQuote(chain.coin, quote)
     }
 
-    fun getAnyTokenWithBalance(amount: Int) : TokenQuote {
+    fun getAnyTokenWithBalance(amount: Double) : TokenQuote {
         return repository.getAnyTokenWithBalance(amount)
     }
 

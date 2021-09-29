@@ -42,6 +42,6 @@ class Settings(
     val maxTimeNoTransaction: Long,
     val excludedTokens: List<String>,
     val minimalCoinBalance: Int,
-    val refillCoinQuote: Int,
+    val refillCoinQuote: Double,
     val maximalTokenShare: Double
 )

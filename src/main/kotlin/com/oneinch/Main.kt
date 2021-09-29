@@ -50,18 +50,43 @@ class Main(
     private fun checkRatesForPair(pair: Pair<Token, Token>) {
         when (val tokenQuote = balance.getERC20(pair.first)) {
             null -> { }
-            else -> { swapWhenConditionsMet(tokenQuote, pair.second) }
+            else -> { swapWhenMoreThanMinimalQuote(tokenQuote, pair.second) }
         }
     }
 
-    private fun swapWhenConditionsMet(tokenQuote: TokenQuote, token: Token) {
+    private fun swapWhenMoreThanMinimalQuote(tokenQuote: TokenQuote, token: Token) {
         if (tokenQuote.usdValue > settings.minSwapQuote) {
-            val usdValue = balance.getERC20(token)?.usdValue
-            val maxUsdShare = balance.getUsdValue() * settings.maximalTokenShare
-            if (usdValue == null || usdValue <= maxUsdShare) {
-                runBlocking { swap.invoke(tokenQuote, token) }
+            swapWhenNotExceedingMaximalShare(tokenQuote, token)
+        }
+    }
+
+    private fun swapWhenNotExceedingMaximalShare(tokenQuote: TokenQuote, token: Token) {
+        val tokenShare = balance.getERC20(token)?.usdValue
+        val maxUsdShare = balance.getUsdValue() * settings.maximalTokenShare
+        if (tokenShare == null || tokenShare <= maxUsdShare) {
+            swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxUsdShare)
+        }
+    }
+
+    private fun swapOnlyToMaximalShare(tokenQuote: TokenQuote, token: Token, tokenShare: Double?, maxUsdShare: Double) {
+        val tokenQuoteToSwap: TokenQuote
+        if (tokenShare == null) {
+            if (tokenQuote.usdValue <= maxUsdShare) {
+                tokenQuoteToSwap = tokenQuote
+            } else {
+                val origin = tokenQuote.calcOrigin(maxUsdShare)
+                tokenQuoteToSwap = TokenQuote(tokenQuote.token, origin)
+            }
+        } else {
+            val swapValue = maxUsdShare - tokenShare
+            if (swapValue > tokenQuote.usdValue) {
+                tokenQuoteToSwap = tokenQuote
+            } else {
+                val origin = tokenQuote.calcOrigin(swapValue)
+                tokenQuoteToSwap = TokenQuote(tokenQuote.token, origin)
             }
         }
+        runBlocking { swap.invoke(tokenQuoteToSwap, token) }
     }
 
     private suspend fun swap(tokenQuote: TokenQuote, token: Token) {
