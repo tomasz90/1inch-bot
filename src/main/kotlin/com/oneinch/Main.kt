@@ -69,23 +69,19 @@ class Main(
     }
 
     private fun swapOnlyToMaximalShare(tokenQuote: TokenQuote, token: Token, tokenShare: Double?, maxUsdShare: Double) {
-        val tokenQuoteToSwap: TokenQuote
-        if (tokenShare == null) {
-            if (tokenQuote.usdValue <= maxUsdShare) {
-                tokenQuoteToSwap = tokenQuote
+        val tokenQuoteToSwap =
+            if (tokenShare == null || maxUsdShare - tokenShare >= tokenQuote.usdValue) {
+                if (tokenQuote.usdValue <= maxUsdShare) {
+                    tokenQuote
+                } else {
+                    val origin = tokenQuote.calcOrigin(maxUsdShare)
+                    TokenQuote(tokenQuote.token, origin)
+                }
             } else {
-                val origin = tokenQuote.calcOrigin(maxUsdShare)
-                tokenQuoteToSwap = TokenQuote(tokenQuote.token, origin)
-            }
-        } else {
-            val swapValue = maxUsdShare - tokenShare
-            if (swapValue > tokenQuote.usdValue) {
-                tokenQuoteToSwap = tokenQuote
-            } else {
+                val swapValue = maxUsdShare - tokenShare
                 val origin = tokenQuote.calcOrigin(swapValue)
-                tokenQuoteToSwap = TokenQuote(tokenQuote.token, origin)
+                TokenQuote(tokenQuote.token, origin)
             }
-        }
         runBlocking { swap.invoke(tokenQuoteToSwap, token) }
     }
 
