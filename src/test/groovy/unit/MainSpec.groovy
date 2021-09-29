@@ -165,7 +165,7 @@ class MainSpec extends BaseSpec {
           def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
           method.setAccessible(true)
         expect:
-          doThrowNullPointerException { method.invoke(main, tokenQuote, token2) }
+          verifyInvokedSwapOnlyToMaximalShare { method.invoke(main, tokenQuote, token2) }
           verifyPrivate(balance).invoke("getERC20", token2)
     }
 
@@ -185,16 +185,17 @@ class MainSpec extends BaseSpec {
           def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
           method.setAccessible(true)
         expect:
-          doThrowNullPointerException { method.invoke(main, tokenQuote, token2) }
+          verifyInvokedSwapOnlyToMaximalShare { method.invoke(main, tokenQuote, token2) }
           verifyPrivate(balance).invoke("getERC20", token2)
     }
 
-    static boolean doThrowNullPointerException(Closure closure) {
+    static boolean verifyInvokedSwapOnlyToMaximalShare(Closure closure) {
         def thrown = false
         try {
             closure.run()
         } catch (InvocationTargetException e) {
-            thrown = e.targetException instanceof NullPointerException
+            thrown = e.targetException.stackTrace[0]
+                    .declaringClass.toString().contains("swapOnlyToMaximalShare")
         }
         return thrown
     }
