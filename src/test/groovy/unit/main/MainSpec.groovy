@@ -1,4 +1,4 @@
-package unit
+package unit.main
 
 import com.oneinch.Main
 import com.oneinch.api.blockchain.balance.Balance
@@ -20,6 +20,8 @@ import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Ignore
 import spock.lang.Shared
+import unit.BaseSpec
+import unit.SpecConfig
 
 import java.lang.reflect.Method
 import java.util.concurrent.atomic.AtomicBoolean
@@ -148,7 +150,6 @@ class MainSpec extends BaseSpec {
         then:
           verifyPrivate(swap, never()).invoke("invoke", any(), any(), any())
     }
-
 
     def "Should not swap when too big share in all balance"() {
         given:
