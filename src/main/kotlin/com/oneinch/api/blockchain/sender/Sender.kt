@@ -42,13 +42,14 @@ class Sender(
         try {
             val toBalance = getBalance(to)
             val allBalanceBefore = balance.getUsdValue()
+            val balanceBefore = getBalance(from)
             val sendTxTimeStamp = Date()
             val txHash = send(tx, from, to)
             val txTime = getDuration(sendTxTimeStamp)
             delay(`20_SECONDS`) // to be sure getting valid balance
             balance.updateAll()
             sendTelegramWhenInProfit(balance.getUsdValue(), allBalanceBefore)
-            val status = getTransactionStatus(from)
+            val status = getTransactionStatus(balanceBefore, from)
             repository.saveTransaction(txHash, tx, txTime, sendTxTimeStamp, from, to, getBalance(to) - toBalance, status)
         } catch (e: Exception) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
@@ -80,11 +81,11 @@ class Sender(
         }
     }
 
-    private fun getTransactionStatus(from: TokenQuote): Status {
+    private fun getTransactionStatus(balanceBefore: BigInteger, from: TokenQuote): Status {
         val status: Status
         when (getBalance(from)) {
-            from.origin -> status = FAIL
-            ZERO -> { status = PASSED; advantageProvider.resetToDefault() }
+            balanceBefore -> status = FAIL
+            balanceBefore - from.origin -> { status = PASSED; advantageProvider.resetToDefault() }
             else -> { status = PARTIALLY; advantageProvider.resetToDefault() }
         }
         return status
