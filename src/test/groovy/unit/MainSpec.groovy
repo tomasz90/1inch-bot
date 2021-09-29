@@ -1,4 +1,4 @@
-package unit.main
+package unit
 
 import com.oneinch.Main
 import com.oneinch.api.blockchain.balance.Balance
@@ -18,10 +18,7 @@ import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Ignore
 import spock.lang.Shared
-import unit.BaseSpec
-import unit.SpecConfig
 
 import java.lang.reflect.Method
 import java.util.concurrent.atomic.AtomicBoolean
@@ -62,7 +59,6 @@ class MainSpec extends BaseSpec {
     Method createUniquePairs
     Method swapWhenMoreThanMinimalQuote
     Method swapWhenNotExceedingMaximalShare
-    Method swapOnlyToMaximalShare
     Token token
 
     def setup() {
@@ -81,10 +77,6 @@ class MainSpec extends BaseSpec {
         swapWhenNotExceedingMaximalShare = main.getClass().getDeclaredMethods()
                 .find(it -> it.name == "swapWhenNotExceedingMaximalShare")
         swapWhenNotExceedingMaximalShare.setAccessible(true)
-
-        swapOnlyToMaximalShare = main.getClass().getDeclaredMethods()
-                .find(it -> it.name == "swapOnlyToMaximalShare")
-        swapOnlyToMaximalShare.setAccessible(true)
 
         // settings:
         setField(settings, "minSwapQuote", 100) // minimal quote to swap
@@ -178,22 +170,18 @@ class MainSpec extends BaseSpec {
           verifyPrivate(swap).invoke("invoke", any(), any(), any())
 
     }
-@Ignore
-    def "should swap"() {
+
+    def "should swap all TokenQuote balance, when tokenShare is null and it doesn't exceeds max share value"() {
         given:
-          def tokenQuote = new TokenQuote(token, new BigInteger("150000000000000000000")) // 150 USD
-          def maxShare = 600
-
-          def tokenShare2 = 100.0D
-
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapOnlyToMaximalShare")
-          method.setAccessible(true)
+          def tokenQuote = new TokenQuote(token, USD_300)
+          def tokenShare = null
+          def maxShare = 600.0D
 
         when:
-          method.invoke(main, tokenQuote, token, tokenShare2, maxShare)
+          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
 
         then:
-          verifyPrivate(swap).invoke("invoke", any(), any(), any())
+          result.usdValue == tokenQuote.usdValue
     }
 
 

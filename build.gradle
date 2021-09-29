@@ -55,6 +55,11 @@ compileKotlin {
     kotlinOptions.jvmTarget = "14"
 }
 
+compileTestGroovy {
+    dependsOn tasks.getByPath('compileTestKotlin')
+    classpath += files(compileTestKotlin.destinationDir)
+}
+
 compileTestKotlin {
     kotlinOptions.jvmTarget = "14"
 }
