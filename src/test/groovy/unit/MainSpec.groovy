@@ -11,9 +11,11 @@ import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlin.Pair
 import kotlin.coroutines.CoroutineContext
-import kotlinx.coroutines.BuildersKt
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.internal.ContextScope
+import org.junit.runner.RunWith
+import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.modules.junit4.PowerMockRunner
 import org.spockframework.spring.EnableSharedInjection
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -116,7 +118,7 @@ class MainSpec extends BaseSpec {
           def minimalSwapQuote = 100 // USD
           setField(settings, "minSwapQuote", minimalSwapQuote)
           def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
           method.setAccessible(true)
 
         when:
@@ -140,7 +142,7 @@ class MainSpec extends BaseSpec {
           when(balance.getUsdValue()).thenReturn(400D)
 
           main = spy(main)
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
           method.setAccessible(true)
 
         when:
@@ -148,7 +150,7 @@ class MainSpec extends BaseSpec {
 
         then:
           verifyPrivate(balance).invoke("getERC20", token2)
-          0 * BuildersKt.runBlocking()
+
     }
 
     def "Should swap when destination tokenQuote is null - balance is 0"() {
@@ -163,7 +165,7 @@ class MainSpec extends BaseSpec {
           when(balance.getERC20(token2)).thenReturn(null)
           when(balance.getUsdValue()).thenReturn(400D)
 
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
           method.setAccessible(true)
         expect:
           doThrowNullPointerException { method.invoke(main, tokenQuote, token2) }
@@ -183,7 +185,7 @@ class MainSpec extends BaseSpec {
           when(balance.getERC20(token2)).thenReturn(tokenQuote2)
           when(balance.getUsdValue()).thenReturn(400D)
 
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenConditionsMet")
+          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
           method.setAccessible(true)
         expect:
           doThrowNullPointerException { method.invoke(main, tokenQuote, token2) }
