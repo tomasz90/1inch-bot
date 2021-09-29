@@ -36,6 +36,7 @@ class Sender(
 
     private val ZERO = BigInteger.valueOf(0)
     private val `20_SECONDS` = 20000L
+    private val `3_MINUTES` = 180000L
 
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
@@ -51,7 +52,16 @@ class Sender(
             repository.saveTransaction(txHash, tx, txTime, sendTxTimeStamp, from, to, getBalance(to) - toBalance, status)
         } catch (e: Exception) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
+            delay(`3_MINUTES`)
+            balance.updateAll()
         }
+    }
+
+    private suspend fun send(tx: BasicTransaction, from: TokenQuote, to: TokenQuote): String {
+        val txHash = manager.sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value).transactionHash
+        logSwapInfo(txHash, from, to)
+        waitUntilTxDone(txHash)
+        return txHash
     }
 
     suspend fun sendBasicTransaction(tx: BasicTransaction, from: TokenQuote, to: TokenQuote) {
@@ -61,13 +71,6 @@ class Sender(
         if (coinBalance != null) {
             telegramClient.sendRefillGasBalanceMessage(coinBalance.round())
         }
-    }
-
-    private suspend fun send(tx: BasicTransaction, from: TokenQuote, to: TokenQuote): String {
-        val txHash = manager.sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value).transactionHash
-        logSwapInfo(txHash, from, to)
-        waitUntilTxDone(txHash)
-        return txHash
     }
 
     private suspend fun waitUntilTxDone(txHash: String) {
