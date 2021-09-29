@@ -4,7 +4,6 @@ import com.oneinch.`object`.Chain
 import com.oneinch.loader.Properties
 import com.oneinch.loader.Protocols
 import com.oneinch.loader.Settings
-import com.oneinch.provider.ApiProvider
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,12 +37,6 @@ open class Config {
 
     @Bean
     open fun scope() = CoroutineScope(CoroutineName("coroutine"))
-
-    @Bean
-    open fun apiProvider() = ApiProvider(properties, settings)
-
-    @Bean
-    open fun oneInch() = apiProvider().createOneInch()
 
     @Bean
     open fun isSwapping() = AtomicBoolean()

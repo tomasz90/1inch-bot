@@ -12,10 +12,13 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.ResponseBody.Companion.toResponseBody
+import org.springframework.context.annotation.Bean
+import org.springframework.stereotype.Component
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
 
+@Component
 class ApiProvider(val properties: Properties, val settings: Settings) {
 
     private val mapper: ObjectMapper = ObjectMapper()
@@ -33,21 +36,24 @@ class ApiProvider(val properties: Properties, val settings: Settings) {
         .readTimeout(settings.timeout, TimeUnit.SECONDS)
         .build()
 
-    fun createOneInch(): OneInchApi = Retrofit.Builder()
+    @Bean
+    fun oneInch(): OneInchApi = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(properties.oneInchUrl)
         .addConverterFactory(jacksonConverter)
         .build()
         .create(OneInchApi::class.java)
 
-    fun createGasStation(): GasStationApi = Retrofit.Builder()
+    @Bean
+    fun gasStation(): GasStationApi = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(properties.gasStationUrl)
         .addConverterFactory(jacksonConverter)
         .build()
         .create(GasStationApi::class.java)
 
-    fun createTelegram(): TelegramApi = Retrofit.Builder()
+    @Bean
+    fun telegram(): TelegramApi = Retrofit.Builder()
         .client(httpClient)
         .baseUrl(properties.telegramUrl)
         .addConverterFactory(jacksonConverter)

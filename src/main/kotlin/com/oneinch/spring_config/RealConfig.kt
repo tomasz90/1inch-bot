@@ -4,7 +4,6 @@ import com.esaulpaugh.headlong.abi.Function
 import com.github.openjson.JSONObject
 import com.oneinch.`object`.Chain
 import com.oneinch.loader.Settings
-import com.oneinch.provider.ApiProvider
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.wallet.Wallet
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,9 +30,6 @@ open class RealConfig {
     @Autowired
     lateinit var abi: JSONObject
 
-    @Autowired
-    lateinit var apiProvider: ApiProvider
-
     @Bean
     open fun web3j() = JsonRpc2_0Web3j(HttpService(chain.rpc))
 
@@ -45,12 +41,6 @@ open class RealConfig {
 
     @Bean
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain.id.toLong())
-
-    @Bean
-    open fun gasStation() = apiProvider.createGasStation()
-
-    @Bean
-    open fun telegram() = apiProvider.createTelegram()
 
     @Bean
     open fun function(): Function {
