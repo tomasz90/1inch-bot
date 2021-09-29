@@ -18,7 +18,6 @@ import com.oneinch.util.getLogger
 import com.oneinch.util.logSwapInfo
 import kotlinx.coroutines.delay
 import org.springframework.stereotype.Component
-import org.web3j.exceptions.MessageDecodingException
 import org.web3j.protocol.Web3j
 import org.web3j.tx.RawTransactionManager
 import java.math.BigInteger
@@ -50,7 +49,7 @@ class Sender(
             sendTelegramWhenInProfit(balance.getUsdValue(), allBalanceBefore)
             val status = getTransactionStatus(from)
             repository.saveTransaction(txHash, tx, txTime, sendTxTimeStamp, from, to, getBalance(to) - toBalance, status)
-        } catch (e: MessageDecodingException) {
+        } catch (e: Exception) {
             getLogger().error("Transaction failed: ${e.stackTrace}")
         }
     }
