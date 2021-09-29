@@ -184,6 +184,32 @@ class MainSpec extends BaseSpec {
           result.usdValue == tokenQuote.usdValue
     }
 
+    def "should swap part of TokenQuote balance matching max, when tokenShare is null and TokenQuote exceeds max share value"() {
+        given:
+          def tokenQuote = new TokenQuote(token, USD_700)
+          def tokenShare = null
+          def maxShare = 600.0D
+
+        when:
+          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
+
+        then:
+          result.usdValue == 600.0D
+    }
+
+    def "should swap part of TokenQuote balance, when sum of token and TokenQuote would exceeds max share"() {
+        given:
+          def tokenQuote = new TokenQuote(token, USD_700)
+          def tokenShare = 200.0D
+          def maxShare = 600.0D
+
+        when:
+          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
+
+        then:
+          result.usdValue == 400.0D
+    }
+
 
     static verifyCreatingUniquePairs(pairs) {
         StringBuilder result = new StringBuilder()
