@@ -21,6 +21,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 
 import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 import java.util.concurrent.atomic.AtomicBoolean
 
 import static org.mockito.Mockito.any
@@ -43,16 +44,30 @@ class MainSpec extends BaseSpec {
     @Autowired
     Settings settings
 
-    static def scope = new ContextScope(new CoroutineName("test") as CoroutineContext)
-    static def abstractRequester = mock(AbstractRequester)
-    static def balance = mock(Balance)
-    static def chain = mock(Chain)
-    static def isSwapping = mock(AtomicBoolean)
-    static def rateLimiter = mock(RateLimiter)
-    static Main main
+    def scope = new ContextScope(new CoroutineName("test") as CoroutineContext)
+    def abstractRequester = mock(AbstractRequester)
+    def balance = mock(Balance)
+    def chain = mock(Chain)
+    def isSwapping = mock(AtomicBoolean)
+    def rateLimiter = mock(RateLimiter)
+    Main main
+    Function3 swap
+    Method createUniquePairs
+    Method swapWhenMoreThanMinimalQuote
 
     def setup() {
         main = new Main(scope, abstractRequester, balance, chain, settings, isSwapping, rateLimiter)
+        main = spy(main)
+        swap = mock(Function3)
+        setField(main, "swap", swap)
+        setField(settings, "minSwapQuote", 100)
+
+        createUniquePairs = main.getClass().getDeclaredMethods().find(it -> it.name == "createUniquePairs")
+        createUniquePairs.setAccessible(true)
+
+        swapWhenMoreThanMinimalQuote = main.getClass()
+                .getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
+        swapWhenMoreThanMinimalQuote.setAccessible(true)
     }
 
     def "should create unique pairs and excluding Dai as target"() {
@@ -60,15 +75,10 @@ class MainSpec extends BaseSpec {
           def tokens = properties.chains.find { it.name == "matic" }.tokens
           def excluded = ["DAI"]
 
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "createUniquePairs")
-          method.setAccessible(true)
         when:
-          List<Pair<Token, Token>> pairs = method.invoke(main, tokens, excluded)
+          List<Pair<Token, Token>> pairs = createUniquePairs.invoke(main, tokens, excluded) as List<Pair<Token, Token>>
 
         then:
-          StringBuilder result = new StringBuilder()
-          pairs.stream().forEach(it -> result.append("${it.first.getSymbol()} ${it.second.getSymbol()}"))
-
           def excludedDai =
                   "DAI UST" +
                   "DAI USDC" +
@@ -80,7 +90,7 @@ class MainSpec extends BaseSpec {
                   "USDT UST" +
                   "USDT USDC"
 
-        result.toString() == excludedDai
+          verifyCreatingUniquePairs(pairs) == excludedDai
 
     }
 
@@ -89,15 +99,10 @@ class MainSpec extends BaseSpec {
           def tokens = properties.chains.find { it.name == "matic" }.tokens
           def excluded =  ["DAI", "UST"]
 
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "createUniquePairs")
-          method.setAccessible(true)
         when:
-          List<Pair<Token, Token>> pairs = method.invoke(main, tokens, excluded)
+          List<Pair<Token, Token>> pairs = createUniquePairs.invoke(main, tokens, excluded) as List<Pair<Token, Token>>
 
         then:
-          StringBuilder result = new StringBuilder()
-          pairs.stream().forEach(it -> result.append("${it.first.getSymbol()} ${it.second.getSymbol()}"))
-
           def excludedDaiAndUST =
                           "DAI USDC" +
                           "DAI USDT" +
@@ -106,7 +111,7 @@ class MainSpec extends BaseSpec {
                           "USDC USDT" +
                           "USDT USDC"
 
-          result.toString() == excludedDaiAndUST
+          verifyCreatingUniquePairs(pairs) == excludedDaiAndUST
 
     }
 
@@ -114,14 +119,12 @@ class MainSpec extends BaseSpec {
         given:
           def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
           def tokenQuote = new TokenQuote(token1, new BigInteger("90000000000000000000")) // 90 USD
-          def minimalSwapQuote = 100 // USD
-          setField(settings, "minSwapQuote", minimalSwapQuote)
           def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
           def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
           method.setAccessible(true)
 
         when:
-          method.invoke(main, tokenQuote, token2)
+          swapWhenMoreThanMinimalQuote.invoke(main, tokenQuote, token2)
 
         then:
           verifyPrivate(balance, never()).invoke("getERC20", token2)
@@ -131,8 +134,6 @@ class MainSpec extends BaseSpec {
         given:
           def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
           def tokenQuote = new TokenQuote(token1, new BigInteger("150000000000000000000")) // 150 USD
-          def minimalSwapQuote = 100 // USD
-          setField(settings, "minSwapQuote", minimalSwapQuote)
           setField(settings, "maximalTokenShare", 0.6D)// max 240 USD in share
 
           def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
@@ -140,12 +141,8 @@ class MainSpec extends BaseSpec {
           when(balance.getERC20(token2)).thenReturn(tokenQuote2)
           when(balance.getUsdValue()).thenReturn(400D)
 
-          main = spy(main)
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
-          method.setAccessible(true)
-
         when:
-          method.invoke(main, tokenQuote, token2)
+          swapWhenMoreThanMinimalQuote.invoke(main, tokenQuote, token2)
 
         then:
           verifyPrivate(balance).invoke("getERC20", token2)
@@ -155,19 +152,18 @@ class MainSpec extends BaseSpec {
         given:
           def token1 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
           def tokenQuote = new TokenQuote(token1, new BigInteger("150000000000000000000")) // 150 USD
-          def minimalSwapQuote = 100 // USD
-          setField(settings, "minSwapQuote", minimalSwapQuote)
           setField(settings, "maximalTokenShare", 0.6D)// max 240 USD in share
 
           def token2 = new Token("symbol", "address", new BigDecimal("1000000000000000000"))
           when(balance.getERC20(token2)).thenReturn(null)
           when(balance.getUsdValue()).thenReturn(400D)
 
-          def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapWhenMoreThanMinimalQuote")
-          method.setAccessible(true)
-        expect:
-          verifyInvokedSwapOnlyToMaximalShare { method.invoke(main, tokenQuote, token2) }
-          verifyPrivate(balance).invoke("getERC20", token2)
+        when:
+          swapWhenMoreThanMinimalQuote.invoke(main, tokenQuote, token2)
+
+        then:
+          verifyPrivate(swap).invoke("invoke", any(), any(), any())
+
     }
 
     def "should swap"() {
@@ -181,24 +177,18 @@ class MainSpec extends BaseSpec {
 
           def method = main.getClass().getDeclaredMethods().find(it -> it.name == "swapOnlyToMaximalShare")
           method.setAccessible(true)
-          //kotlin.jvm.functions.Function3
 
-          def swap = mock(Function3)
-          setField(main, "swap", swap)
         when:
           method.invoke(main, tokenQuote, token2, tokenShare2, maxShare)
+
         then:
           verifyPrivate(swap).invoke("invoke", any(), any(), any())
     }
 
-    static boolean verifyInvokedSwapOnlyToMaximalShare(Closure closure) {
-        def thrown = false
-        try {
-            closure.run()
-        } catch (InvocationTargetException e) {
-            thrown = e.targetException.stackTrace[0]
-                    .declaringClass.toString().contains("swapOnlyToMaximalShare")
-        }
-        return thrown
+
+    static verifyCreatingUniquePairs(pairs) {
+        StringBuilder result = new StringBuilder()
+        pairs.stream().forEach(it -> result.append("${it.first.getSymbol()} ${it.second.getSymbol()}"))
+        return result.toString()
     }
 }
