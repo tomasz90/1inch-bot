@@ -42,7 +42,7 @@ class Main(
         }
     }
 
-    // todo: different advantages for different tokens???
+    // TODO: Different advantages for different tokens???
     private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
         pairs.forEach { pair -> checkRatesForPair(pair) }
     }
@@ -83,7 +83,9 @@ class Main(
                 val origin = tokenQuote.calcOrigin(swapValue)
                 TokenQuote(tokenQuote.token, origin)
             }
-        runBlocking { swap.invoke(tokenQuoteToSwap, token) }
+        if (tokenQuoteToSwap.usdValue > settings.minSwapQuote) {
+            runBlocking { swap.invoke(tokenQuoteToSwap, token) }
+        }
     }
 
     private suspend fun swap(tokenQuote: TokenQuote, token: Token) {
