@@ -24,4 +24,9 @@ class UpdateController(val balance: Balance, val scope: CoroutineScope) {
         App.restart()
         return "Restarting app..."
     }
+
+    @GetMapping("/check")
+    fun check(): String {
+        return "I'm alive"
+    }
 }
