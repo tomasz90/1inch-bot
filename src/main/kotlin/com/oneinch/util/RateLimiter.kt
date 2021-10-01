@@ -25,9 +25,7 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
     private suspend fun tick() {
         while (true) {
             delay(1000)
-            if (current429.get() > 5) {
-                lowerLimit()
-            }
+            count429()
             currentCalls = callsDone.getAndSet(0)
             current429 = AtomicInteger(0)
         }
@@ -37,24 +35,28 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
         return { t: T, s: S -> executeFunction(t, s, function) }
     }
 
-    fun count429() {
+    fun increment429() {
         current429.incrementAndGet()
     }
 
+    private fun count429() {
+        if (current429.get() > 5 && !isSwapping.isLocked) {
+            lowerLimit()
+        }
+    }
+
     private fun lowerLimit() {
-        if (!isSwapping.isLocked) {
-            coroutine.launch {
-                isSwapping.lock()
-                var minutes = 3L
-                getLogger().info("Rps limit reached. Stopping for $minutes minutes.")
-                delay(minutes * 1000 * 60)
-                maxRps = settings.loweredRps
-                isSwapping.unlock()
-                minutes = settings.loweredRpsTimeMinutes
-                getLogger().info("Lowering rate limit for $minutes minutes.")
-                delay(minutes * 1000 * 60)
-                maxRps = settings.maxRps
-            }
+        coroutine.launch {
+            isSwapping.lock()
+            var minutes = 3L
+            getLogger().info("Rps limit reached. Stopping for $minutes minutes.")
+            delay(minutes * 1000 * 60)
+            maxRps = settings.loweredRps
+            isSwapping.unlock()
+            minutes = settings.loweredRpsTimeMinutes
+            getLogger().info("Lowering rate limit for $minutes minutes.")
+            delay(minutes * 1000 * 60)
+            maxRps = settings.maxRps
         }
     }
 

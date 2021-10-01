@@ -54,7 +54,7 @@ class OneInchClient(
 
     private fun <T> Response<T>.logErrorMessage(info: String) {
         val text = this.errorBody()!!.charStream().readText()
-        if(this.code() == 429) limiter.count429()
+        if(this.code() == 429) limiter.increment429()
         getLogger().error("$info Response status: ${this.code()} $text")
     }
 }
