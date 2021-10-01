@@ -6,6 +6,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import org.springframework.stereotype.Component
+import java.time.Instant
+import java.time.Instant.now
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -17,6 +19,8 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
     private var rateLimitReached = AtomicBoolean()
     private var currentLimitations = AtomicInteger(settings.maxRps)
     private var callsDone = AtomicInteger(0)
+    var timeToIncreaseLimit: Long = 0L
+    private lateinit var resetLimitTimestamp: Instant
     private var rps = settings.maxRps
     private val coroutine = CoroutineScope(scope.coroutineContext)
 
@@ -37,6 +41,7 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
     private suspend fun resetCalls() {
         while (true) {
             delay(1_000)
+            timeToIncreaseLimit = resetLimitTimestamp.epochSecond - now().epochSecond
             currentCalls = callsDone.getAndSet(0)
         }
     }
@@ -57,7 +62,9 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
 
     private suspend fun trackCurrentLimitations() {
         while (true) {
-            delay(3600_000)
+            val delayPeriod = 3600_000L
+            resetLimitTimestamp = now().plusMillis(delayPeriod)
+            delay(delayPeriod)
             currentLimitations.set(settings.maxRps)
         }
     }
@@ -65,7 +72,7 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
     private suspend fun stopSwapping() {
         getLogger().info("Stop swapping, cooling down...")
         isSwapping.lock()
-        delay(60_000)
+        delay(30_000)
     }
 
     private fun decreaseRps() {
