@@ -4,7 +4,6 @@ import com.esaulpaugh.headlong.abi.Function
 import com.github.openjson.JSONObject
 import com.oneinch.`object`.Chain
 import com.oneinch.wallet.Wallet
-import kotlinx.coroutines.sync.Mutex
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -39,7 +38,4 @@ open class RealConfig {
     open fun function(): Function {
         return Function.fromJson(abi.toString())
     }
-
-    @Bean
-    open fun isSwapping() = Mutex()
 }

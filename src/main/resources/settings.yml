@@ -1,6 +1,6 @@
 account: fakeAccount
 chain: matic
-maxRps: 100
+maxRps: 1
 loweredRps: 5
 loweredRpsTimeMinutes: 20
 minSwapQuote: 20
