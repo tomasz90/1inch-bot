@@ -12,6 +12,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Component
+import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
@@ -70,20 +71,20 @@ class Main(
 
     // TODO: Any changes here put in corresponding class in tests
     private fun swapOnlyToMaximalShare(tokenQuote: TokenQuote, token: Token, tokenShare: Double?, maxUsdShare: Double) {
-        val tokenQuoteToSwap =
+        var swapValue =
             if (tokenShare == null || maxUsdShare - tokenShare >= tokenQuote.usdValue) {
                 if (tokenQuote.usdValue <= maxUsdShare) {
-                    tokenQuote
+                    tokenQuote.usdValue
                 } else {
-                    val origin = tokenQuote.calcOrigin(maxUsdShare)
-                    TokenQuote(tokenQuote.token, origin)
+                    maxUsdShare
                 }
             } else {
-                val swapValue = maxUsdShare - tokenShare
-                val origin = tokenQuote.calcOrigin(swapValue)
-                TokenQuote(tokenQuote.token, origin)
+                maxUsdShare - tokenShare
             }
-        if (tokenQuoteToSwap.usdValue > settings.minSwapQuote) {
+        if (swapValue > settings.minSwapQuote) {
+            swapValue = if(!settings.randomSwapQuote) swapValue else generateRandom(settings.minSwapQuote, swapValue)
+            val origin = tokenQuote.calcOrigin(swapValue)
+            val tokenQuoteToSwap = TokenQuote(tokenQuote.token, origin)
             runBlocking { swap.invoke(tokenQuoteToSwap, token) }
         }
     }
@@ -99,4 +100,6 @@ class Main(
                 .map { Pair(token, it) }
         }
     }
+
+    private fun generateRandom(min: Double, max: Double): Double = ThreadLocalRandom.current().nextDouble(min, max)
 }

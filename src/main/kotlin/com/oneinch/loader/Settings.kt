@@ -32,6 +32,7 @@ class Settings(
     val account: String,
     val chain: String,
     val minSwapQuote: Double,
+    val randomSwapQuote: Boolean,
     val defaultSlippage: Double,
     val minAdvantage: Double,
     val allowPartialFill: Boolean,

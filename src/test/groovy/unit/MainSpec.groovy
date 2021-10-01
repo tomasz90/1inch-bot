@@ -176,10 +176,12 @@ class MainSpec extends BaseSpec {
           def maxShare = 600.0D
 
         when:
-          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
+          def result = new MainTest(settings).swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
 
         then:
-          result.usdValue == tokenQuote.usdValue
+          result.usdValue >= settings.minSwapQuote
+          result.usdValue <= tokenQuote.usdValue
+          shouldReturnExactQuoteWhenNotRandom(result.usdValue, tokenQuote.usdValue)
     }
 
     def "should swap all TokenQuote balance, when tokenShare is small and sum will not exceeds max share value"() {
@@ -189,10 +191,13 @@ class MainSpec extends BaseSpec {
           def maxShare = 600.0D
 
         when:
-          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
+          def result = new MainTest(settings).swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
 
         then:
-          result.usdValue == 300.0D
+          result.usdValue >= settings.minSwapQuote
+          result.usdValue <= 300.0D
+          shouldReturnExactQuoteWhenNotRandom(result.usdValue, tokenQuote.usdValue)
+
     }
 
     def "should swap part of TokenQuote balance matching max, when tokenShare is null and TokenQuote exceeds max share value"() {
@@ -202,10 +207,12 @@ class MainSpec extends BaseSpec {
           def maxShare = 600.0D
 
         when:
-          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
+          def result = new MainTest(settings).swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
 
         then:
-          result.usdValue == 600.0D
+          result.usdValue >= settings.minSwapQuote
+          result.usdValue <= 600.0D
+          shouldReturnExactQuoteWhenNotRandom(result.usdValue, tokenQuote.usdValue)
     }
 
     def "should swap part of TokenQuote balance, when sum of token and TokenQuote would exceeds max share"() {
@@ -215,10 +222,13 @@ class MainSpec extends BaseSpec {
           def maxShare = 600.0D
 
         when:
-          def result = new MainTest().swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
+          def result = new MainTest(settings).swapOnlyToMaximalShare(tokenQuote, token, tokenShare, maxShare)
 
         then:
-          result.usdValue == 400.0D
+          result.usdValue >= settings.minSwapQuote
+          result.usdValue <= 400.0D
+          shouldReturnExactQuoteWhenNotRandom(result.usdValue, tokenQuote.usdValue)
+
     }
 
 
@@ -226,5 +236,11 @@ class MainSpec extends BaseSpec {
         StringBuilder result = new StringBuilder()
         pairs.stream().forEach(it -> result.append("${it.first.getSymbol()} ${it.second.getSymbol()}"))
         return result.toString()
+    }
+
+    def shouldReturnExactQuoteWhenNotRandom(double result, double expect) {
+        if (!settings.randomSwapQuote) {
+            return result == expect
+        } else true
     }
 }

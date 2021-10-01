@@ -13,6 +13,6 @@ spring:
   datasource:
     url: jdbc:h2:file:./resources/database
     username: 'sa'
-    password: '.3xh434ZX$2jT*@'
+    password: ''
   main:
     allow-bean-definition-overriding: 'true'

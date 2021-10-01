@@ -2,6 +2,7 @@ account: fakeAccount
 chain: matic
 maxRps: 1
 minSwapQuote: 20
+randomSwapQuote: true
 minAdvantage: 2.5
 gasPriceLimit: 1000
 maxTimeNoTransaction: 8
