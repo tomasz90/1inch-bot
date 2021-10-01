@@ -8,6 +8,7 @@ import com.oneinch.loader.Settings
 import com.oneinch.requester.AbstractRequester
 import com.oneinch.util.RateLimiter
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -27,7 +28,7 @@ class Main(
 ) {
 
     private val pairs = createUniquePairs(chain.tokens, settings.excludedTokens)
-    private val swapCoroutine = CoroutineScope(scope.coroutineContext)
+    private val swapCoroutine = CoroutineScope(scope.coroutineContext + Dispatchers.IO)
 
     private val swap = limiter.decorateFunction { tokenQuote: TokenQuote, token: Token -> swap(tokenQuote, token) }
 

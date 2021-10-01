@@ -24,6 +24,7 @@ class OneInchClient(
     val chain: Chain,
     val scope: CoroutineScope
 ) {
+
     private val loweredLimit = AtomicBoolean()
 
     fun quote(from: TokenQuote, to: Token): QuoteDto? {
@@ -69,7 +70,7 @@ class OneInchClient(
                 scope.launch {
                     getLogger().info("Lowering rate limit for 10 minutes.")
                     val defaultRps = settings.maxRps
-                    settings.maxRps = 1
+                    settings.maxRps = 5
                     delay(600000)
                     settings.maxRps = defaultRps
                 }

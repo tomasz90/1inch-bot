@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.concurrent.atomic.AtomicBoolean
 
 @Configuration
 open class Config {
@@ -38,6 +37,4 @@ open class Config {
     @Bean
     open fun scope() = CoroutineScope(CoroutineName("coroutine"))
 
-    @Bean
-    open fun isSwapping() = AtomicBoolean()
 }
