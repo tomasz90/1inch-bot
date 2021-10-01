@@ -13,6 +13,8 @@ refillCoinQuote: 50
 maximalTokenShare: 0.6
 excludedTokens:
   - UST
+excludedProtocols:
+  - POLYGON_ONE_INCH_LIMIT_ORDER
 
 increasedGasLimit: 1.25
 defaultSlippage: 1.0
