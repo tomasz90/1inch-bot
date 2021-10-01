@@ -22,8 +22,16 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
 
     init {
         coroutine.launch { resetCalls() }
-        coroutine.launch { trackFailures() }
+        coroutine.launch { setOptimalCallsRate() }
         coroutine.launch { trackCurrentLimitations() }
+    }
+
+    fun <T, S> decorateFunction(function: suspend (T, S) -> Unit): suspend (T, S) -> Unit {
+        return { t: T, s: S -> executeFunction(t, s, function) }
+    }
+
+    fun notifyRateLimitReached() {
+        rateLimitReached.set(true)
     }
 
     private suspend fun resetCalls() {
@@ -33,7 +41,7 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
         }
     }
 
-    private suspend fun trackFailures() {
+    private suspend fun setOptimalCallsRate() {
         while (true) {
             delay(10_000)
             if (rateLimitReached.get()) {
@@ -44,6 +52,13 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
                 increaseRps()
             }
             rateLimitReached.set(false)
+        }
+    }
+
+    private suspend fun trackCurrentLimitations() {
+        while (true) {
+            delay(3600_000)
+            currentLimitations.set(settings.maxRps)
         }
     }
 
@@ -62,25 +77,14 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
     }
 
     private fun increaseRps() {
-        getLogger().info("Increasing rps...")
         if (rps < currentLimitations.get()) {
             rps += 1
+            getLogger().info("Increasing rps...")
         }
     }
 
     private fun resumeSwapping() {
         isSwapping.unlock()
-    }
-
-    private suspend fun trackCurrentLimitations() {
-        while (true) {
-            delay(3600_000)
-            currentLimitations.set(settings.maxRps)
-        }
-    }
-
-    fun <T, S> decorateFunction(function: suspend (T, S) -> Unit): suspend (T, S) -> Unit {
-        return { t: T, s: S -> executeFunction(t, s, function) }
     }
 
     private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
@@ -93,9 +97,5 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
                 delay(10)
             }
         }
-    }
-
-    fun notifyRateLimitReached() {
-        rateLimitReached.set(true)
     }
 }
