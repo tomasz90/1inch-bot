@@ -41,23 +41,31 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
 
     private fun count429() {
         if (current429.get() > 5 && !isSwapping.isLocked) {
+            coolDown()
+        }
+    }
+
+    private fun coolDown() {
+        coroutine.launch {
+            stop()
             lowerLimit()
         }
     }
 
-    private fun lowerLimit() {
-        coroutine.launch {
-            isSwapping.lock()
-            var minutes = 3L
-            getLogger().info("Rps limit reached. Stopping for $minutes minutes.")
-            delay(minutes * 1000 * 60)
-            maxRps = settings.loweredRps
-            isSwapping.unlock()
-            minutes = settings.loweredRpsTimeMinutes
-            getLogger().info("Lowering rate limit for $minutes minutes.")
-            delay(minutes * 1000 * 60)
-            maxRps = settings.maxRps
-        }
+    private suspend fun stop() {
+        isSwapping.lock()
+        val minutes = 3L
+        getLogger().info("Rps limit reached. Stopping for $minutes minutes.")
+        delay(minutes * 1000 * 60)
+    }
+
+    private suspend fun lowerLimit() {
+        maxRps = settings.loweredRps
+        isSwapping.unlock()
+        val minutes = settings.loweredRpsTimeMinutes
+        getLogger().info("Lowering rate limit for $minutes minutes.")
+        delay(minutes * 1000 * 60)
+        maxRps = settings.maxRps
     }
 
     private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
