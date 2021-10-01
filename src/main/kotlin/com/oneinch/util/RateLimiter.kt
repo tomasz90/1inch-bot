@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import org.springframework.stereotype.Component
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 @Component
@@ -13,21 +14,68 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
 
     var currentCalls = 0
 
-    private var current429 = AtomicInteger(0)
+    private var rateLimitReached = AtomicBoolean()
+    private var currentLimitations = AtomicInteger(settings.maxRps)
     private var callsDone = AtomicInteger(0)
-    private var maxRps = settings.maxRps
+    private var rps = settings.maxRps
     private val coroutine = CoroutineScope(scope.coroutineContext)
 
     init {
-        coroutine.launch { tick() }
+        coroutine.launch { resetCalls() }
+        coroutine.launch { trackFailures() }
+        coroutine.launch { trackCurrentLimitations() }
     }
 
-    private suspend fun tick() {
+    private suspend fun resetCalls() {
         while (true) {
-            delay(1000)
-            count429()
+            delay(1_000)
             currentCalls = callsDone.getAndSet(0)
-            current429 = AtomicInteger(0)
+        }
+    }
+
+    private suspend fun trackFailures() {
+        while (true) {
+            delay(10_000)
+            if (rateLimitReached.get()) {
+                stopSwapping()
+                decreaseRps()
+                resumeSwapping()
+            } else {
+                increaseRps()
+            }
+            rateLimitReached.set(false)
+        }
+    }
+
+    private suspend fun stopSwapping() {
+        getLogger().info("Stop swapping, cooling down...")
+        isSwapping.lock()
+        delay(60_000)
+    }
+
+    private fun decreaseRps() {
+        if (rps > 2) {
+            rps -= 2
+            currentLimitations.set(rps)
+            getLogger().info("Decreasing rps... Setting limitations to: $rps")
+        }
+    }
+
+    private fun increaseRps() {
+        getLogger().info("Increasing rps...")
+        if (rps < currentLimitations.get()) {
+            rps += 1
+        }
+    }
+
+    private fun resumeSwapping() {
+        isSwapping.unlock()
+    }
+
+    private suspend fun trackCurrentLimitations() {
+        while (true) {
+            delay(3600_000)
+            currentLimitations.set(settings.maxRps)
         }
     }
 
@@ -35,38 +83,9 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
         return { t: T, s: S -> executeFunction(t, s, function) }
     }
 
-    fun increment429() {
-        current429.incrementAndGet()
-    }
-
-    private fun count429() {
-        if (current429.get() > 5 && !isSwapping.isLocked) {
-            coroutine.launch {
-                stop()
-                lowerLimit()
-            }
-        }
-    }
-
-    private suspend fun stop() {
-        isSwapping.lock()
-        val minutes = 3L
-        getLogger().info("Rps limit reached. Stopping for $minutes minutes.")
-        delay(minutes * 1000 * 60)
-    }
-
-    private suspend fun lowerLimit() {
-        maxRps = settings.loweredRps
-        isSwapping.unlock()
-        val minutes = settings.loweredRpsTimeMinutes
-        getLogger().info("Lowering rate limit for $minutes minutes.")
-        delay(minutes * 1000 * 60)
-        maxRps = settings.maxRps
-    }
-
     private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
         while (true) {
-            if (callsDone.get() < maxRps) {
+            if (callsDone.get() < rps) {
                 callsDone.incrementAndGet()
                 function(t, s)
                 break
@@ -74,5 +93,9 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
                 delay(10)
             }
         }
+    }
+
+    fun notifyRateLimitReached() {
+        rateLimitReached.set(true)
     }
 }
