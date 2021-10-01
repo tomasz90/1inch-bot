@@ -12,9 +12,9 @@ import com.oneinch.util.getLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import org.springframework.stereotype.Component
 import retrofit2.Response
-import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
 class OneInchClient(
@@ -25,7 +25,7 @@ class OneInchClient(
     val scope: CoroutineScope
 ) {
 
-    private val loweredLimit = AtomicBoolean()
+    private val loweredLimit = Mutex()
 
     fun quote(from: TokenQuote, to: Token): QuoteDto? {
         val response = oneInch.quote(chain.id, from.token.address, to.address, from.origin).execute()
@@ -65,20 +65,34 @@ class OneInchClient(
 
     private fun changeReteLimitWhenGetting429(code: Int) {
         if (code == 429) {
-            if (!loweredLimit.get()) {
-                loweredLimit.set(true)
+            if (!loweredLimit.isLocked) {
                 scope.launch {
+                    loweredLimit.lock()
                     getLogger().info("Lowering rate limit for 10 minutes.")
                     val defaultRps = settings.maxRps
                     settings.maxRps = 5
                     delay(600000)
                     settings.maxRps = defaultRps
+                    loweredLimit.unlock()
                 }
-                loweredLimit.set(false)
             }
         }
     }
 }
+//
+//fun main() {
+//    val x = Mutex()
+//    repeat(100) {
+//        runBlocking {
+//            launch {
+//                if (!x.isLocked) {
+//                    //x.lock()
+//                    println("was here")
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 
