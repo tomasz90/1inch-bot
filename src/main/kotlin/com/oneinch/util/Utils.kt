@@ -7,6 +7,7 @@ import com.oneinch.provider.advantage.IAdvantageProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import retrofit2.Response
 import java.util.*
 
 @Component
@@ -38,6 +39,11 @@ fun getDuration(date: Date): Double {
     val now = Date().time
     val duration = now - date.time
     return duration.toDouble() / 1000
+}
+
+fun <T> Response<T>.logErrorMessage(info: String) {
+    val text = this.errorBody()!!.charStream().readText()
+    getLogger().error("$info Response status: ${this.code()} $text")
 }
 
 

@@ -1,8 +1,8 @@
 package com.oneinch.api.telegram
 
 import com.github.openjson.JSONObject
-import com.oneinch.api.one_inch.logErrorMessage
 import com.oneinch.loader.Properties
+import com.oneinch.util.logErrorMessage
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 

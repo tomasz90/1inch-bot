@@ -1,6 +1,6 @@
 account: fakeAccount
 chain: matic
-maxRps: 1
+maxRps: 100
 minSwapQuote: 20
 randomSwapQuote: true
 minAdvantage: 2.5
