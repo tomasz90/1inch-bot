@@ -12,9 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
 import org.springframework.stereotype.Component
 import java.util.concurrent.ThreadLocalRandom
-import java.util.concurrent.atomic.AtomicBoolean
 
 @Component
 class Main(
@@ -23,7 +23,7 @@ class Main(
     val balance: IBalance,
     val chain: Chain,
     val settings: Settings,
-    val isSwapping: AtomicBoolean,
+    val isSwapping: Mutex,
     limiter: RateLimiter
 ) {
 
@@ -36,7 +36,7 @@ class Main(
         scope.launch {
             if (scope.isActive) {
                 while (true) {
-                    if (!isSwapping.get()) {
+                    if (!isSwapping.isLocked) {
                         checkRatesForEveryPair(pairs)
                     }
                 }

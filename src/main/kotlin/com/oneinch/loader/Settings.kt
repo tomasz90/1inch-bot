@@ -39,6 +39,8 @@ class Settings(
     val increasedGasLimit: Double,
     val gasPriceLimit: Double,
     var maxRps: Int,
+    val loweredRps: Int,
+    val loweredRpsTimeMinutes: Long,
     val timeout: Long,
     val maxTimeNoTransaction: Long,
     val excludedTokens: List<String>,

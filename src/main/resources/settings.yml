@@ -1,6 +1,8 @@
 account: fakeAccount
 chain: matic
 maxRps: 100
+loweredRps: 5
+loweredRpsTimeMinutes: 20
 minSwapQuote: 20
 randomSwapQuote: true
 minAdvantage: 2.5
@@ -13,6 +15,6 @@ excludedTokens:
   - UST
 
 increasedGasLimit: 1.25
-defaultSlippage:  1.0
+defaultSlippage: 1.0
 allowPartialFill: true
 timeout: 5

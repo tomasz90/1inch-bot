@@ -4,6 +4,7 @@ import com.esaulpaugh.headlong.abi.Function
 import com.github.openjson.JSONObject
 import com.oneinch.`object`.Chain
 import com.oneinch.wallet.Wallet
+import kotlinx.coroutines.sync.Mutex
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.Profile
 import org.web3j.protocol.core.JsonRpc2_0Web3j
 import org.web3j.protocol.http.HttpService
 import org.web3j.tx.RawTransactionManager
-import java.util.concurrent.atomic.AtomicBoolean
 
 @Configuration
 @Profile("realAccount")
@@ -41,5 +41,5 @@ open class RealConfig {
     }
 
     @Bean
-    open fun isSwapping() = AtomicBoolean()
+    open fun isSwapping() = Mutex()
 }

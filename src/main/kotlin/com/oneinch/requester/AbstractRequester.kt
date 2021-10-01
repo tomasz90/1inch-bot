@@ -7,7 +7,6 @@ import com.oneinch.api.one_inch.api.data.Dto
 import com.oneinch.provider.advantage.IAdvantageProvider
 import com.oneinch.util.Utils
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.concurrent.atomic.AtomicBoolean
 
 abstract class AbstractRequester {
 
@@ -16,9 +15,6 @@ abstract class AbstractRequester {
 
     @Autowired
     lateinit var utils: Utils
-
-    @Autowired
-    lateinit var isSwapping: AtomicBoolean
 
     @Autowired
     lateinit var protocols: String

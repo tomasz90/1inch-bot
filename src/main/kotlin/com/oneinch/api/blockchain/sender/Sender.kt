@@ -13,6 +13,8 @@ import com.oneinch.repository.dao.Status.FAIL
 import com.oneinch.repository.dao.Status.PARTIALLY
 import com.oneinch.repository.dao.Status.PASSED
 import com.oneinch.repository.round
+import com.oneinch.util.Constants.`20_SECONDS`
+import com.oneinch.util.Constants.`3_MINUTES`
 import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
 import com.oneinch.util.logSwapInfo
@@ -36,10 +38,6 @@ class Sender(
     val advantageProvider: AdvantageProvider
 ) : AbstractSender<Transaction>() {
 
-    private val ZERO = BigInteger.valueOf(0)
-    private val `20_SECONDS` = 20000L
-    private val `3_MINUTES` = 180000L
-
     override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
             val toBalance = getBalance(to)
@@ -60,6 +58,7 @@ class Sender(
         }
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun send(tx: BasicTransaction, from: TokenQuote, to: TokenQuote): String {
         val txHash = manager.sendTransaction(tx.gasPrice, tx.gasLimit, tx.address, tx.data, tx.value).transactionHash
         logSwapInfo(txHash, from, to)

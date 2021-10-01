@@ -68,31 +68,22 @@ class OneInchClient(
             if (!loweredLimit.isLocked) {
                 scope.launch {
                     loweredLimit.lock()
-                    getLogger().info("Lowering rate limit for 10 minutes.")
-                    val defaultRps = settings.maxRps
-                    settings.maxRps = 5
-                    delay(600000)
-                    settings.maxRps = defaultRps
+                    val minutes = settings.loweredRpsTimeMinutes
+                    getLogger().info("Lowering rate limit for $minutes minutes.")
+                    lowerRatesFor(minutes)
                     loweredLimit.unlock()
                 }
             }
         }
     }
+
+    private suspend fun lowerRatesFor(minutes: Long) {
+        val defaultRps = settings.maxRps
+        settings.maxRps = settings.loweredRps
+        delay(minutes * 1000 * 60)
+        settings.maxRps = defaultRps
+    }
 }
-//
-//fun main() {
-//    val x = Mutex()
-//    repeat(100) {
-//        runBlocking {
-//            launch {
-//                if (!x.isLocked) {
-//                    //x.lock()
-//                    println("was here")
-//                }
-//            }
-//        }
-//    }
-//}
 
 
 

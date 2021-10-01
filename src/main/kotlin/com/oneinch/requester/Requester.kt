@@ -11,6 +11,7 @@ import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.loader.Settings
 import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
+import kotlinx.coroutines.sync.Mutex
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.*
@@ -21,7 +22,8 @@ class Requester(
     val sender: Sender,
     val transactionCreator: TransactionCreator,
     val settings: Settings,
-    val balance: Balance
+    val balance: Balance,
+    val isSwapping: Mutex
 ) : AbstractRequester() {
 
     override suspend fun swap(from: TokenQuote, to: Token) {
@@ -35,7 +37,7 @@ class Requester(
                 val tx = createTransaction(dto, realAdvantage, requestDuration)
                 sender.sendTransaction(tx, from, dto.to)
                 refillCoinBalanceIfNeeded()
-                isSwapping.set(false)
+                isSwapping.unlock()
             }
         }
     }
@@ -61,13 +63,13 @@ class Requester(
         return TokenQuote(tokenQuote.token, quote)
     }
 
-    private fun shouldSwap(realAdvantage: Double): Boolean {
+    private suspend fun shouldSwap(realAdvantage: Double): Boolean {
         if (realAdvantage < advantageProvider.advantage) {
             return false
-        } else if (isSwapping.get()) {
+        } else if (isSwapping.isLocked) {
             return false
         }
-        isSwapping.set(true)
+        isSwapping.lock()
         return true
     }
 
