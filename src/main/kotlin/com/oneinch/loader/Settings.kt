@@ -38,7 +38,7 @@ class Settings(
     val allowPartialFill: Boolean,
     val increasedGasLimit: Double,
     val gasPriceLimit: Double,
-    var maxRps: Int,
+    val maxRps: Int,
     val loweredRps: Int,
     val loweredRpsTimeMinutes: Long,
     val timeout: Long,

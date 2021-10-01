@@ -4,26 +4,32 @@ import com.oneinch.loader.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicInteger
 
 @Component
-class RateLimiter(val settings: Settings, scope: CoroutineScope) {
+class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: CoroutineScope) {
 
     var currentCalls = 0
 
-    @Volatile
+    private var current429 = AtomicInteger(0)
     private var callsDone = AtomicInteger(0)
+    private var maxRps = settings.maxRps
     private val coroutine = CoroutineScope(scope.coroutineContext)
 
     init {
-        coroutine.launch { resetCalls() }
+        coroutine.launch { tick() }
     }
 
-    private suspend fun resetCalls() {
+    private suspend fun tick() {
         while (true) {
             delay(1000)
+            if (current429.get() > 5) {
+                lowerLimit()
+            }
             currentCalls = callsDone.getAndSet(0)
+            current429 = AtomicInteger(0)
         }
     }
 
@@ -31,9 +37,30 @@ class RateLimiter(val settings: Settings, scope: CoroutineScope) {
         return { t: T, s: S -> executeFunction(t, s, function) }
     }
 
+    fun count429() {
+        current429.incrementAndGet()
+    }
+
+    private fun lowerLimit() {
+        if (!isSwapping.isLocked) {
+            coroutine.launch {
+                isSwapping.lock()
+                var minutes = 3L
+                getLogger().info("Rps limit reached. Stopping for $minutes minutes.")
+                delay(minutes * 1000 * 60)
+                maxRps = settings.loweredRps
+                isSwapping.unlock()
+                minutes = settings.loweredRpsTimeMinutes
+                getLogger().info("Lowering rate limit for $minutes minutes.")
+                delay(minutes * 1000 * 60)
+                maxRps = settings.maxRps
+            }
+        }
+    }
+
     private suspend fun <T, S> executeFunction(t: T, s: S, function: suspend (T, S) -> Unit) {
         while (true) {
-            if (callsDone.get() < settings.maxRps) {
+            if (callsDone.get() < maxRps) {
                 callsDone.incrementAndGet()
                 function(t, s)
                 break
