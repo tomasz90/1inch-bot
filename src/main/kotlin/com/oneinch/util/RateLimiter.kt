@@ -41,14 +41,10 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
 
     private fun count429() {
         if (current429.get() > 5 && !isSwapping.isLocked) {
-            coolDown()
-        }
-    }
-
-    private fun coolDown() {
-        coroutine.launch {
-            stop()
-            lowerLimit()
+            coroutine.launch {
+                stop()
+                lowerLimit()
+            }
         }
     }
 
@@ -75,12 +71,8 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
                 function(t, s)
                 break
             } else {
-                wait()
+                delay(10)
             }
         }
-    }
-
-    private suspend fun wait() {
-        delay(10)
     }
 }
