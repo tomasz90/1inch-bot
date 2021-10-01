@@ -22,7 +22,8 @@ class OneInchClient(
     val oneInch: OneInchApi,
     val settings: Settings,
     val chain: Chain,
-    val scope: CoroutineScope
+    val scope: CoroutineScope,
+    val isSwapping: Mutex,
 ) {
 
     private val loweredLimit = Mutex()
@@ -69,12 +70,20 @@ class OneInchClient(
                 scope.launch {
                     loweredLimit.lock()
                     val minutes = settings.loweredRpsTimeMinutes
+                    lockSwappingFor(3)
                     getLogger().info("Lowering rate limit for $minutes minutes.")
                     lowerRatesFor(minutes)
                     loweredLimit.unlock()
                 }
             }
         }
+    }
+
+    private suspend fun lockSwappingFor(minutes: Long) {
+        getLogger().info("Rps limit reached. Stopping for $minutes minutes.")
+        isSwapping.lock()
+        delay(minutes * 1000 * 60)
+        isSwapping.unlock()
     }
 
     private suspend fun lowerRatesFor(minutes: Long) {
