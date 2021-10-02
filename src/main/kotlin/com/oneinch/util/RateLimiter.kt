@@ -48,13 +48,14 @@ class RateLimiter(val settings: Settings, val isSwapping: Mutex, scope: Coroutin
 
     private suspend fun setOptimalCallsRate() {
         while (true) {
-            delay(10_000)
+            delay(5_000)
             if (rateLimitReached.get()) {
                 stopSwapping()
                 decreaseRps()
                 resumeSwapping()
             } else {
                 increaseRps()
+                delay(15_000)
             }
             rateLimitReached.set(false)
         }
