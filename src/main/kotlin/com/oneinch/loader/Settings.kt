@@ -47,5 +47,6 @@ class Settings(
     val excludedProtocols: List<String>,
     val minimalCoinBalance: Int,
     val refillCoinQuote: Double,
-    val maximalTokenShare: Double
+    val maximalTokenShare: Double,
+    val complexityLevel: Int
 )

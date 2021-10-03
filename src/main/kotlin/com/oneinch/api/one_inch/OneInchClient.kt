@@ -8,6 +8,7 @@ import com.oneinch.api.one_inch.api.data.QuoteDto
 import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.api.one_inch.api.data.toDto
 import com.oneinch.loader.Settings
+import com.oneinch.provider.GasPriceProvider
 import com.oneinch.util.RateLimiter
 import com.oneinch.util.getLogger
 import org.springframework.stereotype.Component
@@ -20,6 +21,7 @@ class OneInchClient(
     val settings: Settings,
     val chain: Chain,
     val limiter: RateLimiter,
+    val gasPriceProvider: GasPriceProvider
 ) {
 
     fun quote(from: TokenQuote, to: Token): QuoteDto? {
@@ -42,7 +44,9 @@ class OneInchClient(
                 myAddress,
                 slippage,
                 allowPartialFill,
-                protocols
+                protocols,
+                settings.complexityLevel,
+                gasPriceProvider.gasPrice.get()
             ).execute()
         return if (response.isSuccessful) {
             response.body()!!.toDto()

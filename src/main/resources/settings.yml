@@ -11,6 +11,7 @@ maxTimeNoTransaction: 8
 minimalCoinBalance: 10
 refillCoinQuote: 50
 maximalTokenShare: 0.6
+complexityLevel: 50
 excludedTokens:
   - UST
 excludedProtocols:

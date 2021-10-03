@@ -29,8 +29,8 @@ interface OneInchApi {
         @Query("allowPartialFill") allowPartialFill: Boolean,
         @Query("protocols") protocols: String? = null,
         @Query("complexityLevel") complexityLevel: Int? = null,
+        @Query("gasPrice") gasPrice: Long? = null,
         @Query("mainRouteParts") mainRouteParts: Int? = null,
-        @Query("parts") parts: Int? = null,
-        @Query("gasPrice") gasPrice: BigInteger? = null
+        @Query("parts") parts: Int? = null
     ): Call<SwapResponse>
 }
