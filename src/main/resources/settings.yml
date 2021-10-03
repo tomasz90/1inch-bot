@@ -1,4 +1,4 @@
-account: fakeAccount
+account: realAccount
 chain: matic
 maxRps: 1
 loweredRps: 5
@@ -11,7 +11,7 @@ maxTimeNoTransaction: 8
 minimalCoinBalance: 10
 refillCoinQuote: 50
 maximalTokenShare: 0.6
-complexityLevel: 50
+complexityLevel: 3
 excludedTokens:
   - UST
 excludedProtocols:
