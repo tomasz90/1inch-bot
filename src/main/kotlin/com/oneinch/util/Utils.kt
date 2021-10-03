@@ -16,8 +16,8 @@ class Utils(val settings: Settings, val limiter: RateLimiter, val advantageProvi
         getLogger().info(
             "${dto.from.token.symbol}: ${dto.from.usdValue.precision()}, " +
                     "${dto.to.token.symbol}: ${dto.to.usdValue.precision()},  advantage: ${percent.precision()}," +
-                    "  demandAdvantage: ${advantageProvider.advantage.precision()},  ${limiter.currentCalls} rps," +
-                    "  limit reset in: ${(limiter.timeToIncreaseLimit)/60} min."
+                    "  demand: ${advantageProvider.advantage.precision()},  ${limiter.currentCalls} rps," +
+                    "  reset in: ${(limiter.timeToIncreaseLimit)/60} min."
         )
     }
 
