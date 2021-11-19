@@ -1,6 +1,5 @@
 package com.oneinch.wallet
 
-import com.oneinch.util.getLogger
 import org.web3j.crypto.Bip32ECKeyPair
 import org.web3j.crypto.Bip32ECKeyPair.HARDENED_BIT
 import org.web3j.crypto.Credentials
@@ -13,7 +12,7 @@ import java.security.SecureRandom
 object Wallet {
 
     private val file = File("${System.getProperty("user.dir")}/resources")
-    var password: String? = null
+    var password = "***REMOVED******REMOVED***"
 
     fun generateMnemonic(): String {
         val initialEntropy = ByteArray(16)
@@ -36,15 +35,5 @@ object Wallet {
             throw Exception("There is no keystore..")
         }
         return WalletUtils.loadCredentials(password, files[0])
-    }
-
-    fun assignPassword() {
-        getLogger().info("Enter password to keystore:")
-        val pass1 = "***REMOVED***"
-        val pass2 = when(val console = System.console()) {
-            null -> readLine().toString()
-            else -> String(console.readPassword())
-        }
-        password = pass1 + pass2
     }
 }
