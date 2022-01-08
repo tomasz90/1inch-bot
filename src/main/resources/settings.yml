@@ -1,3 +1,4 @@
+proxyAddress: ***REMOVED***
 chain: matic
 maxRps: 1
 minSwapQuote: 20
@@ -9,7 +10,7 @@ refillCoinQuote: 50
 maximalTokenShare: 0.6
 complexityLevel: 3
 excludedTokens:
-  - UST
+
 excludedProtocols:
   - POLYGON_ONE_INCH_LIMIT_ORDER
 
