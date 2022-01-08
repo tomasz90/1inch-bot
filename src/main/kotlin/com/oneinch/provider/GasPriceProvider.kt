@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
 
 @Component
-@Profile("realAccount")
 class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings, scope: CoroutineScope) {
 
     val gasPrice: AtomicLong = AtomicLong(10_000_000_000) // default 10 gwei

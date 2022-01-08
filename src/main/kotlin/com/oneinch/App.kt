@@ -29,7 +29,7 @@ open class App : CommandLineRunner {
             val args = context.getBean(ApplicationArguments::class.java)
             val thread = Thread {
                 context.close()
-                context = setEnvironment(profile).run(*args.sourceArgs)
+                context = SpringApplication(App::class.java).run(*args.sourceArgs)
             }
             thread.isDaemon = false
             thread.start()
@@ -42,23 +42,5 @@ open class App : CommandLineRunner {
 }
 
 fun main(args: Array<String>) {
-    val profile = SettingsLoader.load().account
-    readPasswordIfRealProfile(profile)
-    val application = setEnvironment(profile)
-    App.profile = profile
-    App.context = application.run(*args)
-}
-
-private fun setEnvironment(profile: String): SpringApplication {
-    val environment: ConfigurableEnvironment = StandardEnvironment()
-    environment.setActiveProfiles(profile)
-    val application = SpringApplication(App::class.java)
-    application.setEnvironment(environment)
-    return application
-}
-
-private fun readPasswordIfRealProfile(profile: String) {
-    if (profile == "realAccount") {
-        Wallet.assignPassword()
-    }
+    App.context = SpringApplication(App::class.java).run(*args)
 }

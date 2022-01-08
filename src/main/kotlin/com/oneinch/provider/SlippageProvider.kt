@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 import java.math.BigInteger
 
 @Component
-@Profile("realAccount")
 class SlippageProvider(val function: Function) {
 
     fun modify(inputData: String, newMinReturnAmount: BigInteger): String {

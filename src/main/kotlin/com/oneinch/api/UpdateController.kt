@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@Profile("realAccount")
 class UpdateController(val balance: Balance, val scope: CoroutineScope) {
 
     @GetMapping("/updateBalance")

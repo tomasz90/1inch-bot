@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component
 import java.math.BigInteger
 
 @Component
-@Profile("realAccount")
 class TransactionCreator(
     val settings: Settings,
     val slippageProvider: SlippageProvider,

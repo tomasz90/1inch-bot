@@ -24,16 +24,6 @@ class OneInchClient(
     val gasPriceProvider: GasPriceProvider
 ) {
 
-    fun quote(from: TokenQuote, to: Token): QuoteDto? {
-        val response = oneInch.quote(chain.id, from.token.address, to.address, from.origin).execute()
-        return if (response.isSuccessful) {
-            response.body()!!.toDto()
-        } else {
-            response.logErrorMessage("Error getting quotes.")
-            null
-        }
-    }
-
     fun swap(from: TokenQuote, to: Token, allowPartialFill: Boolean, protocols: String, slippage: Double): SwapDto? {
         val response =
             oneInch.swap(

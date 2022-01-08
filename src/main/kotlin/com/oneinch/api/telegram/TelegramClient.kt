@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("realAccount")
 class TelegramClient(val telegramApi: TelegramApi, val properties: Properties) {
 
     fun sendSwapMessage(amount: Double, gas: Double?) {

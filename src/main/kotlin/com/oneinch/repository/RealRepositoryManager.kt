@@ -15,7 +15,6 @@ import java.math.BigInteger
 import java.util.*
 
 @Component
-@Profile("realAccount")
 class RealRepositoryManager(
     val iTokenEntityRepository: ITokenEntityRepository,
     val iRealTxRepository: IRealTxRepository,

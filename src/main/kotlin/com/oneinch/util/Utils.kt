@@ -3,7 +3,6 @@ package com.oneinch.util
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.one_inch.api.data.Dto
 import com.oneinch.loader.Settings
-import com.oneinch.provider.advantage.IAdvantageProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -11,16 +10,15 @@ import retrofit2.Response
 import java.util.*
 
 @Component
-class Utils(val settings: Settings, val limiter: RateLimiter, val advantageProvider: IAdvantageProvider) {
+class Utils(val settings: Settings, val limiter: RateLimiter) {
     fun logRatesInfo(dto: Dto, percent: Double) {
         getLogger().info(
             "${dto.from.token.symbol}: ${dto.from.usdValue.precision()}, " +
                     "${dto.to.token.symbol}: ${dto.to.usdValue.precision()},  advantage: ${percent.precision()}," +
-                    "  demand: ${advantageProvider.advantage.precision()},  ${limiter.currentCalls} rps," +
+                    "  demand: ${settings.minAdvantage.precision()},  ${limiter.currentCalls} rps," +
                     "  reset in: ${(limiter.timeToIncreaseLimit)/60} min."
         )
     }
-
 }
 
 fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)

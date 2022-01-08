@@ -3,9 +3,9 @@ package com.oneinch
 import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
-import com.oneinch.api.blockchain.balance.IBalance
+import com.oneinch.api.blockchain.balance.Balance
 import com.oneinch.loader.Settings
-import com.oneinch.requester.AbstractRequester
+import com.oneinch.requester.Requester
 import com.oneinch.util.RateLimiter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,8 +19,8 @@ import java.util.concurrent.ThreadLocalRandom
 @Component
 class Main(
     val scope: CoroutineScope,
-    val requester: AbstractRequester,
-    val balance: IBalance,
+    val requester: Requester,
+    val balance: Balance,
     val chain: Chain,
     val settings: Settings,
     val isSwapping: Mutex,
@@ -44,7 +44,6 @@ class Main(
         }
     }
 
-    // TODO: Different advantages for different tokens???
     private fun checkRatesForEveryPair(pairs: List<Pair<Token, Token>>) {
         pairs.forEach { pair -> checkRatesForPair(pair) }
     }

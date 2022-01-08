@@ -6,7 +6,6 @@ import com.oneinch.api.blockchain.tx.BasicTransaction
 import com.oneinch.api.blockchain.tx.Transaction
 import com.oneinch.api.telegram.TelegramClient
 import com.oneinch.loader.Settings
-import com.oneinch.provider.advantage.AdvantageProvider
 import com.oneinch.repository.RealRepositoryManager
 import com.oneinch.repository.dao.Status
 import com.oneinch.repository.dao.Status.FAIL
@@ -27,18 +26,16 @@ import java.math.BigInteger
 import java.util.*
 
 @Component
-@Profile("realAccount")
 class Sender(
     val settings: Settings,
     val manager: RawTransactionManager,
     val repository: RealRepositoryManager,
     val balance: Balance,
     val web3j: Web3j,
-    val telegramClient: TelegramClient,
-    val advantageProvider: AdvantageProvider
-) : AbstractSender<Transaction>() {
+    val telegramClient: TelegramClient
+) {
 
-    override suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
+     suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
         try {
             val toBalance = getBalance(to)
             val allBalanceBefore = balance.getUsdValue()
@@ -86,8 +83,8 @@ class Sender(
         val status: Status
         when (getBalance(from)) {
             balanceBefore -> status = FAIL
-            balanceBefore - from.origin -> { status = PASSED; advantageProvider.resetToDefault() }
-            else -> { status = PARTIALLY; advantageProvider.resetToDefault() }
+            balanceBefore - from.origin -> status = PASSED
+            else -> status = PARTIALLY
         }
         return status
     }

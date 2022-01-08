@@ -16,11 +16,9 @@ import org.web3j.tx.gas.DefaultGasProvider
 import java.math.BigInteger
 
 @Component
-@Profile("realAccount")
-class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository: InMemoryRepository, val chain: Chain) :
-    IBalance {
+class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository: InMemoryRepository, val chain: Chain) {
 
-    override fun getERC20(erc20: Token): TokenQuote? {
+    fun getERC20(erc20: Token): TokenQuote? {
         var tokenQuote = repository.findByAddress(erc20.address)
         if (tokenQuote == null) {
             tokenQuote = getFromChain(erc20.address)
@@ -31,7 +29,7 @@ class Balance(val web3j: JsonRpc2_0Web3j, val myAddress: String, val repository:
         return tokenQuote
     }
 
-    override fun getUsdValue(): Double {
+    fun getUsdValue(): Double {
         return repository.getUsdValue()
     }
 
