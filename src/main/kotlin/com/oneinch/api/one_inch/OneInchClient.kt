@@ -4,7 +4,6 @@ import com.oneinch.`object`.Chain
 import com.oneinch.`object`.Token
 import com.oneinch.`object`.TokenQuote
 import com.oneinch.api.one_inch.api.OneInchApi
-import com.oneinch.api.one_inch.api.data.QuoteDto
 import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.api.one_inch.api.data.toDto
 import com.oneinch.loader.Settings

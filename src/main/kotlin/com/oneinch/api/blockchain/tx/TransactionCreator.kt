@@ -4,7 +4,6 @@ import com.oneinch.api.one_inch.api.data.SwapDto
 import com.oneinch.loader.Settings
 import com.oneinch.provider.GasPriceProvider
 import com.oneinch.provider.SlippageProvider
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 

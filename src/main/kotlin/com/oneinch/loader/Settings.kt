@@ -29,7 +29,6 @@ object SettingsLoader {
 }
 
 class Settings(
-    val account: String,
     val chain: String,
     val minSwapQuote: Double,
     val randomSwapQuote: Boolean,
@@ -39,10 +38,7 @@ class Settings(
     val increasedGasLimit: Double,
     val gasPriceLimit: Double,
     val maxRps: Int,
-    val loweredRps: Int,
-    val loweredRpsTimeMinutes: Long,
     val timeout: Long,
-    val maxTimeNoTransaction: Long,
     val excludedTokens: List<String>,
     val excludedProtocols: List<String>,
     val minimalCoinBalance: Int,

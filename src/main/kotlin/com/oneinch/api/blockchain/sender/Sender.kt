@@ -18,7 +18,6 @@ import com.oneinch.util.getDuration
 import com.oneinch.util.getLogger
 import com.oneinch.util.logSwapInfo
 import kotlinx.coroutines.delay
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.web3j.protocol.Web3j
 import org.web3j.tx.RawTransactionManager

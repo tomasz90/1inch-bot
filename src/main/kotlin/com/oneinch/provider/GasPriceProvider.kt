@@ -5,14 +5,13 @@ import com.oneinch.loader.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
 
 @Component
 class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings, scope: CoroutineScope) {
 
-    val gasPrice: AtomicLong = AtomicLong(10_000_000_000) // default 10 gwei
+    val gasPrice: AtomicLong = AtomicLong(100_000_000_000) // default 100 gwei
     private val gasPriceLimit = settings.gasPriceLimit
     private val coroutine = CoroutineScope(scope.coroutineContext)
     private val TWO_SECONDS = 2000L

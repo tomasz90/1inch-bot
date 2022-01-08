@@ -25,4 +25,4 @@ class Transaction(
     value,
     address,
     data
-), ITransaction
+)
