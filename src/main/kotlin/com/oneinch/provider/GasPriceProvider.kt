@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong
 @Component
 class GasPriceProvider(val gasStationClient: GasStationClient, val settings: Settings, scope: CoroutineScope) {
 
-    val gasPrice: AtomicLong = AtomicLong(100_000_000_000) // default 100 gwei
+    val gasPrice: AtomicLong = AtomicLong(50_000_000_000) // default 50 gwei
     private val gasPriceLimit = settings.gasPriceLimit
     private val coroutine = CoroutineScope(scope.coroutineContext)
     private val TWO_SECONDS = 2000L

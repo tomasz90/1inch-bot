@@ -1,16 +1,17 @@
 proxyAddress: ***REMOVED***
+ownerAddress: ***REMOVED***
 chain: matic
 maxRps: 1
-minSwapQuote: 20
+minSwapQuote: 1
 randomSwapQuote: true
-minAdvantage: 2.5
+minAdvantage: -2.5
 gasPriceLimit: 1000
 minimalCoinBalance: 10
 refillCoinQuote: 50
 maximalTokenShare: 0.6
 complexityLevel: 3
 excludedTokens:
-
+  -
 excludedProtocols:
   - POLYGON_ONE_INCH_LIMIT_ORDER
 

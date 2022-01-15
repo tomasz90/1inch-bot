@@ -40,7 +40,7 @@ open class Config {
     open fun credentials() = Wallet.open()
 
     @Bean
-    open fun myAddress() = credentials().address
+    open fun myAddress() = settings.ownerAddress
 
     @Bean
     open fun rawTransactionManager() = RawTransactionManager(web3j(), credentials(), chain().id.toLong())
