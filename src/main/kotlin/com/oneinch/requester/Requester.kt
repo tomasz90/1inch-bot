@@ -41,7 +41,7 @@ class Requester(
             if (shouldSwap(realAdvantage)) {
                 val tx = createTransaction(dto, realAdvantage, requestDuration)
                 sender.sendTransaction(tx, from, dto.to)
-                refillCoinBalanceIfNeeded()
+                //refillCoinBalanceIfNeeded()
                 isSwapping.unlock()
             }
         }

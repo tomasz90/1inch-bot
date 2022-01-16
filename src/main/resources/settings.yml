@@ -1,10 +1,10 @@
 proxyAddress: ***REMOVED***
 ownerAddress: ***REMOVED***
 chain: matic
-maxRps: 1
-minSwapQuote: 1
+maxRps: 5
+minSwapQuote: 5
 randomSwapQuote: true
-minAdvantage: -2.5
+minAdvantage: 2.5
 gasPriceLimit: 1000
 minimalCoinBalance: 10
 refillCoinQuote: 50
