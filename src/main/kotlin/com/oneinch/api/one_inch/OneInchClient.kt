@@ -15,7 +15,6 @@ import retrofit2.Response
 
 @Component
 class OneInchClient(
-    val myAddress: String,
     val oneInch: OneInchApi,
     val settings: Settings,
     val chain: Chain,
@@ -30,9 +29,10 @@ class OneInchClient(
                 from.token.address,
                 to.address,
                 from.origin,
-                myAddress,
+                settings.proxyAddress,
                 slippage,
                 allowPartialFill,
+                true,
                 protocols,
                 settings.complexityLevel,
                 gasPriceProvider.gasPrice.get()

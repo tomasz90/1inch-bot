@@ -27,6 +27,7 @@ interface OneInchApi {
         @Query("fromAddress") fromAddress: String,
         @Query("slippage") slippage: Double,
         @Query("allowPartialFill") allowPartialFill: Boolean,
+        @Query("disableEstimate") disableEstimate: Boolean,
         @Query("protocols") protocols: String? = null,
         @Query("complexityLevel") complexityLevel: Int? = null,
         @Query("gasPrice") gasPrice: Long? = null,
