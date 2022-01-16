@@ -29,7 +29,7 @@ class OneInchClient(
                 from.token.address,
                 to.address,
                 from.origin,
-                settings.proxyAddress,
+                settings.ownerAddress,
                 slippage,
                 allowPartialFill,
                 true,

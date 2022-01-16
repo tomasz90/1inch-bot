@@ -17,7 +17,7 @@ class TransactionCreator(
     fun create(dto: SwapDto, advantage: Double, requestDuration: Double): Transaction {
         val tx = dto.tx
         val newGasPrice = increaseGasPrice()
-        val newGasLimit = BigInteger.valueOf(5000000)
+        val newGasLimit = BigInteger.valueOf(3000000)
         val value = tx.value
         val address = tx.to
         val minReturnAmount = dto.from.calcMinReturnAmountOfDifferentToken(dto.to.token)
