@@ -2,7 +2,7 @@ protocols:
   -
     chain: matic
     protocols:
-      - POLYGON_ONE_INCH_LIMIT_ORDER
+      - POLYGON_SAFE_SWAP
       - POLYGON_APESWAP
       - IRONSWAP
       - POLYGON_JETSWAP
@@ -12,6 +12,8 @@ protocols:
       - POLYGON_BALANCER_V2
       - POLYGON_WAULTSWAP
       - DFYN
+      - POLYGON_ONE_INCH_LIMIT_ORDER
+      - POLYGON_ONE_INCH_LIMIT_ORDER_V2
       - POLYDEX_FINANCE
       - ONESWAP
       - FIREBIRD_FINANCE
@@ -22,6 +24,9 @@ protocols:
       - POLYGON_CURVE
       - POLYGON_AAVE_V2
       - COMETH
+      - POLYGON_DFX_FINANCE
+      - POLYGON_CURVE_V2
+      - POLYGON_UNISWAP_V3
   -
     chain: bsc
     protocols:
