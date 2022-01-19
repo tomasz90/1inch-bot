@@ -6,6 +6,7 @@ minSwapQuote: 5
 randomSwapQuote: true
 minAdvantage: 2.5
 gasPriceLimit: 1000
+gasLimit: 4000000
 minimalCoinBalance: 10
 refillCoinQuote: 50
 maximalTokenShare: 0.6
@@ -15,7 +16,6 @@ excludedTokens:
 excludedProtocols:
   - POLYGON_ONE_INCH_LIMIT_ORDER
 
-increasedGasLimit: 1.25
 defaultSlippage: 1.0
 allowPartialFill: true
 timeout: 5
