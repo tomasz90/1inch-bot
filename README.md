@@ -1,4 +1,4 @@
-# 1inch
+# 1inch bot
 
 This project is implementation of simple trading bot which looks for differences between stablecoin prices.
 It uses 1inch api to quote popular stablecoins: DAI, USDC, USDT, UST, TUSD requesting for different trade sizes.
