@@ -7,6 +7,7 @@ Features:
 * request rate limiter
 * gas station client
 * telegram client which sends message after successful trade
+* embeded database with all information about performed transactions
 * possiblity to choose between different chains
 * setting minimal swap quote / maximal swap quote
 * setting minimal trade advantage
