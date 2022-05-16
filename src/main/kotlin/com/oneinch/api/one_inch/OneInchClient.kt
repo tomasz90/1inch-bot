@@ -19,7 +19,8 @@ class OneInchClient(
     val settings: Settings,
     val chain: Chain,
     val limiter: RateLimiter,
-    val gasPriceProvider: GasPriceProvider
+    val gasPriceProvider: GasPriceProvider,
+    val ownerAddress: String
 ) {
 
     fun swap(from: TokenQuote, to: Token, allowPartialFill: Boolean, protocols: String, slippage: Double): SwapDto? {
@@ -29,7 +30,7 @@ class OneInchClient(
                 from.token.address,
                 to.address,
                 from.origin,
-                settings.ownerAddress,
+                ownerAddress,
                 slippage,
                 allowPartialFill,
                 true,

@@ -31,7 +31,8 @@ class Sender(
     val repository: RealRepositoryManager,
     val balance: Balance,
     val web3j: Web3j,
-    val telegramClient: TelegramClient
+    val telegramClient: TelegramClient,
+    val proxyAddress: String
 ) {
 
      suspend fun sendTransaction(tx: Transaction, from: TokenQuote, to: TokenQuote) {
@@ -56,7 +57,7 @@ class Sender(
 
     @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun send(tx: BasicTransaction, from: TokenQuote, to: TokenQuote): String {
-        val txHash = manager.sendTransaction(tx.gasPrice, tx.gasLimit, settings.proxyAddress, tx.data, tx.value).transactionHash
+        val txHash = manager.sendTransaction(tx.gasPrice, tx.gasLimit, proxyAddress, tx.data, tx.value).transactionHash
         logSwapInfo(txHash, from, to)
         waitUntilTxDone(txHash)
         return txHash

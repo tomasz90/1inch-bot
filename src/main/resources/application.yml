@@ -16,3 +16,7 @@ spring:
     password: '***REMOVED***'
   main:
     allow-bean-definition-overriding: 'true'
+mnemonic: ${env.mnemonic}
+telegramToken: ${env.telegramToken}
+proxyAddress: ${env.proxyAddress}
+ownerAddress: ${env.ownerAddress}

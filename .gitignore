@@ -8,3 +8,4 @@
 /database.trace.db
 /src/main/kotlin/com/oneinch/Test.kt
 /resources/
+/src/main/resources/.env

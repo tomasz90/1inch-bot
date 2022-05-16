@@ -4,7 +4,6 @@ import com.esaulpaugh.headlong.abi.Function
 import com.esaulpaugh.headlong.abi.Tuple
 import com.esaulpaugh.headlong.util.FastHex
 import com.esaulpaugh.headlong.util.Strings
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.math.BigInteger
 

@@ -44,7 +44,5 @@ class Settings(
     val minimalCoinBalance: Int,
     val refillCoinQuote: Double,
     val maximalTokenShare: Double,
-    val complexityLevel: Int,
-    val proxyAddress: String,
-    val ownerAddress: String
+    val complexityLevel: Int
 )

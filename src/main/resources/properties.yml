@@ -1,7 +1,6 @@
 oneInchUrl: https://api.1inch.exchange/
 gasStationUrl: https://gasstation-mainnet.matic.network
 telegramUrl: https://api.telegram.org
-telegramToken: ***REMOVED***
 
 chains:
   -
@@ -36,7 +35,7 @@ chains:
   -
     name: matic
     id: 137
-    rpc: ***REMOVED***
+    rpc: https://rpc-mainnet.matic.network
     coin:
       symbol: MATIC
       address: 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee

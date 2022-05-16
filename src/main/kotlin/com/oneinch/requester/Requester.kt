@@ -86,7 +86,7 @@ class Requester(
         return transactionCreator.createBasic(dto)
     }
 
-    fun calculateAdvantage(dto: Dto): Double {
+    private fun calculateAdvantage(dto: Dto): Double {
         val realAdvantage = (dto.to.usdValue - dto.from.usdValue) / dto.from.usdValue * 100
         utils.logRatesInfo(dto, realAdvantage)
         return realAdvantage

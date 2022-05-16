@@ -6,7 +6,7 @@ import com.oneinch.util.logErrorMessage
 import org.springframework.stereotype.Component
 
 @Component
-class TelegramClient(val telegramApi: TelegramApi, val properties: Properties) {
+class TelegramClient(val telegramApi: TelegramApi, val telegramToken: String) {
 
     fun sendSwapMessage(amount: Double, gas: Double?) {
         var message = "Congratulations, you earned $amount$  \uD83D\uDCB8"
@@ -28,7 +28,7 @@ class TelegramClient(val telegramApi: TelegramApi, val properties: Properties) {
     }
 
     private fun sendMessage(message: String): JSONObject? {
-        val response = telegramApi.sendMessage(properties.telegramToken, message).execute()
+        val response = telegramApi.sendMessage(telegramToken, message).execute()
         return if (response.isSuccessful) {
             response.body()
         } else {

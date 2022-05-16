@@ -21,6 +21,5 @@ class Properties(
     val oneInchUrl: String,
     val gasStationUrl: String,
     val chains: List<Chain>,
-    val telegramToken: String,
     val telegramUrl: String
 )
